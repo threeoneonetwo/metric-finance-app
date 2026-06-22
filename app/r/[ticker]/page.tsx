@@ -394,7 +394,7 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
                 }
               >
                 <p className="font-mono text-xs uppercase tracking-wider text-[#8e909f]">{tile.label}</p>
-                <p className="mt-3 whitespace-nowrap text-[clamp(1.75rem,3.6vw,3rem)] font-bold leading-tight text-[#dae2fd]">{tile.value}</p>
+                <p className="mt-3 max-w-full overflow-hidden whitespace-nowrap text-[clamp(1.75rem,1.7vw,2.125rem)] font-bold leading-tight text-[#dae2fd]">{tile.value}</p>
                 <p className="mt-3 text-base leading-snug text-[#8e909f]">{tile.meaning}</p>
               </div>
             ))}
