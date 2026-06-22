@@ -375,21 +375,21 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
 
         {/* ── Signal Grid (4 key tiles) ── */}
         <section className={`lg:h-full ${hasTechnicalSignals ? "lg:col-span-4" : "lg:col-span-6"}`}>
-          <p className="text-[9px] text-[#8e909f] font-mono uppercase tracking-widest mb-3">Live Signals</p>
+          <p className="mb-4 font-mono text-xs uppercase tracking-widest text-[#8e909f]">Live Signals</p>
           <div className="grid grid-cols-2 gap-3 lg:h-[calc(100%-1.5rem)] lg:grid-rows-2">
             {[signalTiles[0], signalTiles[3], signalTiles[6], signalTiles[7]].map((tile) => (
               <div
                 key={tile.label}
-                className="glass-panel p-4 lg:h-full"
+                className="glass-panel p-5 lg:h-full lg:p-6"
                 style={
                   tile.tone === "accent" ? { background: "rgba(55,85,195,0.18)", borderColor: "rgba(184,196,255,0.2)" }
                     : tile.tone === "dark" ? { background: "rgba(6,14,32,0.8)" }
                     : {}
                 }
               >
-                <p className="text-[9px] text-[#8e909f] font-mono uppercase tracking-wider">{tile.label}</p>
-                <p className="mt-2 text-base font-bold text-[#dae2fd] break-words leading-tight">{tile.value}</p>
-                <p className="mt-1.5 text-[10px] text-[#8e909f] leading-tight">{tile.meaning}</p>
+                <p className="font-mono text-xs uppercase tracking-wider text-[#8e909f]">{tile.label}</p>
+                <p className="mt-3 break-words text-[1.625rem] font-bold leading-tight text-[#dae2fd] lg:text-3xl">{tile.value}</p>
+                <p className="mt-3 text-base leading-snug text-[#8e909f]">{tile.meaning}</p>
               </div>
             ))}
           </div>
