@@ -7,6 +7,7 @@ import { ReportViewEvent } from "@/components/analytics-events";
 import { BriefCardDeck } from "@/components/brief-card-deck";
 import { LiveAnalysisRefresh } from "@/components/live-analysis-refresh";
 import { ShareReportButton } from "@/components/share-report-button";
+import { TickerSearch } from "@/components/ticker-search";
 import { getPeerComparisonLabels, shouldReplacePeerLabels } from "@/domain/competitors";
 import { getInstantReportViewForTicker, getReportViewForTicker } from "@/domain/report-cache";
 import { resolveTickerQuery } from "@/domain/ticker-resolver";
@@ -130,6 +131,7 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
   const rangePositionText = aiInsights?.rangePosition ?? rangeRead.meaning;
   const newsContextText = aiInsights?.newsContext ?? null;
   const rangePos = getRangePosition(marketData);
+  const sortedNews = sortNewsByNewest(signals?.news ?? []);
 
   const G = "rgba(255,255,255,0.08)"; // glass border shorthand
 
@@ -152,13 +154,17 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
 
       {/* Top nav */}
       <header
-        className="w-full h-16 flex items-center justify-between"
-        style={{ background: "rgba(11,19,38,0.85)", backdropFilter: "blur(16px)", borderBottom: `1px solid ${G}`, paddingLeft: "2.5rem", paddingRight: "2.5rem" }}
+        className="relative z-50 w-full flex flex-wrap items-center justify-between gap-3 px-4 py-3 lg:flex-nowrap lg:px-10"
+        style={{ background: "rgba(11,19,38,0.85)", backdropFilter: "blur(16px)", borderBottom: `1px solid ${G}` }}
       >
         <Link href="/" className="text-white font-bold text-2xl tracking-tight">
-          Metric
+          <span className="lg:hidden">Metric</span>
+          <span className="hidden lg:inline">Metric Finance</span>
         </Link>
-        <div className="flex items-center gap-1">
+        <div className="order-3 w-full lg:order-2 lg:max-w-xl lg:flex-1">
+          <TickerSearch dark />
+        </div>
+        <div className="order-2 flex items-center gap-1 lg:order-3">
           <Link
             href={`/analyze/${report.ticker}?refresh=1`}
             className="p-2 rounded-full hover:bg-white/5 transition-colors text-[#8e909f]"
@@ -308,11 +314,13 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
             <p className="text-xs text-[#8e909f] leading-relaxed mb-4">{newsContextText}</p>
           )}
           <div className="grid gap-4 lg:auto-rows-fr lg:grid-cols-[repeat(auto-fit,minmax(13rem,1fr))]">
-            {(signals?.news ?? []).length > 0 ? (
-              signals!.news.map((item) => (
+            {sortedNews.length > 0 ? (
+              sortedNews.map((item) => (
                 <div key={`${item.title}-${item.publishedAt}`} className="rounded-lg p-3 lg:h-full" style={{ background: "rgba(23,31,51,0.8)", border: `1px solid ${G}` }}>
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[8px] font-bold text-[#b8c4ff] uppercase tracking-wider">{item.source}</span>
+                    <span className="text-[8px] font-bold text-[#b8c4ff] uppercase tracking-wider">
+                      {item.source} · {formatNewsDate(item.publishedAt)}
+                    </span>
                     <span className="text-[8px] text-[#8e909f] uppercase">{item.sentiment}</span>
                   </div>
                   {item.url ? (
@@ -340,8 +348,8 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
           <h2 className="mb-4 text-base font-semibold text-[#dae2fd]">{hasFundamentalData ? "Business Quality" : "Market Feed"}</h2>
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-6">
             {displayMetrics.slice(0, 6).map(([label, value, yoy, median]) => {
-              const hasYoY = isMeaningfulMetricMovement(yoy);
-              const hasMedian = Boolean(median && median !== "N/A");
+              const meaning = getBusinessMetricMeaning([label, value, yoy, median]);
+              const toneClass = getBusinessMetricTone(meaning);
               return (
                 <div
                   key={label}
@@ -355,16 +363,9 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
                   </div>
 
                   <div className="flex min-h-5 items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.08em]">
-                    {hasYoY && (
-                      <span className={`rounded-full px-2 py-1 ${yoy.startsWith("-") ? "bg-[#f43f5e]/10 text-[#fda4af]" : "bg-[#4ade80]/10 text-[#86efac]"}`}>
-                        {yoy}
-                      </span>
-                    )}
-                    {hasMedian && (
-                      <span className="truncate rounded-full bg-white/5 px-2 py-1 text-[#a8adbf]">
-                        Median {median}
-                      </span>
-                    )}
+                    <span className={`truncate rounded-full px-2 py-1 ${toneClass}`}>
+                      {meaning}
+                    </span>
                   </div>
                 </div>
               );
@@ -676,17 +677,16 @@ function buildSignalTiles(input: { displayDayChange: string; marketData: MarketS
   const quality = metric(/roe|roce|margin|profit/i);
   const debt = metric(/debt|d\/?e|risk|quick|current ratio|interest coverage/i);
   const technical = input.signals?.technicals[0];
-  const newsCount = input.signals?.news.length ?? 0;
   const newsSignal = getNewsSentimentSummary(input.signals);
   return [
-    { label: "Price Action", value: input.displayDayChange, meaning: input.marketRead.label.replace("Market Signal: ", ""), tone: "accent" as const },
-    { label: "Volume", value: formatNumber(input.marketData?.volume ?? null), meaning: input.volumeRead.label.replace("Volume Context: ", ""), tone: "white" as const },
-    { label: "52W Position", value: `${getRangePosition(input.marketData)}%`, meaning: input.rangeRead.label.replace("Range Context: ", ""), tone: "white" as const },
-    { label: "Valuation", value: valuation ? formatValuationTileValue(valuation) : "Pending", meaning: valuation ? formatMetricTileContext(valuation, "Current multiple") : "Awaiting ratios", tone: "dark" as const },
-    { label: "Business Quality", value: quality?.[1] ?? "Mixed", meaning: quality ? `${quality[0]} vs ${quality[3]}` : "Awaiting ratios", tone: "white" as const },
-    { label: "Debt / Risk", value: debt?.[1] ?? "Check", meaning: debt ? `${debt[0]} vs ${debt[3]}` : "Awaiting leverage", tone: "white" as const },
-    { label: "Technical Setup", value: technical?.value ?? "N/A", meaning: technical?.label ?? "Tradient signal", tone: "accent" as const },
-    { label: "News Signal", value: newsSignal.label, meaning: newsCount ? `${newsSignal.detail} · ${newsCount} matched` : "No exact match", tone: "white" as const },
+    { label: "Price Action", value: input.displayDayChange, meaning: getPriceActionMeaning(input.marketData?.dayChangePercent ?? null), tone: "accent" as const },
+    { label: "Volume", value: formatNumber(input.marketData?.volume ?? null), meaning: input.volumeRead.label.includes("Unavailable") ? "No data" : "Active", tone: "white" as const },
+    { label: "52W Position", value: `${getRangePosition(input.marketData)}%`, meaning: getRangeMeaning(input.marketData), tone: "white" as const },
+    { label: "Valuation", value: valuation ? formatValuationTileValue(valuation) : "Pending", meaning: valuation ? getValuationMeaning(valuation) : "No data", tone: "dark" as const },
+    { label: "Business Quality", value: quality?.[1] ?? "Mixed", meaning: quality ? getQualityMeaning(quality) : "No data", tone: "white" as const },
+    { label: "Debt / Risk", value: debt?.[1] ?? "Check", meaning: debt ? getDebtMeaning(debt) : "No data", tone: "white" as const },
+    { label: "Technical Setup", value: technical?.value ?? "N/A", meaning: getTechnicalMeaning(technical), tone: "accent" as const },
+    { label: "News Signal", value: newsSignal.label, meaning: getNewsMeaning(newsSignal.label), tone: "white" as const },
   ];
 }
 
@@ -702,11 +702,82 @@ function formatValuationTileValue(metric: [string, string, string, string]) {
   return `${shortLabel} ${unitValue}`;
 }
 
-function formatMetricTileContext(metric: [string, string, string, string], fallback: string) {
-  const [, , yoy, median] = metric;
-  if (isMeaningfulMetricMovement(yoy)) return `${yoy} YoY`;
-  if (median && median !== "N/A") return `Median ${median}`;
-  return fallback;
+function getPriceActionMeaning(change: number | null) {
+  if (change === null) return "No data";
+  if (change >= 2) return "Strong up";
+  if (change <= -2) return "Strong down";
+  return "Small move";
+}
+
+function getRangeMeaning(marketData: MarketSnapshot | undefined) {
+  const position = getRangePosition(marketData);
+  if (!position) return "No data";
+  if (position >= 75) return "Near high";
+  if (position <= 25) return "Near low";
+  return "Mid range";
+}
+
+function getValuationMeaning(metric: [string, string, string, string]) {
+  const companyValue = parseMetricNumber(metric[1]);
+  const medianValue = parseMetricNumber(metric[3]);
+  if (companyValue === null) return "No data";
+  if (medianValue === null || medianValue === 0) return companyValue >= 40 ? "Expensive" : companyValue <= 15 ? "Cheap" : "Fair";
+  const gap = ((companyValue - medianValue) / Math.abs(medianValue)) * 100;
+  if (gap >= 15) return "Expensive";
+  if (gap <= -15) return "Cheap";
+  return "Fair";
+}
+
+function getBusinessMetricMeaning(metric: [string, string, string, string]) {
+  const [label] = metric;
+  if (/p\/?e|p\/?b|ev\/?ebitda|valuation/i.test(label)) {
+    return getValuationMeaning(metric);
+  }
+  if (/debt|d\/?e|risk|quick|current ratio|interest coverage/i.test(label)) {
+    return getDebtMeaning(metric);
+  }
+  if (/roe|roa|roce|margin|profit|quality/i.test(label)) {
+    return getQualityMeaning(metric);
+  }
+  return getQualityMeaning(metric);
+}
+
+function getBusinessMetricTone(meaning: string) {
+  if (["Strong", "Cheap", "Lower risk"].includes(meaning)) return "bg-[#4ade80]/10 text-[#86efac]";
+  if (["Weak", "Expensive", "Higher risk"].includes(meaning)) return "bg-[#f43f5e]/10 text-[#fda4af]";
+  return "bg-white/5 text-[#a8adbf]";
+}
+
+function getQualityMeaning(metric: [string, string, string, string]) {
+  const companyValue = parseMetricNumber(metric[1]);
+  const medianValue = parseMetricNumber(metric[3]);
+  if (companyValue === null || medianValue === null) return "Check";
+  return companyValue >= medianValue ? "Strong" : "Weak";
+}
+
+function getDebtMeaning(metric: [string, string, string, string]) {
+  const companyValue = parseMetricNumber(metric[1]);
+  const medianValue = parseMetricNumber(metric[3]);
+  if (companyValue === null || medianValue === null) return "Check";
+  return companyValue <= medianValue ? "Lower risk" : "Higher risk";
+}
+
+function getTechnicalMeaning(technical: TradientSignal["technicals"][number] | undefined) {
+  if (!technical) return "No data";
+  const value = parseMetricNumber(technical.value);
+  if (/rsi/i.test(technical.label) && value !== null) {
+    if (value >= 70) return "Overbought";
+    if (value <= 30) return "Oversold";
+    return "Neutral";
+  }
+  return "Check setup";
+}
+
+function getNewsMeaning(label: string) {
+  if (label === "Positive") return "Good news";
+  if (label === "Negative") return "Bad news";
+  if (label === "Neutral") return "Mixed news";
+  return "No news";
 }
 
 function getRangePosition(marketData: MarketSnapshot | undefined) {
@@ -798,6 +869,16 @@ function getNewsSentimentCounts(news: TradientSignal["news"]) {
   }, { positive: 0, neutral: 0, negative: 0 });
 }
 
+function sortNewsByNewest(news: TradientSignal["news"]) {
+  return [...news].sort((a, b) => getNewsTime(b.publishedAt) - getNewsTime(a.publishedAt));
+}
+
+function getNewsTime(value: string | null) {
+  if (!value) return 0;
+  const time = new Date(value).getTime();
+  return Number.isNaN(time) ? 0 : time;
+}
+
 function getNewsSentimentSummary(signals: TradientSignal | null) {
   const news = signals?.news ?? [];
   const counts = getNewsSentimentCounts(news);
@@ -825,4 +906,11 @@ function formatNumber(value: number | null) {
 function formatTimestamp(value: string | null) {
   if (!value) return "N/A";
   return new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" }).format(new Date(value));
+}
+
+function formatNewsDate(value: string | null) {
+  if (!value) return "Date N/A";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Date N/A";
+  return new Intl.DateTimeFormat("en-IN", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Kolkata" }).format(date);
 }

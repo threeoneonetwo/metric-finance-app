@@ -21,7 +21,10 @@ export default function Home() {
         className="fixed top-0 w-full z-50 flex items-center justify-between h-16 px-4 sm:px-10"
         style={{ background: "rgba(11,19,38,0.85)", backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
       >
-        <Link href="/" className="text-2xl font-bold text-white tracking-tight shrink-0" style={{ fontFamily: "Arial, sans-serif" }}>Metric</Link>
+        <Link href="/" className="text-2xl font-bold text-white tracking-tight shrink-0" style={{ fontFamily: "Arial, sans-serif" }}>
+          <span className="lg:hidden">Metric</span>
+          <span className="hidden lg:inline">Metric Finance</span>
+        </Link>
         <div className="flex items-center gap-4 sm:gap-6" style={{ fontFamily: "Arial, sans-serif" }}>
           <a
             href="#faq"

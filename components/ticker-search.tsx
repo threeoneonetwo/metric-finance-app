@@ -150,14 +150,15 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
 
   if (dark) {
     return (
-      <div ref={containerRef} className="w-full" style={{ position: "relative" }}>
+      <div ref={containerRef} className="w-full py-4 sm:py-5" style={{ position: "relative" }}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex w-full flex-col gap-0"
+          className="mx-auto flex w-full max-w-[30rem] flex-col gap-0"
+          autoComplete="off"
           onBlur={() => window.setTimeout(() => setIsDropdownOpen(false), 120)}
         >
           <div
-            className="flex items-center p-1.5 rounded-xl transition-all duration-300"
+            className="flex items-center rounded-xl p-1 transition-all duration-300 sm:p-1.5"
             style={{ position: "relative", background: "rgba(23,31,51,0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)", overflow: "hidden" }}
           >
             <Search className="shrink-0 ml-3 text-[#90909a]" size={18} strokeWidth={2} />
@@ -168,8 +169,12 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
               aria-controls="ticker-search-dropdown-dark"
               placeholder="Search ticker (e.g. HDFCBANK)"
               role="combobox"
+              autoCapitalize="characters"
+              autoComplete="new-password"
+              autoCorrect="off"
+              spellCheck={false}
               suppressHydrationWarning
-              className="flex-grow bg-transparent border-none text-white placeholder:text-[#90909a] focus:ring-0 text-base py-3 px-3 outline-none"
+              className="min-w-0 flex-grow bg-transparent border-none px-2.5 py-2.5 text-sm text-white outline-none placeholder:text-[#90909a] focus:ring-0 sm:px-3 sm:py-3 sm:text-base"
               name={queryField.name}
               ref={queryField.ref}
               onBlur={queryField.onBlur}
@@ -178,8 +183,8 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
               onClick={() => setIsDropdownOpen(true)}
             />
             <button
-              className="rounded-lg mr-1 text-[#0b1326] bg-[#b8c4ff] hover:bg-[#dde1ff] active:scale-95 transition-all disabled:cursor-wait disabled:opacity-70 shrink-0"
-              style={{ padding: "6px 10px", fontFamily: "Arial, sans-serif", fontWeight: 800, fontSize: "12px", letterSpacing: "0.05em", minWidth: 60 }}
+              className="mr-2 min-w-0 rounded-md bg-[#b8c4ff] px-3 py-1.5 text-[#0b1326] transition-all hover:bg-[#dde1ff] active:scale-95 disabled:cursor-wait disabled:opacity-70 shrink-0 sm:mr-3 sm:px-3.5 sm:py-2"
+              style={{ fontFamily: "Arial, sans-serif", fontWeight: 800, fontSize: "12px", lineHeight: 1, letterSpacing: "0.05em" }}
               disabled={form.formState.isSubmitting || isNavigating}
             >
               {(form.formState.isSubmitting || isNavigating) ? (
@@ -279,6 +284,7 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
     <form
       onSubmit={form.handleSubmit(onSubmit)}
       className="flex w-full flex-col gap-0 neo-shadow"
+      autoComplete="off"
       onBlur={() => window.setTimeout(() => setIsDropdownOpen(false), 120)}
     >
       <label className="flex min-w-0 flex-1 items-center gap-3 border-4 border-black bg-metric-finance-accent-soft px-4 py-2">
@@ -290,6 +296,10 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
           aria-controls="ticker-search-dropdown"
           placeholder="ENTER COMPANY OR TICKER..."
           role="combobox"
+          autoCapitalize="characters"
+          autoComplete="new-password"
+          autoCorrect="off"
+          spellCheck={false}
           suppressHydrationWarning
           className="min-w-0 flex-1 bg-transparent font-mono text-xs font-bold uppercase tracking-[0.05em] text-black outline-none placeholder:text-metric-blue"
           name={queryField.name}
