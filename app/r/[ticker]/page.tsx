@@ -114,6 +114,12 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
   });
   const metricBrief = aiMetricBrief ?? templateMetricBrief;
   const signalTiles = buildSignalTiles({ displayDayChange, marketData, marketRead, rangeRead, volumeRead, metrics: displayMetrics, signals });
+  const peerLensRead = buildPeerLensRead({
+    ticker: report.ticker,
+    marketData,
+    peerLabels: displayPeers.slice(1),
+    peerSnapshots,
+  });
   const newsCounts = getNewsSentimentCounts(signals?.news ?? []);
   const newsTotal = Math.max(1, (signals?.news ?? []).length);
   const newsPrimary = newsCounts.positive > newsCounts.negative && newsCounts.positive >= newsCounts.neutral
@@ -388,7 +394,7 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
                 }
               >
                 <p className="font-mono text-xs uppercase tracking-wider text-[#8e909f]">{tile.label}</p>
-                <p className="mt-3 break-words text-[1.625rem] font-bold leading-tight text-[#dae2fd] lg:text-3xl">{tile.value}</p>
+                <p className="mt-3 whitespace-nowrap text-[clamp(1.75rem,3.6vw,3rem)] font-bold leading-tight text-[#dae2fd]">{tile.value}</p>
                 <p className="mt-3 text-base leading-snug text-[#8e909f]">{tile.meaning}</p>
               </div>
             ))}
@@ -432,6 +438,9 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
               </tbody>
             </table>
           </div>
+          <p className="mt-5 border-t border-white/5 pt-4 text-sm leading-relaxed text-[#a8adbf]">
+            {peerLensRead}
+          </p>
         </section>
 
         {/* ── Technical Signals ── */}
@@ -624,6 +633,48 @@ async function getPeerSnapshots(peers: string[]) {
     return result.ok && result.data.source !== "mock" ? result.data : null;
   }));
   return snapshots;
+}
+
+function buildPeerLensRead(input: {
+  ticker: string;
+  marketData: MarketSnapshot | undefined;
+  peerLabels: string[];
+  peerSnapshots: Array<MarketSnapshot | null>;
+}) {
+  const ownChange = input.marketData?.dayChangePercent;
+  const peers = input.peerLabels
+    .map((label, index) => ({ label, snapshot: input.peerSnapshots[index] }))
+    .filter((peer): peer is { label: string; snapshot: MarketSnapshot } => peer.snapshot !== null);
+  const peerChanges = peers
+    .map((peer) => ({ label: peer.label, change: peer.snapshot.dayChangePercent }))
+    .filter((peer): peer is { label: string; change: number } => peer.change !== null && peer.change !== undefined);
+
+  if (ownChange === null || ownChange === undefined || peerChanges.length === 0) {
+    return "Peer data is thin right now, so the clean read is to compare the stock's next move against the peer table above.";
+  }
+
+  const peerAverage = peerChanges.reduce((sum, peer) => sum + peer.change, 0) / peerChanges.length;
+  const peerUpCount = peerChanges.filter((peer) => peer.change >= 0).length;
+  const topPeer = [...peerChanges].sort((a, b) => b.change - a.change)[0];
+  const gap = ownChange - peerAverage;
+  const direction = peerUpCount >= Math.ceil(peerChanges.length / 2) ? "mostly green" : "mostly weak";
+  const relativeRead = gap >= 0.5
+    ? "leading the peer group"
+    : gap <= -0.5
+      ? "lagging the peer group"
+      : "moving with the peer group";
+  const volumeRead = getPeerVolumeRead(input.marketData?.volume ?? null, peers.map((peer) => peer.snapshot.volume));
+
+  return `${input.ticker} is ${relativeRead}: ${formatPercent(ownChange)} versus a peer average of ${formatPercent(peerAverage)}. Peers are ${direction}${topPeer ? `, led by ${topPeer.label} at ${formatPercent(topPeer.change)}` : ""}.${volumeRead ? ` ${volumeRead}` : ""}`;
+}
+
+function getPeerVolumeRead(ownVolume: number | null, peerVolumes: Array<number | null | undefined>) {
+  const validPeerVolumes = peerVolumes.filter((volume): volume is number => volume !== null && volume !== undefined && volume > 0);
+  if (!ownVolume || validPeerVolumes.length === 0) return null;
+  const averageVolume = validPeerVolumes.reduce((sum, volume) => sum + volume, 0) / validPeerVolumes.length;
+  if (ownVolume >= averageVolume * 1.25) return `Volume is heavier than peers at ${formatNumber(ownVolume)}.`;
+  if (ownVolume <= averageVolume * 0.75) return `Volume is lighter than peers at ${formatNumber(ownVolume)}.`;
+  return `Volume is broadly in line with peers at ${formatNumber(ownVolume)}.`;
 }
 
 function buildMetricBrief(input: {
