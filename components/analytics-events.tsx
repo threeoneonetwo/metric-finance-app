@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { trackEvent } from "@/lib/gtag";
-import { trackPostHogEvent } from "@/lib/posthog";
 import { trackProductEvent } from "@/lib/product-events";
 
 type AnalysisEventProps = {
@@ -19,10 +18,10 @@ export function AnalysisRunEvent({ ticker, companyName, refresh = false }: Analy
       company_name: companyName,
       refresh,
     });
-    trackPostHogEvent("analysis_run", {
+    trackProductEvent({
+      eventName: "analysis_run",
       ticker,
-      company_name: companyName,
-      refresh,
+      metadata: { companyName, refresh },
     });
   }, [companyName, refresh, ticker]);
 

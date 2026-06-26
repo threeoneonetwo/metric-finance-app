@@ -4,18 +4,31 @@ import { trackPostHogEvent, type PostHogEventName } from "@/lib/posthog";
 import { isOwner } from "@/lib/gtag";
 
 type ProductEventPayload = {
-  eventName: "landing_view" | "search_open" | "search_submit" | "report_view" | "share_report";
+  eventName: "landing_view" | "search_open" | "search_submit" | "report_view" | "share_report" | "analysis_run";
   ticker?: string;
   metadata?: Record<string, unknown>;
 };
 
+const ACTIVE_PRODUCT_EVENTS = new Set<ProductEventPayload["eventName"]>(["search_submit", "analysis_run"]);
+
 export function trackProductEvent(payload: ProductEventPayload) {
   if (typeof window === "undefined" || isOwner()) return;
 
-  trackPostHogEvent(payload.eventName as PostHogEventName, {
+  const properties = {
     ticker: payload.ticker,
     ...flattenMetadata(payload.metadata),
+  };
+
+  trackPostHogEvent(payload.eventName as PostHogEventName, {
+    ...properties,
   });
+
+  if (ACTIVE_PRODUCT_EVENTS.has(payload.eventName)) {
+    trackPostHogEvent("product_active", {
+      ...properties,
+      source_event: payload.eventName,
+    });
+  }
 
   const body = JSON.stringify(payload);
 

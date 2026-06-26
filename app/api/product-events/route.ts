@@ -10,6 +10,7 @@ const ALLOWED_EVENTS = new Set([
   "search_submit",
   "report_view",
   "share_report",
+  "analysis_run",
 ]);
 
 export async function POST(request: Request) {
