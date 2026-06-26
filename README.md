@@ -61,6 +61,20 @@ When the key is unavailable, the app safely falls back to the mock report
 payload. Saved reports are reused for 24 hours unless a request includes
 `?refresh=1`.
 
+## Product Analytics
+
+PostHog tracks product usage when these public environment variables are set:
+
+```bash
+NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=your_posthog_project_token
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+```
+
+The current instrumentation sends page views, page leaves, and the core product
+events already used by the app: landing views, search opens/submits, report
+views, shares, and analysis runs. Set `localStorage.metric_owner = "1"` in your
+browser to exclude your own testing from GA and PostHog.
+
 ## Market Data
 
 The market-data layer supports Yahoo Finance for temporary MVP data and
