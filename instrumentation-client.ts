@@ -1,17 +1,11 @@
 import posthog from "posthog-js";
+import { applyOwnerOptOutFromUrl } from "@/lib/gtag";
 
 const POSTHOG_PROJECT_TOKEN = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
 const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com";
-const OPT_OUT_KEY = "metric_owner";
 
 if (POSTHOG_PROJECT_TOKEN && typeof window !== "undefined") {
-  let isOwner = false;
-
-  try {
-    isOwner = window.localStorage.getItem(OPT_OUT_KEY) === "1";
-  } catch {
-    isOwner = false;
-  }
+  const isOwner = applyOwnerOptOutFromUrl();
 
   if (!isOwner) {
     posthog.init(POSTHOG_PROJECT_TOKEN, {

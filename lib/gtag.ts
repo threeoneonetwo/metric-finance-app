@@ -1,6 +1,6 @@
 export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
-const OPT_OUT_KEY = "metric_owner";
+export const OWNER_OPT_OUT_KEY = "metric_owner";
 
 type GtagCommand = "config" | "event" | "js";
 
@@ -15,7 +15,35 @@ declare global {
 }
 
 export function isOwner() {
-  return typeof window !== "undefined" && localStorage.getItem(OPT_OUT_KEY) === "1";
+  if (typeof window === "undefined") return false;
+
+  try {
+    return window.localStorage.getItem(OWNER_OPT_OUT_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function applyOwnerOptOutFromUrl() {
+  if (typeof window === "undefined") return false;
+
+  try {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("owner") !== "1") {
+      return isOwner();
+    }
+
+    window.localStorage.setItem(OWNER_OPT_OUT_KEY, "1");
+
+    if (GA_MEASUREMENT_ID) {
+      window[`ga-disable-${GA_MEASUREMENT_ID}`] = true;
+    }
+
+    return true;
+  } catch {
+    return isOwner();
+  }
 }
 
 export function pageview(url: string) {

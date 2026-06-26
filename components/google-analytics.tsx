@@ -3,7 +3,7 @@
 import Script from "next/script";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
-import { GA_MEASUREMENT_ID, isOwner, pageview } from "@/lib/gtag";
+import { applyOwnerOptOutFromUrl, GA_MEASUREMENT_ID, isOwner, OWNER_OPT_OUT_KEY, pageview } from "@/lib/gtag";
 
 export function GoogleAnalytics() {
   if (!GA_MEASUREMENT_ID) {
@@ -18,7 +18,10 @@ export function GoogleAnalytics() {
         dangerouslySetInnerHTML={{
           __html: `
             try {
-              if (localStorage.getItem('metric_owner') === '1') {
+              if (new URLSearchParams(location.search).get('owner') === '1') {
+                localStorage.setItem('${OWNER_OPT_OUT_KEY}', '1');
+              }
+              if (localStorage.getItem('${OWNER_OPT_OUT_KEY}') === '1') {
                 window['ga-disable-${GA_MEASUREMENT_ID}'] = true;
               }
             } catch(e) {}
@@ -54,6 +57,7 @@ function PageViewTracker() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    applyOwnerOptOutFromUrl();
     if (isOwner()) return;
     const query = searchParams.toString();
     pageview(`${pathname}${query ? `?${query}` : ""}`);

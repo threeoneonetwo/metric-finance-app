@@ -1,6 +1,7 @@
 "use client";
 
 import { trackPostHogEvent, type PostHogEventName } from "@/lib/posthog";
+import { isOwner } from "@/lib/gtag";
 
 type ProductEventPayload = {
   eventName: "landing_view" | "search_open" | "search_submit" | "report_view" | "share_report";
@@ -9,7 +10,7 @@ type ProductEventPayload = {
 };
 
 export function trackProductEvent(payload: ProductEventPayload) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || isOwner()) return;
 
   trackPostHogEvent(payload.eventName as PostHogEventName, {
     ticker: payload.ticker,
