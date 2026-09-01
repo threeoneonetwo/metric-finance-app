@@ -36,7 +36,7 @@ export function TopBar({ reportActions = false, ticker, companyName }: TopBarPro
           style={{ fontWeight: 800 }}
         >
           <img src="/chart-arrow.png" alt="" className={pageLoaded ? undefined : "chart-arrow-icon"} style={{ width: 34, height: 34, objectFit: "contain" }} />
-          metric
+          Metric Finance
         </Link>
         {reportActions ? (
           <div className="flex items-center gap-3">

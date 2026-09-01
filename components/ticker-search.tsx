@@ -33,7 +33,7 @@ const searchSuggestions: SearchSuggestion[] = [
   { ticker: "BHARTIARTL", name: "Bharti Airtel", meta: "Telecom", source: "static" },
   ];
 
-export function TickerSearch({ dark = false }: { dark?: boolean }) {
+export function TickerSearch({ dark = false, compact = false }: { dark?: boolean; compact?: boolean }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -150,7 +150,7 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
 
   if (dark) {
     return (
-      <div ref={containerRef} className="w-full py-4 sm:py-5" style={{ position: "relative" }}>
+      <div ref={containerRef} className={compact ? "w-full" : "w-full py-4 sm:py-5"} style={{ position: "relative" }}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="mx-auto flex w-full max-w-[40rem] flex-col gap-0"
@@ -158,7 +158,7 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
           onBlur={() => window.setTimeout(() => setIsDropdownOpen(false), 120)}
         >
           <div
-            className="flex items-center p-1.5 transition-all duration-300 sm:p-2"
+            className={compact ? "flex items-center p-1 transition-all duration-300" : "flex items-center p-1.5 transition-all duration-300 sm:p-2"}
             style={{ position: "relative", background: "#18181b", backdropFilter: "blur(12px)", border: "1px solid #303034", overflow: "hidden" }}
           >
             <Search className="shrink-0 ml-3 text-[#90909a]" size={18} strokeWidth={2} />
@@ -174,7 +174,9 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
               autoCorrect="off"
               spellCheck={false}
               suppressHydrationWarning
-              className="min-w-0 flex-grow border-none bg-transparent px-3 py-3 text-sm text-white outline-none placeholder:text-[#90909a] focus:ring-0 sm:px-4 sm:py-4 sm:text-base"
+              className={compact
+                ? "min-w-0 flex-grow border-none bg-transparent px-3 py-2.5 text-base text-white outline-none placeholder:text-[#90909a] focus:ring-0"
+                : "min-w-0 flex-grow border-none bg-transparent px-3 py-3 text-sm text-white outline-none placeholder:text-[#90909a] focus:ring-0 sm:px-4 sm:py-4 sm:text-base"}
               name={queryField.name}
               ref={queryField.ref}
               onBlur={queryField.onBlur}
@@ -183,7 +185,9 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
               onClick={() => setIsDropdownOpen(true)}
             />
             <button
-              className="mr-1.5 min-w-0 shrink-0 border border-[#3f3f46] bg-[#27272a] px-4 py-2.5 text-[#f4f4f5] transition-all hover:-translate-y-0.5 hover:bg-[#303034] active:translate-y-0 active:scale-95 disabled:cursor-wait disabled:opacity-70 sm:mr-2 sm:px-5 sm:py-3"
+              className={compact
+                ? "mr-1 min-w-0 shrink-0 border border-[#3f3f46] bg-[#27272a] px-4 py-2.5 text-[#f4f4f5] transition-all hover:-translate-y-0.5 hover:bg-[#303034] active:translate-y-0 active:scale-95 disabled:cursor-wait disabled:opacity-70"
+                : "mr-1.5 min-w-0 shrink-0 border border-[#3f3f46] bg-[#27272a] px-4 py-2.5 text-[#f4f4f5] transition-all hover:-translate-y-0.5 hover:bg-[#303034] active:translate-y-0 active:scale-95 disabled:cursor-wait disabled:opacity-70 sm:mr-2 sm:px-5 sm:py-3"}
               style={{ fontFamily: "Arial, sans-serif", fontWeight: 800, fontSize: "12px", lineHeight: 1, letterSpacing: "0.05em" }}
               disabled={form.formState.isSubmitting || isNavigating}
             >

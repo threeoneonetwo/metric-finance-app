@@ -90,9 +90,9 @@ body > main {
 }
 
 .mobile-safe-top-nav {
-  min-height: calc(4.25rem + env(safe-area-inset-top));
-  padding-top: calc(0.5rem + env(safe-area-inset-top));
-  padding-bottom: 0.5rem;
+  min-height: calc(3.75rem + env(safe-area-inset-top));
+  padding-top: calc(0.25rem + env(safe-area-inset-top));
+  padding-bottom: 0.25rem;
 }
 
 .mobile-safe-page-header {
@@ -114,9 +114,9 @@ body > main {
   }
 
   .mobile-safe-top-nav {
-    min-height: 4.25rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    min-height: 3.75rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
   }
 
   .mobile-safe-page-header {
@@ -635,10 +635,46 @@ body > main.report-page::before {
   padding: clamp(1rem, 1.6vw, 1.25rem);
 }
 
+.report-dashboard-content [class~="text-[8px]"] {
+  font-size: 0.625rem !important;
+}
+
+.report-dashboard-content [class~="text-[9px]"] {
+  font-size: 0.6875rem !important;
+}
+
+.report-dashboard-content [class~="text-[10px]"] {
+  font-size: 0.75rem !important;
+}
+
+.report-dashboard-content [class~="text-xs"] {
+  font-size: 0.875rem !important;
+}
+
+.report-dashboard-content [class~="text-sm"] {
+  font-size: 1rem !important;
+}
+
+.report-dashboard-content [class~="text-base"] {
+  font-size: 1.125rem !important;
+}
+
+.report-dashboard-content [class~="text-lg"] {
+  font-size: 1.25rem !important;
+}
+
+.report-dashboard-content [class~="text-xl"] {
+  font-size: 1.5rem !important;
+}
+
+.report-dashboard-content [class~="text-2xl"] {
+  font-size: 1.75rem !important;
+}
+
 @media (min-width: 1024px) {
   .report-dashboard-hero {
     margin-inline: auto;
-    max-width: 48rem;
+    max-width: 35rem;
     width: 100%;
   }
 

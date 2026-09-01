@@ -104,7 +104,7 @@ export function OnboardingJourney() {
           className="flex items-center justify-between px-5 py-3"
           style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
         >
-          <span className="text-white font-bold text-lg tracking-tight">Metric</span>
+          <span className="text-xl font-bold tracking-tight text-white">Metric Finance</span>
           <span
             className="text-[10px] font-medium uppercase tracking-widest px-2 py-0.5 rounded-full"
             style={{ background: "rgba(184,196,255,0.1)", color: "#b8c4ff" }}

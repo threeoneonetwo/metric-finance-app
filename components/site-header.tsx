@@ -15,7 +15,7 @@ export async function SiteHeader({ fixed = false }: SiteHeaderProps) {
         borderBottom: "1px solid #303034",
       }}
     >
-      <Link href="/" className="shrink-0 text-2xl font-bold tracking-[-0.04em] text-white" style={{ fontFamily: "Arial, sans-serif" }}>
+      <Link href="/" className="shrink-0 text-3xl font-bold leading-none tracking-[-0.04em] text-white" style={{ fontFamily: "Arial, sans-serif" }}>
         Metric Finance
       </Link>
       <nav className="hidden min-w-0 items-center gap-6 sm:flex" style={{ fontFamily: "Arial, sans-serif" }} aria-label="Main navigation">

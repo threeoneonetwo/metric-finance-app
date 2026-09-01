@@ -6,6 +6,7 @@ import type { LucideIcon } from "lucide-react";
 import { ReportViewEvent } from "@/components/analytics-events";
 import { BriefCardDeck } from "@/components/brief-card-deck";
 import { LiveAnalysisRefresh } from "@/components/live-analysis-refresh";
+import { NewsletterSignupPrompt } from "@/components/newsletter-signup-prompt";
 import { ShareReportButton } from "@/components/share-report-button";
 import { SiteFooter } from "@/components/site-footer";
 import { TickerSearch } from "@/components/ticker-search";
@@ -157,14 +158,14 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
 
       {/* Top nav */}
       <header
-        className="mobile-safe-page-header relative z-50 flex w-full flex-wrap items-center justify-between gap-5 px-5 pb-5 sm:px-8 lg:flex-nowrap lg:px-10 xl:px-12"
-        style={{ background: "rgba(24,24,27,0.94)", backdropFilter: "blur(16px)", borderBottom: "1px solid #303034" }}
+        className="mobile-safe-page-header relative z-50 flex w-full flex-wrap items-center justify-between gap-3 px-5 pb-2 sm:px-8 lg:flex-nowrap lg:px-10 xl:px-12"
+        style={{ background: "rgba(24,24,27,0.94)", backdropFilter: "blur(16px)", borderBottom: "1px solid #303034", paddingTop: "calc(0.5rem + env(safe-area-inset-top))" }}
       >
-        <Link href="/" className="text-white font-bold text-2xl tracking-tight">
-          Metric
+        <Link href="/" className="text-3xl font-bold leading-none tracking-[-0.04em] text-white">
+          Metric Finance
         </Link>
         <div className="order-3 w-full lg:order-2 lg:max-w-xl lg:flex-1">
-          <TickerSearch dark />
+          <TickerSearch dark compact />
         </div>
         <div className="order-2 flex items-center gap-1 lg:order-3">
           <Link
@@ -185,12 +186,12 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
       </header>
 
       {/* Content — single column on mobile, full-width dashboard on desktop */}
-      <div className="mx-auto flex w-full max-w-[46rem] flex-col gap-7 px-5 pb-20 pt-8 sm:gap-8 sm:px-8 sm:pt-10 md:max-w-[56rem] lg:max-w-[960px] lg:gap-7 lg:px-8 lg:pb-24 lg:pt-10">
+      <div className="report-dashboard-content mx-auto flex w-full max-w-[46rem] flex-col gap-7 px-5 pb-20 pt-8 sm:gap-8 sm:px-8 sm:pt-10 md:max-w-[56rem] lg:max-w-[960px] lg:gap-7 lg:px-8 lg:pb-24 lg:pt-10">
         <LiveAnalysisRefresh ticker={report.ticker} enabled={needsAiGeneration} />
 
         {/* ── Hero header ── */}
-        <div className="report-dashboard-hero lg:flex lg:items-end lg:justify-between lg:gap-8">
-          <div className="lg:flex-1 min-w-0">
+        <div className="report-dashboard-hero mx-auto flex w-full flex-col gap-5" style={{ maxWidth: "35rem" }}>
+          <div className="min-w-0">
             <div className="flex items-center gap-2 mb-3">
               <span
                 className="px-2 py-0.5 rounded text-[9px] font-bold tracking-widest text-[#a8b8ff]"
@@ -205,11 +206,11 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
               )}
               <span className="text-[#8e909f] text-[9px] ml-auto lg:ml-3">{formatTimestamp(marketData?.asOf ?? null)}</span>
             </div>
-            <h1 className="mb-6 text-[1.85rem] font-bold leading-tight tracking-[-0.025em] text-white sm:text-[2.15rem] lg:mb-0 lg:text-4xl">
+            <h1 className="text-[1.85rem] font-bold leading-tight tracking-[-0.025em] text-white sm:text-[2.15rem] lg:text-4xl">
               {report.companyName}
             </h1>
           </div>
-          <div className="grid grid-cols-2 gap-4 lg:w-[380px] lg:shrink-0 lg:gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <div className="glass-panel flex flex-col p-4">
               <span className="text-[9px] text-[#8e909f] uppercase tracking-wider mb-2 font-mono">Current Price</span>
               <div className="text-xl font-bold tracking-tight text-[#b8c4ff]">{displayPrice}</div>
@@ -455,9 +456,9 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
         </div>
         </div>
 
-        <div className="grid w-full gap-6 lg:grid-cols-2 lg:items-stretch">
+        <div className="mx-auto flex w-full max-w-[35rem] flex-col gap-6">
           {/* ── What Could Matter ── */}
-          <section className="glass-panel h-full p-4 sm:p-5 lg:p-6">
+          <section className="glass-panel p-4 sm:p-5 lg:p-6">
             <h2 className="text-base font-semibold text-[#dae2fd] mb-4">What Could Matter</h2>
             <div className="space-y-3">
               {riskCards.map(({ Icon, title, copy }) => (
@@ -473,8 +474,8 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
           </section>
 
           {/* ── Verdict ── */}
-          <section className="h-full p-4 sm:p-5 lg:p-6" style={{ background: "#18181b", border: "1px solid #303034" }}>
-            <div className="flex h-full flex-col">
+          <section className="p-4 sm:p-5 lg:p-6" style={{ background: "#18181b", border: "1px solid #303034" }}>
+            <div className="flex flex-col">
               <div className="mb-4 flex items-center gap-2">
                 <h2 className="text-base font-semibold text-[#b8c4ff]">Analyst Verdict</h2>
               </div>
@@ -496,6 +497,8 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
               />
             </div>
           </section>
+
+          <NewsletterSignupPrompt ticker={report.ticker} />
         </div>
       </div>
 

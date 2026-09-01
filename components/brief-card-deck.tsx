@@ -62,7 +62,7 @@ export function BriefCardDeck({
               className="h-full w-full shrink-0 overflow-y-auto px-4 pb-5 pt-4 text-left sm:px-5 lg:px-5 lg:pb-4 lg:pt-4"
             >
               <p
-                className={`whitespace-pre-line font-[Arial] tracking-normal ${prominentText ? "text-xl font-normal leading-8 lg:text-[22px] lg:leading-9" : "text-sm font-semibold leading-7 lg:leading-6"} ${textColor}`}
+                className={`whitespace-pre-line font-[Arial] font-normal tracking-normal ${prominentText ? "text-xl leading-8 lg:text-[22px] lg:leading-9" : "text-sm leading-7 lg:leading-6"} ${textColor}`}
               >
                 {card}
               </p>
