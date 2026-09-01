@@ -6,7 +6,6 @@ import type { LucideIcon } from "lucide-react";
 import { ReportViewEvent } from "@/components/analytics-events";
 import { BriefCardDeck } from "@/components/brief-card-deck";
 import { LiveAnalysisRefresh } from "@/components/live-analysis-refresh";
-import { NewsletterSignupPrompt } from "@/components/newsletter-signup-prompt";
 import { ShareReportButton } from "@/components/share-report-button";
 import { SiteFooter } from "@/components/site-footer";
 import { TickerSearch } from "@/components/ticker-search";
@@ -497,8 +496,6 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
               />
             </div>
           </section>
-
-          <NewsletterSignupPrompt ticker={report.ticker} />
         </div>
       </div>
 
