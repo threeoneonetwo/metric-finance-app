@@ -28,11 +28,11 @@ export function TopBar({ reportActions = false, ticker, companyName }: TopBarPro
   }, []);
 
   return (
-    <header className="relative z-50 border-b-4 border-black bg-metric-cream neo-shadow">
+    <header className="relative z-50 border-b border-[#303034] bg-[#18181b] text-[#f4f4f5]">
       <div className="mx-auto flex h-10 w-full max-w-[42rem] items-center justify-between px-4 py-1.5 lg:max-w-none lg:px-10">
         <Link
           href="/"
-          className="flex items-center gap-0 text-[30px] font-extrabold leading-none tracking-[-0.04em] text-black"
+          className="flex items-center gap-0 text-[30px] font-extrabold leading-none tracking-[-0.04em] text-[#f4f4f5]"
           style={{ fontWeight: 800 }}
         >
           <img src="/chart-arrow.png" alt="" className={pageLoaded ? undefined : "chart-arrow-icon"} style={{ width: 34, height: 34, objectFit: "contain" }} />
@@ -42,7 +42,7 @@ export function TopBar({ reportActions = false, ticker, companyName }: TopBarPro
           <div className="flex items-center gap-3">
             <Link
               href={`/analyze/${ticker ?? ""}`}
-              className="neo-press inline-flex h-8 w-8 items-center justify-center border-2 border-black bg-white"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#3f3f46] bg-[#27272a] text-[#f4f4f5] transition hover:bg-[#303034]"
               aria-label="Refresh analysis"
             >
               <RefreshCw size={17} strokeWidth={2.2} />
@@ -52,13 +52,13 @@ export function TopBar({ reportActions = false, ticker, companyName }: TopBarPro
               companyName={companyName}
               iconOnly
               iconSize={17}
-              className="neo-press inline-flex h-8 w-8 items-center justify-center border-2 border-black bg-metric-green-bright"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#3f3f46] bg-[#27272a] text-[#f4f4f5] transition hover:bg-[#303034]"
             />
           </div>
         ) : (
           <div className="relative">
             <button
-              className="neo-press inline-flex h-8 w-8 items-center justify-center border-2 border-black bg-white"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#3f3f46] bg-[#27272a] text-[#f4f4f5] transition hover:bg-[#303034]"
               aria-expanded={menuOpen}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               onClick={() => setMenuOpen((current) => !current)}
@@ -73,13 +73,13 @@ export function TopBar({ reportActions = false, ticker, companyName }: TopBarPro
             {menuOpen ? (
               <nav
                 aria-label="Main menu"
-                className="absolute right-0 top-12 z-50 w-44 border-4 border-black bg-white p-2 neo-shadow"
+                className="absolute right-0 top-12 z-50 w-44 rounded-xl border border-[#303034] bg-[#18181b] p-2 shadow-2xl shadow-black/60"
               >
                 {menuLinks.map(([label, href]) => (
                   <a
                     key={href}
                     href={href}
-                    className="block border-2 border-black px-4 py-3 text-sm font-extrabold uppercase tracking-[0.05em] text-black hover:bg-metric-green-bright"
+                    className="block rounded-lg px-4 py-3 text-sm font-extrabold uppercase tracking-[0.05em] text-[#f4f4f5] hover:bg-[#27272a]"
                     onClick={() => setMenuOpen(false)}
                   >
                     {label}
@@ -150,7 +150,7 @@ export function DarkMenuButton() {
         <nav
           aria-label="Main menu"
           className="absolute right-0 top-10 z-50 w-44 rounded-xl p-2"
-          style={{ background: "rgba(23,31,51,0.95)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)" }}
+          style={{ background: "rgba(0,0,0,0.96)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.1)" }}
         >
           {menuLinks.map(([label, href]) => (
             <a

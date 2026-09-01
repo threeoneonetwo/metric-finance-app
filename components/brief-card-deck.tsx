@@ -7,10 +7,23 @@ type BriefCardDeckProps = {
   paragraphs: string[];
   muted?: boolean;
   className?: string;
+  fill?: boolean;
+  packToLength?: number;
+  prominentText?: boolean;
 };
 
-export function BriefCardDeck({ paragraphs, muted = false, className = "" }: BriefCardDeckProps) {
-  const cards = useMemo(() => paragraphs.map((paragraph) => paragraph.trim()).filter(Boolean), [paragraphs]);
+export function BriefCardDeck({
+  paragraphs,
+  muted = false,
+  className = "",
+  fill = false,
+  packToLength,
+  prominentText = false,
+}: BriefCardDeckProps) {
+  const cards = useMemo(
+    () => packTextCards(paragraphs, packToLength),
+    [packToLength, paragraphs],
+  );
   const [index, setIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const textColor = muted ? "text-[#c4c5d5]" : "text-[#dae2fd]";
@@ -33,9 +46,9 @@ export function BriefCardDeck({ paragraphs, muted = false, className = "" }: Bri
   if (!current) return null;
 
   return (
-    <div className={`overflow-hidden rounded-xl border border-white/10 bg-[#111a30]/70 ${className}`}>
+    <div className={`overflow-hidden rounded-xl border border-[#303034] bg-[#18181b] ${fill ? "flex min-h-[17rem] flex-1 flex-col" : ""} ${className}`}>
       <div
-        className="h-[16rem] overflow-hidden sm:h-[14rem] lg:h-[12rem] xl:h-[11rem]"
+        className={fill ? "min-h-[12rem] flex-1 overflow-hidden" : "h-[15rem] overflow-hidden sm:h-[13rem] lg:h-[9.5rem]"}
         onTouchStart={(event) => setTouchStart(event.changedTouches[0]?.clientX ?? null)}
         onTouchEnd={(event) => onTouchEnd(event.changedTouches[0]?.clientX ?? 0)}
       >
@@ -46,10 +59,10 @@ export function BriefCardDeck({ paragraphs, muted = false, className = "" }: Bri
           {cards.map((card, cardIndex) => (
             <article
               key={`${cardIndex}-${card.slice(0, 24)}`}
-              className="h-full w-full shrink-0 overflow-y-auto px-4 pb-6 pt-5 sm:px-5 lg:px-6 lg:pb-6 lg:pt-5"
+              className="h-full w-full shrink-0 overflow-y-auto px-4 pb-5 pt-4 text-left sm:px-5 lg:px-5 lg:pb-4 lg:pt-4"
             >
               <p
-                className={`font-[Arial] text-sm font-semibold leading-7 tracking-normal lg:text-base lg:leading-8 xl:text-[17px] ${textColor}`}
+                className={`whitespace-pre-line font-[Arial] tracking-normal ${prominentText ? "text-xl font-normal leading-8 lg:text-[22px] lg:leading-9" : "text-sm font-semibold leading-7 lg:leading-6"} ${textColor}`}
               >
                 {card}
               </p>
@@ -58,15 +71,15 @@ export function BriefCardDeck({ paragraphs, muted = false, className = "" }: Bri
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-white/10 px-3 py-3">
+      <div className="flex items-center justify-between border-t border-white/10 px-3 py-2">
         <button
           type="button"
           onClick={() => go(-1)}
           disabled={!canMove || index === 0}
-          className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-[#0b1326] text-[#dae2fd] transition-colors hover:bg-[#b8c4ff] hover:text-[#0b1326] disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-[#0b1326] disabled:hover:text-[#dae2fd]"
+          className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#3f3f46] bg-[#27272a] text-[#dae2fd] transition-colors hover:bg-[#303034] disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-[#27272a] disabled:hover:text-[#dae2fd]"
           aria-label="Previous brief part"
         >
-          <ChevronLeft size={18} strokeWidth={2.4} />
+          <ChevronLeft size={16} strokeWidth={2.4} />
         </button>
 
         <div className="flex items-center gap-2">
@@ -75,7 +88,7 @@ export function BriefCardDeck({ paragraphs, muted = false, className = "" }: Bri
               key={dotIndex}
               type="button"
               onClick={() => setIndex(dotIndex)}
-              className={`h-2 rounded-full transition-all ${dotIndex === index ? "w-7 bg-[#b8c4ff]" : "w-2 bg-white/20 hover:bg-white/40"}`}
+              className={`h-2 w-2 rounded-full transition-all ${dotIndex === index ? "bg-white" : "bg-white/20 hover:bg-white/40"}`}
               aria-label={`Open brief part ${dotIndex + 1}`}
             />
           ))}
@@ -89,13 +102,42 @@ export function BriefCardDeck({ paragraphs, muted = false, className = "" }: Bri
             type="button"
             onClick={() => go(1)}
             disabled={!canMove || index === cards.length - 1}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-[#0b1326] text-[#dae2fd] transition-colors hover:bg-[#b8c4ff] hover:text-[#0b1326] disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-[#0b1326] disabled:hover:text-[#dae2fd]"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#3f3f46] bg-[#27272a] text-[#dae2fd] transition-colors hover:bg-[#303034] disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-[#27272a] disabled:hover:text-[#dae2fd]"
             aria-label="Next brief part"
           >
-            <ChevronRight size={18} strokeWidth={2.4} />
+            <ChevronRight size={16} strokeWidth={2.4} />
           </button>
         </div>
       </div>
     </div>
   );
+}
+
+function packTextCards(paragraphs: string[], maxLength?: number) {
+  const cleaned = paragraphs.map((paragraph) => paragraph.trim()).filter(Boolean);
+  if (!maxLength) return cleaned;
+
+  const units = cleaned.flatMap((paragraph) => {
+    const sentences = paragraph
+      .split(/(?<=[.!?])\s+(?=[A-Z₹(])/)
+      .map((sentence) => sentence.trim())
+      .filter(Boolean);
+    return sentences.length ? sentences : [paragraph];
+  });
+
+  const cards: string[] = [];
+  let current = "";
+
+  for (const unit of units) {
+    const next = current ? `${current} ${unit}` : unit;
+    if (current && next.length > maxLength) {
+      cards.push(current);
+      current = unit;
+    } else {
+      current = next;
+    }
+  }
+
+  if (current) cards.push(current);
+  return cards;
 }

@@ -10,7 +10,9 @@ export type PostHogEventName =
   | "report_view"
   | "share_report"
   | "analysis_run"
-  | "product_active";
+  | "product_active"
+  | "user_active"
+  | "user_signout";
 
 type PostHogEventProperties = Record<string, string | number | boolean | null | undefined>;
 

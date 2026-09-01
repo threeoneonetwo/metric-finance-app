@@ -1,35 +1,15 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-
 export function HeroHeadline() {
-  const h1Ref = useRef<HTMLHeadingElement>(null);
-  const [pWidth, setPWidth] = useState<number | null>(null);
-
-  useEffect(() => {
-    const measure = () => {
-      if (h1Ref.current) setPWidth(h1Ref.current.offsetWidth);
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (h1Ref.current) ro.observe(h1Ref.current);
-    return () => ro.disconnect();
-  }, []);
-
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem", fontFamily: "Arial, sans-serif" }}>
+    <div className="mx-auto flex w-full max-w-[40rem] flex-col items-center gap-6" style={{ fontFamily: "Arial, sans-serif" }}>
       <h1
-        ref={h1Ref}
-        className="text-[2rem] sm:text-[2.75rem] font-bold text-white leading-[1.08] tracking-tight text-center"
-        style={{ whiteSpace: "nowrap" }}
+        className="w-full text-center text-[clamp(2.65rem,11vw,4.5rem)] font-bold leading-[1.02] tracking-[-0.035em] text-white"
       >
-        Finally know what<br />you&apos;re investing in
+        <span className="inline-block">Stocks explained</span><br />like you&apos;re 5
       </h1>
       <p
-        className="text-[#8e909f] text-base leading-relaxed text-center"
-        style={{ maxWidth: pWidth ? `${pWidth}px` : "100%" }}
+        className="w-full text-center text-lg leading-8 text-[#8e909f] sm:text-xl sm:leading-9"
       >
-        Metric analyses 2,133 Indian stocks and explains what the data means in plain language.
+        Agentic analysis for public equities in plain English to help you become a smarter investor for free
       </p>
     </div>
   );

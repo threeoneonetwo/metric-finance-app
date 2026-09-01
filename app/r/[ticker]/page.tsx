@@ -7,6 +7,7 @@ import { ReportViewEvent } from "@/components/analytics-events";
 import { BriefCardDeck } from "@/components/brief-card-deck";
 import { LiveAnalysisRefresh } from "@/components/live-analysis-refresh";
 import { ShareReportButton } from "@/components/share-report-button";
+import { SiteFooter } from "@/components/site-footer";
 import { TickerSearch } from "@/components/ticker-search";
 import { getPeerComparisonLabels, shouldReplacePeerLabels } from "@/domain/competitors";
 import { getInstantReportViewForTicker, getReportViewForTicker } from "@/domain/report-cache";
@@ -79,7 +80,6 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
     marketData?.dayChangePercent !== null && marketData?.dayChangePercent !== undefined
       ? formatPercent(marketData.dayChangePercent)
       : report.dayChange;
-  const isDayUp = (marketData?.dayChangePercent ?? 0) >= 0;
   const displayPeers = shouldReplacePeerLabels(report.peers)
     ? getPeerComparisonLabels({
         ticker: resolved.data.ticker,
@@ -127,7 +127,6 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
     : newsCounts.negative > newsCounts.positive && newsCounts.negative >= newsCounts.neutral
       ? "Negative"
       : (signals?.news ?? []).length ? "Neutral" : "No News";
-  const hasTechnicalSignals = (signals?.technicals?.length ?? 0) > 0;
   const templateRiskCards = buildRiskCards({ marketData, marketRead, rangeRead, volumeRead, metrics: displayMetrics, signals });
   const riskCards = templateRiskCards.map((card, i) => {
     const aiCopy = i === 0 ? aiInsights?.valuationRisk : i === 1 ? aiInsights?.earningsRisk : aiInsights?.marketTiming;
@@ -149,23 +148,20 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
       <div
         className="fixed inset-0 -z-10"
         style={{
-          backgroundColor: "#0b1326",
-          backgroundImage: "radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
+          backgroundColor: "#09090b",
         }}
       />
       {/* Atmosphere glows */}
-      <div className="fixed top-[-5%] left-[-10%] w-[50%] h-[40%] rounded-full pointer-events-none -z-10" style={{ background: "rgba(184,196,255,0.07)", filter: "blur(80px)" }} />
-      <div className="fixed bottom-[-5%] right-[-10%] w-[40%] h-[30%] rounded-full pointer-events-none -z-10" style={{ background: "rgba(77,224,130,0.04)", filter: "blur(80px)" }} />
+      <div className="fixed top-[-5%] left-[-10%] w-[50%] h-[40%] rounded-full pointer-events-none -z-10" style={{ background: "transparent", filter: "blur(80px)" }} />
+      <div className="fixed bottom-[-5%] right-[-10%] w-[40%] h-[30%] rounded-full pointer-events-none -z-10" style={{ background: "transparent", filter: "blur(80px)" }} />
 
       {/* Top nav */}
       <header
-        className="relative z-50 w-full flex flex-wrap items-center justify-between gap-3 px-4 py-3 lg:flex-nowrap lg:px-10"
-        style={{ background: "rgba(11,19,38,0.85)", backdropFilter: "blur(16px)", borderBottom: `1px solid ${G}` }}
+        className="mobile-safe-page-header relative z-50 flex w-full flex-wrap items-center justify-between gap-5 px-5 pb-5 sm:px-8 lg:flex-nowrap lg:px-10 xl:px-12"
+        style={{ background: "rgba(24,24,27,0.94)", backdropFilter: "blur(16px)", borderBottom: "1px solid #303034" }}
       >
         <Link href="/" className="text-white font-bold text-2xl tracking-tight">
-          <span className="lg:hidden">Metric</span>
-          <span className="hidden lg:inline">Metric Finance</span>
+          Metric
         </Link>
         <div className="order-3 w-full lg:order-2 lg:max-w-xl lg:flex-1">
           <TickerSearch dark />
@@ -173,7 +169,7 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
         <div className="order-2 flex items-center gap-1 lg:order-3">
           <Link
             href={`/analyze/${report.ticker}?refresh=1`}
-            className="p-2 rounded-full hover:bg-white/5 transition-colors text-[#8e909f]"
+            className="rounded-full border border-transparent bg-[#27272a] p-3 text-[#a1a1aa] transition-colors hover:border-[#3f3f46] hover:bg-[#303034] hover:text-white"
             aria-label="Refresh analysis"
           >
             <RefreshCw size={18} strokeWidth={1.8} />
@@ -183,17 +179,17 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
             companyName={report.companyName}
             iconOnly
             iconSize={18}
-            className="p-2 rounded-full hover:bg-white/5 transition-colors text-[#8e909f]"
+            className="rounded-full border border-transparent bg-[#27272a] p-3 text-[#a1a1aa] transition-colors hover:border-[#3f3f46] hover:bg-[#303034] hover:text-white"
           />
         </div>
       </header>
 
       {/* Content — single column on mobile, full-width dashboard on desktop */}
-      <div className="mx-auto w-full max-w-[430px] lg:max-w-[1320px] px-4 lg:px-10 pt-6 lg:pt-10 pb-24 flex flex-col gap-5 lg:gap-6">
+      <div className="mx-auto flex w-full max-w-[46rem] flex-col gap-7 px-5 pb-20 pt-8 sm:gap-8 sm:px-8 sm:pt-10 md:max-w-[56rem] lg:max-w-[960px] lg:gap-7 lg:px-8 lg:pb-24 lg:pt-10">
         <LiveAnalysisRefresh ticker={report.ticker} enabled={needsAiGeneration} />
 
         {/* ── Hero header ── */}
-        <div className="lg:flex lg:items-end lg:justify-between lg:gap-8">
+        <div className="report-dashboard-hero lg:flex lg:items-end lg:justify-between lg:gap-8">
           <div className="lg:flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-3">
               <span
@@ -209,18 +205,18 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
               )}
               <span className="text-[#8e909f] text-[9px] ml-auto lg:ml-3">{formatTimestamp(marketData?.asOf ?? null)}</span>
             </div>
-            <h1 className="text-[1.75rem] lg:text-4xl font-bold leading-tight text-white mb-5 lg:mb-0 tracking-tight">
+            <h1 className="mb-6 text-[1.85rem] font-bold leading-tight tracking-[-0.025em] text-white sm:text-[2.15rem] lg:mb-0 lg:text-4xl">
               {report.companyName}
             </h1>
           </div>
-          <div className="grid grid-cols-2 gap-3 lg:gap-4 lg:w-[420px] lg:shrink-0">
-            <div className="glass-panel p-4 flex flex-col">
+          <div className="grid grid-cols-2 gap-4 lg:w-[380px] lg:shrink-0 lg:gap-3">
+            <div className="glass-panel flex flex-col p-4">
               <span className="text-[9px] text-[#8e909f] uppercase tracking-wider mb-2 font-mono">Current Price</span>
-              <div className="text-2xl font-bold text-[#b8c4ff] tracking-tight">{displayPrice}</div>
+              <div className="text-xl font-bold tracking-tight text-[#b8c4ff]">{displayPrice}</div>
             </div>
-            <div className="glass-panel p-4 flex flex-col">
+            <div className="glass-panel flex flex-col p-4">
               <span className="text-[9px] text-[#8e909f] uppercase tracking-wider mb-2 font-mono">Day Change</span>
-              <div className={`text-2xl font-bold tracking-tight ${isDayUp ? "text-[#4ade80]" : "text-[#f43f5e]"}`}>
+              <div className="text-xl font-bold tracking-tight text-[#dae2fd]">
                 {displayDayChange}
               </div>
             </div>
@@ -228,61 +224,57 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
         </div>
 
         {/* ── Desktop bento grid; mobile remains a single-column reading flow ── */}
-        <div className="flex flex-col gap-5 lg:grid lg:grid-cols-12 lg:items-start lg:gap-5 xl:gap-6">
+        <div className="report-dashboard-grid flex flex-col gap-7 sm:gap-8 lg:gap-6">
         <div className="contents">
 
         {/* ── Before You Buy ── */}
-        <section className="glass-panel p-5 lg:col-span-12 lg:p-6">
-          <div className="flex items-center justify-between mb-4">
+        <section className="glass-panel p-4 sm:p-5 lg:col-span-6 lg:p-6">
+          <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-[#b8c4ff]">
               Before You Buy
             </h2>
             <span className="text-[9px] text-[#8e909f] opacity-60 uppercase tracking-widest">Analyst Brief</span>
           </div>
           <BriefCardDeck paragraphs={splitBriefText(report.summary)} className="mb-5" />
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-4" style={{ borderTop: `1px solid ${G}` }}>
+          <div className="grid grid-cols-2 gap-3 pt-4 sm:gap-4 lg:grid-cols-4" style={{ borderTop: `1px solid ${G}` }}>
             {[signalTiles[0], signalTiles[3], signalTiles[6], signalTiles[7]].map((tile) => (
               <div key={tile.label}>
-                <p className="text-[9px] text-[#8e909f] uppercase tracking-wider mb-1">{tile.label}</p>
+                <p className="mb-1 text-[9px] uppercase tracking-wider text-[#8e909f]">{tile.label}</p>
                 <p className="text-base font-bold text-[#dae2fd]">{tile.value}</p>
-                <p className="text-[9px] text-[#8e909f] mt-0.5">{tile.meaning}</p>
+                <p className="mt-0.5 text-[9px] text-[#8e909f]">{tile.meaning}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* ── Range Position ── */}
-        <section className="glass-panel p-5 lg:col-span-12 lg:p-6">
+        <section className="glass-panel p-4 sm:p-5 lg:col-span-6 lg:p-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-base font-semibold text-[#dae2fd]">Range Position</h2>
             <span
-              className={`px-2 py-0.5 rounded text-[9px] ${
-                rangeRead.label.includes("Upper") ? "bg-[#4ade80]/10 text-[#4ade80]"
-                  : rangeRead.label.includes("Lower") ? "bg-[#f43f5e]/10 text-[#f43f5e]"
-                  : "bg-[#b8c4ff]/10 text-[#b8c4ff]"
-              }`}
+              className="bg-white/5 px-2 py-0.5 text-[9px] text-[#a8adbf]"
              
             >
               {rangeRead.label.replace("Range Context: ", "")}
             </span>
           </div>
-          <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-center lg:gap-8">
+          <div>
             <div>
               <div className="flex justify-between mt-3 text-[10px] text-[#8e909f]">
                 <span>{formatPrice(marketData?.fiftyTwoWeekLow ?? null)}</span>
                 <span className="text-[#b8c4ff]">{rangePos}% of range</span>
                 <span>{formatPrice(marketData?.fiftyTwoWeekHigh ?? null)}</span>
               </div>
-              <div className="h-2 rounded-full mt-2 overflow-hidden" style={{ background: "rgba(45,52,73,1)" }}>
+              <div className="h-2 rounded-full mt-2 overflow-hidden" style={{ background: "rgba(255,255,255,0.12)" }}>
                 <div className="h-full rounded-full bg-[#b8c4ff] transition-all" style={{ width: `${rangePos}%` }} />
               </div>
             </div>
-            <p className="text-xs text-[#8e909f] mt-3 leading-relaxed lg:mt-0">{rangePositionText}</p>
+            <p className="mt-3 text-xs leading-relaxed text-[#8e909f]">{rangePositionText}</p>
           </div>
         </section>
 
         {/* ── Metric Brief ── */}
-        <section className="glass-panel p-5 lg:col-span-12 lg:p-6">
+        <section className="glass-panel p-4 sm:p-5 lg:col-span-6 lg:p-6">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-base font-semibold text-[#dae2fd]">Metric Brief</h2>
             <Link href={`/analyze/${report.ticker}?refresh=1`} className="p-1.5 text-[#8e909f] rounded-full hover:bg-white/5" aria-label="Refresh">
@@ -293,25 +285,25 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
         </section>
 
         {/* ── News Sentiment ── */}
-        <section className="glass-panel p-5 lg:col-span-12 lg:p-6">
+        <section className="glass-panel p-4 sm:p-5 lg:col-span-6 lg:p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-semibold text-[#dae2fd]">News Sentiment</h2>
             <span
               className="px-2 py-0.5 rounded-full text-[9px] font-medium text-[#dae2fd]"
-              style={{ background: "rgba(45,52,73,1)" }}
+              style={{ background: "#27272a", border: "1px solid #3f3f46" }}
             >
               {newsPrimary.toUpperCase()}
             </span>
           </div>
           <div className="flex gap-1 h-1.5 rounded-full overflow-hidden mb-5">
-            <div className="bg-[#4ade80] h-full rounded-full" style={{ width: `${(newsCounts.positive / newsTotal) * 100}%` }} />
-            <div className="bg-white/20 h-full" style={{ width: `${(newsCounts.neutral / newsTotal) * 100}%` }} />
-            <div className="bg-[#f43f5e] h-full rounded-full" style={{ width: `${(newsCounts.negative / newsTotal) * 100}%` }} />
+            <div className="h-full bg-[#71717a]" style={{ width: `${(newsCounts.positive / newsTotal) * 100}%` }} />
+            <div className="h-full bg-[#52525b]" style={{ width: `${(newsCounts.neutral / newsTotal) * 100}%` }} />
+            <div className="h-full bg-[#3f3f46]" style={{ width: `${(newsCounts.negative / newsTotal) * 100}%` }} />
           </div>
           <div className="grid grid-cols-3 gap-2 mb-5">
-            {([["Positive", newsCounts.positive, "#4ade80"], ["Neutral", newsCounts.neutral, "#8e909f"], ["Negative", newsCounts.negative, "#f43f5e"]] as const).map(([label, count, color]) => (
-              <div key={label} className="rounded-lg p-2 text-center" style={{ background: "rgba(23,31,51,0.8)", border: `1px solid ${G}` }}>
-                <p className="text-[8px] uppercase tracking-wider" style={{ color }}>{label}</p>
+            {([["Positive", newsCounts.positive], ["Neutral", newsCounts.neutral], ["Negative", newsCounts.negative]] as const).map(([label, count]) => (
+              <div key={label} className="rounded-lg p-2 text-center" style={{ background: "#27272a", border: "1px solid #3f3f46" }}>
+                <p className="text-[8px] uppercase tracking-wider text-[#a1a1aa]">{label}</p>
                 <p className="text-xl font-bold text-[#dae2fd] mt-1">{count}</p>
               </div>
             ))}
@@ -319,10 +311,10 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
           {newsContextText && (
             <p className="text-xs text-[#8e909f] leading-relaxed mb-4">{newsContextText}</p>
           )}
-          <div className="grid gap-4 lg:auto-rows-fr lg:grid-cols-[repeat(auto-fit,minmax(13rem,1fr))]">
+          <div className="grid gap-3 sm:gap-4 lg:auto-rows-fr lg:grid-cols-[repeat(auto-fit,minmax(13rem,1fr))]">
             {sortedNews.length > 0 ? (
               sortedNews.map((item) => (
-                <div key={`${item.title}-${item.publishedAt}`} className="rounded-lg p-3 lg:h-full" style={{ background: "rgba(23,31,51,0.8)", border: `1px solid ${G}` }}>
+                <div key={`${item.title}-${item.publishedAt}`} className="rounded-lg p-3 lg:h-full" style={{ background: "#27272a", border: "1px solid #3f3f46" }}>
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-[8px] font-bold text-[#b8c4ff] uppercase tracking-wider">
                       {item.source} · {formatNewsDate(item.publishedAt)}
@@ -350,20 +342,20 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
         <div className="contents">
 
         {/* ── Business Quality ── */}
-        <section className="glass-panel p-5 lg:col-span-12 lg:p-6">
+        <section className="glass-panel p-4 sm:p-5 lg:col-span-6 lg:p-6">
           <h2 className="mb-4 text-base font-semibold text-[#dae2fd]">{hasFundamentalData ? "Business Quality" : "Market Feed"}</h2>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
             {displayMetrics.slice(0, 6).map(([label, value, yoy, median]) => {
               const meaning = getBusinessMetricMeaning([label, value, yoy, median]);
               const toneClass = getBusinessMetricTone(meaning);
               return (
                 <div
                   key={label}
-                  className="flex min-h-[8.5rem] flex-col justify-between rounded-xl border border-white/10 bg-[#111a30]/80 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] lg:min-h-[8.75rem]"
+              className="flex min-h-[7rem] flex-col justify-between rounded-xl border border-[#3f3f46] bg-[#27272a] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:min-h-[7.5rem] lg:min-h-[7.75rem]"
                 >
                   <div className="space-y-2">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8e909f]">{label}</p>
-                    <p className="break-words text-[28px] font-black leading-none tracking-[-0.02em] text-[#dae2fd] lg:text-[30px]">
+                    <p className="break-words text-2xl font-black leading-none tracking-[-0.02em] text-[#dae2fd] lg:text-[26px]">
                       {value}
                     </p>
                   </div>
@@ -380,29 +372,29 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
         </section>
 
         {/* ── Signal Grid (4 key tiles) ── */}
-        <section className={`lg:h-full ${hasTechnicalSignals ? "lg:col-span-4" : "lg:col-span-6"}`}>
+        <section className="lg:col-span-6 lg:h-full">
           <p className="mb-4 font-mono text-xs uppercase tracking-widest text-[#8e909f]">Live Signals</p>
           <div className="grid grid-cols-2 gap-3 lg:h-[calc(100%-1.5rem)] lg:grid-rows-2">
             {[signalTiles[0], signalTiles[3], signalTiles[6], signalTiles[7]].map((tile) => (
               <div
                 key={tile.label}
-                className="glass-panel p-5 lg:h-full lg:p-6"
+                className="glass-panel p-4 sm:p-5 lg:h-full lg:p-6"
                 style={
-                  tile.tone === "accent" ? { background: "rgba(55,85,195,0.18)", borderColor: "rgba(184,196,255,0.2)" }
-                    : tile.tone === "dark" ? { background: "rgba(6,14,32,0.8)" }
+                  tile.tone === "accent" ? { background: "#27272a", borderColor: "#3f3f46" }
+                    : tile.tone === "dark" ? { background: "#18181b" }
                     : {}
                 }
               >
                 <p className="font-mono text-xs uppercase tracking-wider text-[#8e909f]">{tile.label}</p>
-                <p className="mt-3 max-w-full overflow-hidden whitespace-nowrap text-[clamp(1.75rem,1.7vw,2.125rem)] font-bold leading-tight text-[#dae2fd]">{tile.value}</p>
-                <p className="mt-3 text-base leading-snug text-[#8e909f]">{tile.meaning}</p>
+                <p className="mt-2.5 max-w-full overflow-hidden whitespace-nowrap text-[clamp(1.5rem,1.5vw,1.875rem)] font-bold leading-tight text-[#dae2fd]">{tile.value}</p>
+                <p className="mt-2.5 text-sm leading-snug text-[#8e909f]">{tile.meaning}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* ── Peer Lens ── */}
-        <section className={`glass-panel p-5 lg:h-full ${hasTechnicalSignals ? "lg:col-span-4" : "lg:col-span-6"}`}>
+        <section className="glass-panel p-4 sm:p-5 lg:col-span-6 lg:h-full">
           <h2 className="text-base font-semibold text-[#dae2fd] mb-4">Peer Lens</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
@@ -418,17 +410,16 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
                 <tr style={{ borderBottom: `1px solid rgba(255,255,255,0.04)` }}>
                   <td className="py-2.5 text-[#b8c4ff] font-bold">{report.ticker}</td>
                   <td className="py-2.5 text-right text-[#dae2fd]">{displayPrice}</td>
-                  <td className={`py-2.5 text-right font-bold ${isDayUp ? "text-[#4ade80]" : "text-[#f43f5e]"}`}>{displayDayChange}</td>
+                  <td className="py-2.5 text-right font-bold text-[#dae2fd]">{displayDayChange}</td>
                   <td className="py-2.5 text-right text-[#8e909f]">{formatNumber(marketData?.volume ?? null)}</td>
                 </tr>
                 {displayPeers.slice(1).map((peer, i) => {
                   const snap = peerSnapshots[i];
-                  const peerUp = (snap?.dayChangePercent ?? 0) >= 0;
                   return (
                     <tr key={peer} style={{ borderBottom: `1px solid rgba(255,255,255,0.04)` }}>
                       <td className="py-2.5 text-[#8e909f]">{peer}</td>
                       <td className="py-2.5 text-right text-[#8e909f]">{formatPrice(snap?.price ?? null)}</td>
-                      <td className={`py-2.5 text-right ${snap?.dayChangePercent !== null && snap?.dayChangePercent !== undefined ? (peerUp ? "text-[#4ade80]" : "text-[#f43f5e]") : "text-[#8e909f]"}`}>
+                      <td className="py-2.5 text-right text-[#8e909f]">
                         {formatPercent(snap?.dayChangePercent ?? null)}
                       </td>
                       <td className="py-2.5 text-right text-[#8e909f]">{formatNumber(snap?.volume ?? null)}</td>
@@ -445,7 +436,7 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
 
         {/* ── Technical Signals ── */}
         {(signals?.technicals?.length ?? 0) > 0 && (
-          <section className="glass-panel p-5 lg:col-span-4 lg:h-full">
+          <section className="glass-panel p-4 sm:p-5 lg:col-span-6 lg:h-full">
             <h2 className="text-base font-semibold text-[#dae2fd] mb-4">Technical Signals</h2>
             <div className="space-y-4">
               {signals!.technicals.map((item) => (
@@ -464,63 +455,51 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
         </div>
         </div>
 
-        {/* ── What Could Matter ── */}
-        <section className="glass-panel p-5 lg:p-6">
-          <h2 className="text-base font-semibold text-[#dae2fd] mb-4">What Could Matter</h2>
-          <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-4 lg:items-stretch">
-            {riskCards.map(({ Icon, title, copy, stripe }) => {
-              const stripeColor = stripe === "bg-metric-red" ? "#f43f5e" : stripe === "bg-metric-pink" ? "#ffb4ab" : "#4ade80";
-              return (
-                <div key={title} className="relative min-h-full overflow-hidden rounded-lg p-3 pl-4 lg:p-4 lg:pl-5" style={{ background: "rgba(23,31,51,0.8)", border: `1px solid ${G}` }}>
-                  <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg" style={{ background: stripeColor }} />
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <Icon size={14} strokeWidth={2} style={{ color: stripeColor }} />
-                    <p className="text-[10px] font-bold text-[#dae2fd] uppercase tracking-wider">{title}</p>
+        <div className="grid w-full gap-6 lg:grid-cols-2 lg:items-stretch">
+          {/* ── What Could Matter ── */}
+          <section className="glass-panel h-full p-4 sm:p-5 lg:p-6">
+            <h2 className="text-base font-semibold text-[#dae2fd] mb-4">What Could Matter</h2>
+            <div className="space-y-3">
+              {riskCards.map(({ Icon, title, copy }) => (
+                  <div key={title} className="relative min-h-full overflow-hidden p-3 lg:p-4" style={{ background: "#27272a", border: "1px solid #3f3f46" }}>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <Icon size={14} strokeWidth={2} className="text-[#a1a1aa]" />
+                      <p className="text-[10px] font-bold text-[#dae2fd] uppercase tracking-wider">{title}</p>
+                    </div>
+                    <p className="text-xs text-[#8e909f] leading-relaxed lg:text-sm">{copy}</p>
                   </div>
-                  <p className="text-xs text-[#8e909f] leading-relaxed lg:text-sm">{copy}</p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ── Verdict ── */}
-        <section className="rounded-xl p-6 lg:p-8 mb-2" style={{ background: "linear-gradient(135deg, rgba(30,64,175,0.2) 0%, rgba(11,19,38,0.4) 100%)", border: "1px solid rgba(184,196,255,0.25)" }}>
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-1.5 h-5 rounded-full bg-[#b8c4ff]" />
-              <h2 className="text-lg font-bold text-[#b8c4ff] tracking-tight">Analyst Verdict</h2>
+              ))}
             </div>
-            {verdict ? (
-              <BriefCardDeck paragraphs={splitBriefText(verdict)} muted />
-            ) : (
-              <BriefCardDeck
-                paragraphs={splitBriefText("Claude analyst verdict is refreshing for this ticker. The live signal grid above is still grounded in the latest available market data.")}
-                muted
+          </section>
+
+          {/* ── Verdict ── */}
+          <section className="h-full p-4 sm:p-5 lg:p-6" style={{ background: "#18181b", border: "1px solid #303034" }}>
+            <div className="flex h-full flex-col">
+              <div className="mb-4 flex items-center gap-2">
+                <h2 className="text-base font-semibold text-[#b8c4ff]">Analyst Verdict</h2>
+              </div>
+              {verdict ? (
+                <BriefCardDeck paragraphs={splitBriefText(verdict)} muted fill prominentText packToLength={300} />
+              ) : (
+                <BriefCardDeck
+                  paragraphs={splitBriefText("Claude analyst verdict is refreshing for this ticker. The live signal grid above is still grounded in the latest available market data.")}
+                  muted
+                  fill
+                  prominentText
+                  packToLength={300}
+                />
+              )}
+              <ShareReportButton
+                ticker={report.ticker}
+                companyName={report.companyName}
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-[#3f3f46] bg-[#27272a] py-3 text-sm font-bold text-[#f4f4f5] transition-colors hover:bg-[#303034]"
               />
-            )}
-            <ShareReportButton
-              ticker={report.ticker}
-              companyName={report.companyName}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-[#b8c4ff] py-3 text-sm font-bold text-[#0b1326] transition-colors hover:bg-[#dde1ff] sm:w-64"
-            />
-          </div>
-        </section>
+            </div>
+          </section>
+        </div>
       </div>
 
-      {/* Footer */}
-      <footer
-        className="py-6 text-center text-[9px] uppercase tracking-widest mt-auto"
-        style={{ borderTop: `1px solid ${G}`, background: "rgba(6,14,32,0.8)" }}
-      >
-        <p className="text-[#8e909f]">
-          Built by{" "}
-          <a href="https://www.linkedin.com/in/yashnapandugala/" target="_blank" rel="noreferrer" className="text-[#dae2fd] underline underline-offset-2">Yashna</a>
-          {" "}&{" "}
-          <a href="https://www.linkedin.com/in/vanshpandita-real/" target="_blank" rel="noreferrer" className="text-[#dae2fd] underline underline-offset-2">Vansh</a>
-          {" "}• Not financial advice
-        </p>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
@@ -657,7 +636,7 @@ function buildPeerLensRead(input: {
   const peerUpCount = peerChanges.filter((peer) => peer.change >= 0).length;
   const topPeer = [...peerChanges].sort((a, b) => b.change - a.change)[0];
   const gap = ownChange - peerAverage;
-  const direction = peerUpCount >= Math.ceil(peerChanges.length / 2) ? "mostly green" : "mostly weak";
+  const direction = peerUpCount >= Math.ceil(peerChanges.length / 2) ? "mostly positive" : "mostly weak";
   const relativeRead = gap >= 0.5
     ? "leading the peer group"
     : gap <= -0.5
@@ -710,15 +689,15 @@ function buildMetricBrief(input: {
 function buildRiskCards(input: {
   marketData: MarketSnapshot | undefined; marketRead: AnalysisRead; rangeRead: AnalysisRead;
   volumeRead: AnalysisRead; metrics: Array<[string, string, string, string]>; signals: TradientSignal | null;
-}): Array<{ Icon: LucideIcon; title: string; copy: string; stripe: string }> {
+}): Array<{ Icon: LucideIcon; title: string; copy: string }> {
   const valuation = getMetricTuple(input.metrics, /p\/?e|p\/?b|ev\/?ebitda|valuation/i);
   const quality = getMetricTuple(input.metrics, /roe|roce|margin|profit|quality/i);
   const balanceSheet = getMetricTuple(input.metrics, /debt|d\/?e|risk|quick|current ratio|interest coverage/i);
   const newsSignal = getNewsSentimentSummary(input.signals);
   return [
-    { Icon: AlertTriangle, title: "Valuation risk", stripe: "bg-metric-red", copy: valuation ? buildMetricComparisonCopy(valuation, "Valuation read", "If the multiple is rich versus peers, the market will need cleaner growth, margin resilience, or earnings visibility to keep supporting it.") : `${input.rangeRead.meaning} With no clean valuation ratio in the feed, the honest read is range, peer action, and whether fresh numbers confirm the move.` },
-    { Icon: TrendingDown, title: "Earnings risk", stripe: "bg-metric-pink", copy: quality ? buildMetricComparisonCopy(quality, "Quality read", "The question is whether earnings quality can keep pace once margins, deal momentum, and cash conversion are refreshed.") : `${input.marketRead.meaning} Profitability data is incomplete, so earnings commentary, margin direction, and peer execution deserve more weight than a single daily move.` },
-    { Icon: Bolt, title: "Market timing", stripe: "bg-metric-green", copy: [`Latest market print: ${formatTimestamp(input.marketData?.asOf ?? null)}.`, input.volumeRead.meaning, balanceSheet ? `Balance-sheet read: ${balanceSheet[0]} is ${balanceSheet[1]} versus sector median ${balanceSheet[3]}.` : null, newsSignal.label !== "No News" ? `The matched news flow is ${newsSignal.label.toLowerCase()} (${newsSignal.detail}).` : null].filter(Boolean).join(" ") },
+    { Icon: AlertTriangle, title: "Valuation risk", copy: valuation ? buildMetricComparisonCopy(valuation, "Valuation read", "If the multiple is rich versus peers, the market will need cleaner growth, margin resilience, or earnings visibility to keep supporting it.") : `${input.rangeRead.meaning} With no clean valuation ratio in the feed, the honest read is range, peer action, and whether fresh numbers confirm the move.` },
+    { Icon: TrendingDown, title: "Earnings risk", copy: quality ? buildMetricComparisonCopy(quality, "Quality read", "The question is whether earnings quality can keep pace once margins, deal momentum, and cash conversion are refreshed.") : `${input.marketRead.meaning} Profitability data is incomplete, so earnings commentary, margin direction, and peer execution deserve more weight than a single daily move.` },
+    { Icon: Bolt, title: "Market timing", copy: [`Latest market print: ${formatTimestamp(input.marketData?.asOf ?? null)}.`, input.volumeRead.meaning, balanceSheet ? `Balance-sheet read: ${balanceSheet[0]} is ${balanceSheet[1]} versus sector median ${balanceSheet[3]}.` : null, newsSignal.label !== "No News" ? `The matched news flow is ${newsSignal.label.toLowerCase()} (${newsSignal.detail}).` : null].filter(Boolean).join(" ") },
   ];
 }
 
@@ -794,8 +773,8 @@ function getBusinessMetricMeaning(metric: [string, string, string, string]) {
 }
 
 function getBusinessMetricTone(meaning: string) {
-  if (["Strong", "Cheap", "Lower risk"].includes(meaning)) return "bg-[#4ade80]/10 text-[#86efac]";
-  if (["Weak", "Expensive", "Higher risk"].includes(meaning)) return "bg-[#f43f5e]/10 text-[#fda4af]";
+  if (["Strong", "Cheap", "Lower risk"].includes(meaning)) return "bg-white/5 text-[#c6c5d0]";
+  if (["Weak", "Expensive", "Higher risk"].includes(meaning)) return "bg-white/5 text-[#c6c5d0]";
   return "bg-white/5 text-[#a8adbf]";
 }
 

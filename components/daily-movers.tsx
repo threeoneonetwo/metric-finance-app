@@ -100,7 +100,7 @@ function MoverCard({ mover, rank }: { mover: Mover; rank: number }) {
         {formatPrice(mover.price)}
       </p>
 
-      <div className="overflow-hidden rounded" style={{ background: "rgba(11,19,38,0.5)", border: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="overflow-hidden rounded-xl" style={{ background: "#18181b", border: "1px solid #303034" }}>
         <MiniChart isUp={isUp} seed={rank} />
       </div>
     </Link>

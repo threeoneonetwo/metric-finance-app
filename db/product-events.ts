@@ -1,3 +1,4 @@
+import { and, eq, sql } from "drizzle-orm";
 import { getDb } from "./client";
 import { productEvents } from "./schema";
 
@@ -34,4 +35,23 @@ export async function logProductEvent(input: ProductEventInput) {
     .returning();
 
   return event ?? null;
+}
+
+export async function hasProductEventForAuthUser(eventName: string, authUserId: string) {
+  const db = getDb();
+
+  if (!db) {
+    return false;
+  }
+
+  const rows = await db
+    .select({ id: productEvents.id })
+    .from(productEvents)
+    .where(and(
+      eq(productEvents.eventName, eventName),
+      sql`${productEvents.metadata}->>'auth_user_id' = ${authUserId}`,
+    ))
+    .limit(1);
+
+  return rows.length > 0;
 }

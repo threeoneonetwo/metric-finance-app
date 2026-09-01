@@ -1,16 +1,21 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@/components/google-analytics";
+import { MicrosoftClarity } from "@/components/microsoft-clarity";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://metricfinance.app"),
-  title: "Indian Stock Analysis in Seconds | Metric Finance",
+  applicationName: "Metric Finance",
+  title: "Free AI Stock Analysis for NSE & BSE | Metric Finance",
   description:
-    "Understand the stocks you're actually investing in. Search any NSE or BSE stock, get the full picture in seconds. Free, no sign-up needed.",
+    "Get instant AI-powered analysis for any NSE or BSE listed stock. Understand price action, fundamentals, peer comparison, and news in plain English. Free, no sign-up needed.",
+  formatDetection: {
+    telephone: false,
+  },
   openGraph: {
-    title: "Metric Finance : Finally know what you're investing in",
-    description: "Understand the stocks you're actually investing in. Search any NSE or BSE stock, get the full picture in seconds. Free, no sign-up needed.",
+    title: "Finally know what you're investing in | Metric Finance",
+    description: "Get instant AI-powered analysis for any NSE or BSE listed stock. Understand price action, fundamentals, peer comparison, and news in plain English. Free, no sign-up needed.",
     url: "https://metricfinance.app",
     siteName: "Metric Finance",
     images: [{ url: "https://metricfinance.app/og-image.png", width: 1200, height: 630 }],
@@ -18,8 +23,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Metric Finance : Finally know what you're investing in",
-    description: "Understand the stocks you're actually investing in. Search any NSE or BSE stock, get the full picture in seconds. Free, no sign-up needed.",
+    title: "Finally know what you're investing in | Metric Finance",
+    description: "Get instant AI-powered analysis for any NSE or BSE listed stock. Understand price action, fundamentals, peer comparison, and news in plain English. Free, no sign-up needed.",
     images: ["https://metricfinance.app/og-image.png"],
   },
   icons: {
@@ -32,6 +37,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#000000",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,6 +54,7 @@ export default function RootLayout({
       <body className="antialiased">
         {children}
         <GoogleAnalytics />
+        <MicrosoftClarity />
         <Analytics />
       </body>
     </html>

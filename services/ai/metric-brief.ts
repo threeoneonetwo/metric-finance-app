@@ -72,7 +72,7 @@ export async function generateMetricBrief(input: {
   const data = buildMarketPayload(input.companyName, input.marketData, input.metrics, input.signals);
 
   const system =
-    "You are a senior Indian equities analyst writing for a normal person who wants to understand a stock before buying it. Write in 3 short card-ready paragraphs separated by blank lines. Each paragraph must be 35 to 55 words and should explain one idea clearly: what is happening, why it matters, and what to watch next. Keep it specific to this company and this data. Use plain English, not finance jargon unless you explain the meaning. Do not follow a template. No bullet points. No headers. No dashes of any kind. No financial advice. ONLY use numbers that appear in the provided data.";
+    "You are a senior public equities analyst writing for a normal person who wants to understand a stock before buying it. Write in 3 short card-ready paragraphs separated by blank lines. Each paragraph must be 35 to 55 words and should explain one idea clearly: what is happening, why it matters, and what to watch next. Keep it specific to this company and this data. Use plain English, not finance jargon unless you explain the meaning. Do not follow a template. No bullet points. No headers. No dashes of any kind. No financial advice. ONLY use numbers that appear in the provided data.";
 
   try {
     const result = await withTimeout(
@@ -126,7 +126,7 @@ export async function generatePeerInsight(input: {
   });
 
   const system =
-    "You are a senior Indian equities analyst. Write 2 short card-ready paragraphs separated by a blank line. Each paragraph must be 35 to 55 words and explain what the peer setup means in plain English. Start with the most useful contrast between the company and peers. Avoid generic lines about alignment, confirmation, or single data points. No bullet points. No headers. No dashes. No financial advice. Only reference numbers present in the data.";
+    "You are a senior public equities analyst. Write 2 short card-ready paragraphs separated by a blank line. Each paragraph must be 35 to 55 words and explain what the peer setup means in plain English. Start with the most useful contrast between the company and peers. Avoid generic lines about alignment, confirmation, or single data points. No bullet points. No headers. No dashes. No financial advice. Only reference numbers present in the data.";
 
   try {
     const { text } = await generateText({
@@ -179,7 +179,7 @@ export async function generateReportInsights(input: {
   const data = buildMarketPayload(input.companyName, input.marketData, input.metrics, input.signals);
 
   const system =
-    "You are a senior Indian equities analyst writing for a serious investor, but the reader is not a finance professional. Write like a person, not like a report template. Interpret what the data means, not what it says. Take a clear point of view, but do not recommend buying, selling, or holding. Be specific to this company and this exact data. Avoid generic scaffolding that could apply to any stock. For long fields, use short card-ready paragraphs separated by blank lines. Never use these phrases or close variants: sellers are setting the tone, current price sits, on fundamentals, technically, news flow is, the cleaner conclusion, alignment matters, read together. No dashes of any kind. No bullet points. Only reference numbers present in the provided data.";
+    "You are a senior public equities analyst writing for a serious investor, but the reader is not a finance professional. Write like a person, not like a report template. Interpret what the data means, not what it says. Take a clear point of view, but do not recommend buying, selling, or holding. Be specific to this company and this exact data. Avoid generic scaffolding that could apply to any stock. For long fields, use short card-ready paragraphs separated by blank lines. Never use these phrases or close variants: sellers are setting the tone, current price sits, on fundamentals, technically, news flow is, the cleaner conclusion, alignment matters, read together. No dashes of any kind. No bullet points. Only reference numbers present in the provided data.";
 
   const prompt = `Analyse ${input.companyName} using ONLY this data:
 

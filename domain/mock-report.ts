@@ -14,7 +14,7 @@ export function getMockReport(ticker: string): ReportPayload {
     overview:
       "The company is presented here with placeholder fundamentals while the market data adapter is being wired. This page establishes the report structure, responsive layout, and visual system before connecting live NSE and BSE data.",
     summary:
-      "Metric Finance is using a mocked report shell for the first setup step. The final report will ground every narrative paragraph in structured fundamentals, peer medians, and cited Indian business news. Treat the current values as layout fixtures only. The next implementation step is to replace these fixtures with typed adapter responses.",
+      "Metric Finance is using a mocked report shell for the first setup step. The final report will ground every narrative paragraph in structured fundamentals, peer medians, and cited business news. Treat the current values as layout fixtures only. The next implementation step is to replace these fixtures with typed adapter responses.",
     metrics: [
       ["Revenue TTM", "₹9.1T", "+4.8%", "₹1.2T"],
       ["Op Margin", "14.2%", "-80 bps", "18.6%"],

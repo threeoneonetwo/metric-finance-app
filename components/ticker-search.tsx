@@ -153,13 +153,13 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
       <div ref={containerRef} className="w-full py-4 sm:py-5" style={{ position: "relative" }}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="mx-auto flex w-full max-w-[30rem] flex-col gap-0"
+          className="mx-auto flex w-full max-w-[40rem] flex-col gap-0"
           autoComplete="off"
           onBlur={() => window.setTimeout(() => setIsDropdownOpen(false), 120)}
         >
           <div
-            className="flex items-center rounded-xl p-1 transition-all duration-300 sm:p-1.5"
-            style={{ position: "relative", background: "rgba(23,31,51,0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)", overflow: "hidden" }}
+            className="flex items-center p-1.5 transition-all duration-300 sm:p-2"
+            style={{ position: "relative", background: "#18181b", backdropFilter: "blur(12px)", border: "1px solid #303034", overflow: "hidden" }}
           >
             <Search className="shrink-0 ml-3 text-[#90909a]" size={18} strokeWidth={2} />
             <input
@@ -167,14 +167,14 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
               aria-expanded={isDropdownOpen}
               aria-haspopup="listbox"
               aria-controls="ticker-search-dropdown-dark"
-              placeholder="Search ticker (e.g. HDFCBANK)"
+              placeholder="Search ticker"
               role="combobox"
               autoCapitalize="characters"
               autoComplete="new-password"
               autoCorrect="off"
               spellCheck={false}
               suppressHydrationWarning
-              className="min-w-0 flex-grow bg-transparent border-none px-2.5 py-2.5 text-sm text-white outline-none placeholder:text-[#90909a] focus:ring-0 sm:px-3 sm:py-3 sm:text-base"
+              className="min-w-0 flex-grow border-none bg-transparent px-3 py-3 text-sm text-white outline-none placeholder:text-[#90909a] focus:ring-0 sm:px-4 sm:py-4 sm:text-base"
               name={queryField.name}
               ref={queryField.ref}
               onBlur={queryField.onBlur}
@@ -183,7 +183,7 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
               onClick={() => setIsDropdownOpen(true)}
             />
             <button
-              className="mr-2 min-w-0 rounded-md bg-[#b8c4ff] px-3 py-1.5 text-[#0b1326] transition-all hover:bg-[#dde1ff] active:scale-95 disabled:cursor-wait disabled:opacity-70 shrink-0 sm:mr-3 sm:px-3.5 sm:py-2"
+              className="mr-1.5 min-w-0 shrink-0 border border-[#3f3f46] bg-[#27272a] px-4 py-2.5 text-[#f4f4f5] transition-all hover:-translate-y-0.5 hover:bg-[#303034] active:translate-y-0 active:scale-95 disabled:cursor-wait disabled:opacity-70 sm:mr-2 sm:px-5 sm:py-3"
               style={{ fontFamily: "Arial, sans-serif", fontWeight: 800, fontSize: "12px", lineHeight: 1, letterSpacing: "0.05em" }}
               disabled={form.formState.isSubmitting || isNavigating}
             >
@@ -192,8 +192,8 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
                   <span
                     style={{
                       width: 10, height: 10, borderRadius: "50%",
-                      border: "2px solid rgba(11,19,38,0.25)",
-                      borderTopColor: "#0b1326",
+                      border: "2px solid rgba(255,255,255,0.25)",
+                      borderTopColor: "#f4f4f5",
                       display: "inline-block",
                       animation: "btn-spin 0.7s linear infinite",
                       flexShrink: 0,
@@ -242,35 +242,33 @@ export function TickerSearch({ dark = false }: { dark?: boolean }) {
           <div
             id="ticker-search-dropdown-dark"
             role="listbox"
-            className="rounded-xl overflow-hidden search-dropdown"
+            className="search-dropdown left-1/2 w-[calc(100%-2.5rem)] max-w-[32rem] -translate-x-1/2 overflow-hidden"
             style={{
               position: "absolute",
               top: "calc(100% + 8px)",
-              left: 0,
-              right: 0,
-              background: "#080f1e",
-              border: "1px solid rgba(255,255,255,0.12)",
+              background: "#18181b",
+              border: "1px solid #303034",
               zIndex: 99999,
               boxShadow: "0 24px 48px rgba(0,0,0,0.95)",
             }}
             onMouseDown={(event) => event.preventDefault()}
           >
-            <div className="search-dropdown-list max-h-72 overflow-y-auto">
+            <div className="search-dropdown-list max-h-60 overflow-y-auto">
               {visibleSuggestions.map((item, index) => (
                 <button
                   key={`${item.symbol ?? item.ticker}-${index}`}
                   type="button"
                   role="option"
                   aria-selected="false"
-                  className="flex w-full items-center justify-between gap-4 px-4 py-3 text-left hover:bg-white/5 transition-colors"
+                  className="flex w-full items-center justify-between gap-3 px-3 py-2 text-left transition-colors hover:bg-white/5"
                   style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
                   onClick={() => openSuggestion(item.ticker)}
                 >
                   <span className="min-w-0">
-                    <span className="block font-mono text-sm font-bold text-white uppercase tracking-wide">{item.ticker}</span>
-                    <span className="block truncate text-xs text-[#8e909f] mt-0.5">{item.companyName ?? item.name}</span>
+                    <span className="block font-mono text-xs font-bold uppercase tracking-wide text-white">{item.ticker}</span>
+                    <span className="mt-0.5 block truncate text-[10px] text-[#8e909f]">{item.companyName ?? item.name}</span>
                   </span>
-                  <span className="shrink-0 text-[10px] text-[#b8c4ff] font-mono">{item.meta ?? item.exchange ?? "NSE"}</span>
+                  <span className="shrink-0 font-mono text-[9px] text-[#b8c4ff]">{item.meta ?? item.exchange ?? "NSE"}</span>
                 </button>
               ))}
             </div>

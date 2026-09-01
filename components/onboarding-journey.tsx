@@ -10,26 +10,26 @@ const steps = [
   {
     icon: Search,
     label: "01",
-    title: "Search any stock",
-    body: "Type a ticker or company name. Metric resolves the closest NSE or BSE stock and shows matches as you type.",
+    title: "Search any public company",
+    body: "Type a company name or NSE/BSE ticker. Metric finds the right listing and shows matches as you type.",
   },
   {
     icon: BarChart3,
     label: "02",
-    title: "Read the live signal",
-    body: "The brief turns price action, volume, peers, and news into plain English context you can actually use.",
+    title: "Get the full AI analysis",
+    body: "Claude AI reads price action, volume, fundamentals, peers, and news and writes a clear brief in plain English.",
   },
   {
     icon: Sparkles,
     label: "03",
-    title: "Compare before acting",
-    body: "Use movers, peer comparison, and news sentiment to understand whether a move has depth or is just noise.",
+    title: "Understand the context",
+    body: "See how the stock compares to peers, where it sits in its 52-week range, and what recent news is signalling.",
   },
   {
     icon: Check,
     label: "04",
-    title: "Run your first analysis",
-    body: "Pick any stock, scan the brief, and refresh when you want the latest available snapshot.",
+    title: "Research freely, for free",
+    body: "No account needed. Run as many analyses as you want and refresh any time you need the latest data.",
   },
 ];
 
@@ -90,14 +90,14 @@ export function OnboardingJourney() {
   return (
     <div
       className="fixed inset-0 flex items-center justify-center px-5"
-      style={{ zIndex: 10000, background: "rgba(7,12,26,0.85)", backdropFilter: "blur(8px)" }}
+      style={{ zIndex: 10000, background: "rgba(0,0,0,0.88)", backdropFilter: "blur(8px)" }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="metric-onboarding-title"
     >
       <div
         className="w-full max-w-[340px] rounded-2xl flex flex-col overflow-hidden"
-        style={{ background: "#080f20", border: "1px solid rgba(255,255,255,0.1)", fontFamily: "Arial, sans-serif" }}
+        style={{ background: "#18181b", border: "1px solid #303034", fontFamily: "Arial, sans-serif" }}
       >
         {/* Header */}
         <div
@@ -145,7 +145,7 @@ export function OnboardingJourney() {
                 className="rounded-full transition-all duration-200"
                 style={{
                   height: 4,
-                  width: i === activeStep ? 20 : 6,
+                  width: 4,
                   background: i <= activeStep ? "#b8c4ff" : "rgba(255,255,255,0.12)",
                 }}
               />
@@ -156,8 +156,7 @@ export function OnboardingJourney() {
           <button
             type="button"
             onClick={continueJourney}
-            className="w-full rounded-xl py-2.5 font-bold text-sm text-[#0b1326] active:scale-95 transition-all"
-            style={{ background: "#b8c4ff" }}
+            className="w-full rounded-xl border border-[#3f3f46] bg-[#27272a] py-2.5 text-sm font-bold text-[#f4f4f5] transition-all hover:bg-[#303034] active:scale-95"
           >
             {isFinalStep ? "Get started" : "Next"}
           </button>

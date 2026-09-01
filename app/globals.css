@@ -17,6 +17,11 @@
   --metric-surface: #ffffff;
   --metric-surface-dim: #dadada;
   --metric-surface-variant: #e2e2e2;
+  --metric-page-dark: #09090b;
+  --metric-panel-dark: #18181b;
+  --metric-control-dark: #27272a;
+  --metric-border-dark: #303034;
+  --metric-text-dark: #f4f4f5;
   --background: var(--metric-finance-bg);
   --foreground: var(--metric-ink);
 }
@@ -54,6 +59,7 @@ html {
   min-height: 100dvh;
   background: var(--metric-ink);
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -63,6 +69,7 @@ body {
   font-feature-settings: "tnum", "lnum";
   min-height: 100vh;
   min-height: 100dvh;
+  overscroll-behavior-y: none;
 }
 
 body::before {
@@ -82,10 +89,42 @@ body > main {
   width: 100%;
 }
 
+.mobile-safe-top-nav {
+  min-height: calc(4.25rem + env(safe-area-inset-top));
+  padding-top: calc(0.5rem + env(safe-area-inset-top));
+  padding-bottom: 0.5rem;
+}
+
+.mobile-safe-page-header {
+  padding-top: calc(1rem + env(safe-area-inset-top));
+}
+
+.mobile-safe-home-content {
+  padding-top: calc(6.5rem + env(safe-area-inset-top));
+}
+
 @media (min-width: 1024px) {
   html,
   body {
     background: var(--background);
+  }
+
+  body {
+    overscroll-behavior-y: auto;
+  }
+
+  .mobile-safe-top-nav {
+    min-height: 4.25rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .mobile-safe-page-header {
+    padding-top: 1rem;
+  }
+
+  .mobile-safe-home-content {
+    padding-top: 6.5rem;
   }
 
   body > main {
@@ -526,9 +565,10 @@ input {
 /* ── Shared dark glassmorphism ── */
 
 .glass-panel {
-  background: #060d1c;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.75rem;
+  background: var(--metric-panel-dark);
+  border: 1px solid var(--metric-border-dark);
+  border-radius: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
 }
 
 .dot-grid {
@@ -538,16 +578,17 @@ input {
   background-size: 24px 24px;
 }
 
-.linear-glow {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 400px;
-  background: radial-gradient(circle at 50% 0%, rgba(184, 196, 255, 0.08) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+.site-header-signin {
+  min-height: 2.75rem !important;
+  border-radius: 0 !important;
+  padding: 0.5rem 1.25rem !important;
+  font-size: 1.5rem !important;
+  line-height: 1 !important;
+}
+
+.site-header-signin svg {
+  height: 1.25rem;
+  width: 1.25rem;
 }
 
 /* ── Homepage dark theme ── */
@@ -560,6 +601,15 @@ body > main.homepage {
 
 body > main.homepage::before {
   display: none;
+}
+
+.homepage-texture {
+  background-color: var(--metric-page-dark);
+  background-image:
+    radial-gradient(circle at 50% 7%, rgba(184, 196, 255, 0.085), transparent 32rem),
+    radial-gradient(circle at 85% 72%, rgba(79, 143, 198, 0.05), transparent 28rem),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.075'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 100% 100%, 180px 180px;
 }
 
 @media (min-width: 1024px) {
@@ -581,6 +631,24 @@ body > main.report-page::before {
   display: none;
 }
 
+.report-page section.glass-panel {
+  padding: clamp(1rem, 1.6vw, 1.25rem);
+}
+
+@media (min-width: 1024px) {
+  .report-dashboard-hero {
+    margin-inline: auto;
+    max-width: 48rem;
+    width: 100%;
+  }
+
+  .report-dashboard-grid section {
+    margin-inline: auto;
+    max-width: 35rem;
+    width: 100%;
+  }
+}
+
 @media (min-width: 1024px) {
   body > main.report-page {
     max-width: 100%;
@@ -591,26 +659,33 @@ body > main.report-page::before {
 /* ── Dark mover cards ── */
 
 .dark-tile {
-  background: #060d1c;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.75rem;
+  background: var(--metric-panel-dark);
+  border: 1px solid var(--metric-border-dark);
+  border-radius: 0;
   transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
 }
 
 .dark-tile:hover {
-  background: #0d1830;
-  border-color: rgba(184, 196, 255, 0.25);
-  transform: translateY(-2px);
+  background: #202023;
+  border-color: #3f3f46;
+  transform: translateY(-3px);
 }
 
 .dark-mover-card {
-  background: rgba(23, 31, 51, 0.6);
+  background: rgba(24, 24, 27, 0.88);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.75rem;
+  border-radius: 0;
   transition: background 140ms ease;
 }
 
 .dark-mover-card:hover {
-  background: rgba(30, 41, 59, 0.85);
+  background: rgba(39, 39, 42, 0.96);
+}
+
+/* Square geometry across the product. */
+body *,
+body *::before,
+body *::after {
+  border-radius: 0 !important;
 }

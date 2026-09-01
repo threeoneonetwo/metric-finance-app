@@ -1,4 +1,4 @@
-import { jsonb, pgTable, text, timestamp, uuid, integer, boolean } from "drizzle-orm/pg-core";
+import { boolean, integer, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import type { ReportPayload, ReportSourceData } from "./types";
 
 export const reports = pgTable("reports", {
