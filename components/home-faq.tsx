@@ -64,7 +64,7 @@ const faqItems = [
       "Market prices update with each new analysis you run. Fundamentals refresh when the data providers push new filings, which typically happens each quarter. Every report shows the exact timestamp of the data it was built on, so you always know how fresh the numbers are.",
   },
   {
-    question: "Can I search by company name instead of the NSE or BSE ticker?",
+    question: "Can I search by company name instead of the stock ticker?",
     answer:
       "Yes. Type the company name like HDFC Bank, Tata Motors, or Infosys and Metric finds the right NSE or BSE listing automatically. You can also enter the ticker directly if you know it. Either approach works the same way.",
   },
