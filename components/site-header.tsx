@@ -3,9 +3,10 @@ import { Menu, X } from "lucide-react";
 
 type SiteHeaderProps = {
   fixed?: boolean;
+  faqHref?: string;
 };
 
-export async function SiteHeader({ fixed = false }: SiteHeaderProps) {
+export async function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps) {
   return (
     <header
       className={`mobile-safe-top-nav ${fixed ? "fixed top-0" : "relative"} z-50 flex w-full items-center justify-between gap-4 px-4 sm:px-7 lg:px-10`}
@@ -19,7 +20,7 @@ export async function SiteHeader({ fixed = false }: SiteHeaderProps) {
         Metric Finance
       </Link>
       <nav className="hidden min-w-0 items-center gap-6 sm:flex" style={{ fontFamily: "Arial, sans-serif" }} aria-label="Main navigation">
-        <Link href="/#faq" className="px-1 py-2 text-base font-medium text-[#8e909f] transition-colors hover:text-white">
+        <Link href={faqHref} className="px-1 py-2 text-base font-medium text-[#8e909f] transition-colors hover:text-white">
           FAQ
         </Link>
         <a
@@ -44,7 +45,7 @@ export async function SiteHeader({ fixed = false }: SiteHeaderProps) {
           className="absolute right-0 top-11 w-52 overflow-hidden rounded-2xl border border-[#303034] bg-[#18181b] p-2 shadow-2xl shadow-black/60"
         >
           <Link
-            href="/#faq"
+            href={faqHref}
             className="block rounded-xl px-4 py-3.5 text-base font-semibold text-white transition hover:bg-[#27272a]"
           >
             FAQ
