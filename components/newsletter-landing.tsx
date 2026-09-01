@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Search, X } from "lucide-react";
 import styles from "./newsletter-landing.module.css";
 
@@ -90,6 +90,29 @@ const FAQS = [
 
 const PRIVACY_URL = "https://metricfinance.notion.site/Privacy-Policy-377bc65fd7b380a7bb9af9f5df0b0911";
 
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, inView };
+}
+
 export function NewsletterLanding() {
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
@@ -99,6 +122,10 @@ export function NewsletterLanding() {
   const [submitted, setSubmitted] = useState(false);
   const [slide, setSlide] = useState(0);
   const [openFaq, setOpenFaq] = useState(0);
+  const features = useReveal<HTMLElement>();
+  const testimonials = useReveal<HTMLElement>();
+  const faq = useReveal<HTMLElement>();
+  const cta = useReveal<HTMLElement>();
 
   const results = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -159,14 +186,14 @@ export function NewsletterLanding() {
       <section id="top" className={styles.hero}>
         <div className={styles.heroGrid} />
         <div className={styles.heroInner}>
-          <div className={styles.eyebrow}>
+          <div className={`${styles.eyebrow} ${styles.fadeUp}`} style={{ animationDelay: "0ms" }}>
             <span />
             Free weekly briefing · US markets
           </div>
-          <h1>Stocks explained<br />like you&apos;re 5</h1>
-          <p className={styles.heroCopy}>Agentic analysis for public equities in plain English to help you become a smarter investor for free.</p>
+          <h1 className={styles.fadeUp} style={{ animationDelay: "80ms" }}>Stocks explained<br />like you&apos;re 5</h1>
+          <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>Agentic analysis for public equities in plain English to help you become a smarter investor for free.</p>
 
-          <div id="signup" className={styles.signup}>
+          <div id="signup" className={`${styles.signup} ${styles.fadeUp}`} style={{ animationDelay: "240ms" }}>
             {submitted ? (
               <div className={styles.success} aria-live="polite">
                 <div className={styles.successTitle}><Check size={20} /> You&apos;re in.</div>
@@ -257,7 +284,7 @@ export function NewsletterLanding() {
             )}
           </div>
 
-          <div className={styles.stats}>
+          <div className={`${styles.stats} ${styles.fadeUp}`} style={{ animationDelay: "320ms" }}>
             <div><strong>5000+ stocks</strong><span>Nasdaq &amp; NYSE</span></div>
             <div><strong>Market context</strong><span>Without the noise</span></div>
             <div><strong>AI analysis</strong><span>Metric engine</span></div>
@@ -265,15 +292,15 @@ export function NewsletterLanding() {
         </div>
       </section>
 
-      <section className={styles.featuresSection}>
+      <section ref={features.ref} className={`${styles.featuresSection} ${features.inView ? styles.inView : ""}`}>
         <div className={styles.sectionInner}>
           <div className={styles.sectionHeading}>
             <h2>What lands in your inbox</h2>
             <p>One weekly email that walks through your stocks and explains what changed in plain English.</p>
           </div>
           <div className={styles.features}>
-            {FEATURES.map(([number, title, copy]) => (
-              <article key={number}>
+            {FEATURES.map(([number, title, copy], index) => (
+              <article key={number} style={{ transitionDelay: features.inView ? `${index * 70}ms` : "0ms" }}>
                 <span>{number}</span>
                 <h3>{title}</h3>
                 <p>{copy}</p>
@@ -283,7 +310,7 @@ export function NewsletterLanding() {
         </div>
       </section>
 
-      <section className={styles.testimonialsSection}>
+      <section ref={testimonials.ref} className={`${styles.testimonialsSection} ${testimonials.inView ? styles.inView : ""}`}>
         <div className={styles.sectionInner}>
           <span className={styles.kicker}>From real users</span>
           <div className={styles.testimonialHeading}>
@@ -294,28 +321,30 @@ export function NewsletterLanding() {
               <button type="button" onClick={() => setSlide((slide + 1) % TESTIMONIALS.length)} aria-label="Next testimonial"><ChevronRight size={18} /></button>
             </div>
           </div>
-          <blockquote className={styles.testimonial}>
+          <blockquote className={styles.testimonial} key={slide}>
             <p>“{TESTIMONIALS[slide].quote}”</p>
             <footer><span /> <strong>{TESTIMONIALS[slide].author}</strong> {TESTIMONIALS[slide].role}</footer>
           </blockquote>
         </div>
       </section>
 
-      <section id="faq" className={styles.faqSection}>
+      <section id="faq" ref={faq.ref} className={`${styles.faqSection} ${faq.inView ? styles.inView : ""}`}>
         <div className={styles.faqInner}>
           <div>
             <span className={styles.kicker}>FAQ</span>
             <h2>Questions,<br />answered plainly</h2>
           </div>
           <div className={styles.faqs}>
-            {FAQS.map((faq, index) => {
+            {FAQS.map((item, index) => {
               const open = openFaq === index;
               return (
-                <div key={faq.question}>
+                <div key={item.question}>
                   <button type="button" onClick={() => setOpenFaq(open ? -1 : index)} aria-expanded={open}>
-                    {faq.question}<span>{open ? "−" : "+"}</span>
+                    {item.question}<span className={open ? styles.faqIconOpen : ""}>+</span>
                   </button>
-                  {open ? <p>{faq.answer}</p> : null}
+                  <div className={`${styles.faqAnswerWrap} ${open ? styles.faqAnswerOpen : ""}`}>
+                    <div><p>{item.answer}</p></div>
+                  </div>
                 </div>
               );
             })}
@@ -323,7 +352,7 @@ export function NewsletterLanding() {
         </div>
       </section>
 
-      <section className={styles.finalCta}>
+      <section ref={cta.ref} className={`${styles.finalCta} ${cta.inView ? styles.inView : ""}`}>
         <h2>Understand stocks like a pro</h2>
         <p>Pick the stocks you care about and get the context you need in plain English every week.</p>
         <a href="#signup">Build my watchlist</a>
