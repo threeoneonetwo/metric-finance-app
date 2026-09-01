@@ -11,7 +11,7 @@ export default function NotFound() {
         <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-[#b8c4ff]">404</p>
         <h1 className="text-3xl font-bold tracking-tight text-white">Page not found</h1>
         <p className="mx-auto mt-4 max-w-[30rem] text-sm leading-6 text-[#8e909f]">
-          This page does not exist. Search for a stock from the homepage instead.
+          This page does not exist. Head back to the homepage instead.
         </p>
         <div className="mt-7">
           <Link

@@ -1,14 +1,18 @@
-# Metric Stocks Analyser
+# Metric Finance
 
-Metric Finance generates AI-powered equity research reports for NSE and BSE listed stocks. Enter any ticker and get a shareable analysis covering executive summary, contrarian signal, financials, peer comparison, sentiment, and risks.
+Metric Finance is a personalized weekly newsletter for young professionals
+investing directly in US equities: pick the stocks you follow and get a plain-English
+briefing on price action, fundamentals, peers, and the news that matters.
 
-Built on Next.js 15, Claude, and Postgres, with streaming generation and sub-second cached reads.
+This repo currently ships the landing page and signup flow only. The product
+is undergoing a rebuild into the full newsletter service, so the market-data,
+report-generation, and broker-integration layers that previously lived here
+have been removed.
 
 ## Tech Stack
 
 - Next.js 15
 - React 19
-- Claude via AI SDK
 - Postgres with Drizzle ORM
 - Tailwind CSS 4
 
@@ -46,20 +50,8 @@ Create or update the database tables:
 npm run db:migrate
 ```
 
-The first database-backed flow is report caching:
-
-- `/analyze/[ticker]` creates or reuses a saved report record
-- `/r/[ticker]` reads the saved report first
-- `/api/reports/[ticker]` exposes the saved/generated report as JSON
-
-## AI Reports
-
-Set `ANTHROPIC_API_KEY` to enable Claude-backed report generation.
-The default model is `claude-sonnet-4-6`, configurable with `CLAUDE_MODEL`.
-
-When the key is unavailable, the app safely falls back to the mock report
-payload. Saved reports are reused for 24 hours unless a request includes
-`?refresh=1`.
+The only table in active use today is `product_events`, which backs basic
+product analytics (landing page views, etc.).
 
 ## Product Analytics
 
@@ -77,42 +69,8 @@ Finance project. The project ID can be overridden per environment when needed:
 NEXT_PUBLIC_CLARITY_PROJECT_ID=your_clarity_project_id
 ```
 
-The current instrumentation sends page views, page leaves, and the core product
-events already used by the app: landing views, search opens/submits, report
-views, shares, and analysis runs. Set `localStorage.metric_owner = "1"` in your
-browser to exclude your own testing from GA, PostHog, and Microsoft Clarity.
-
-## Market Data
-
-The market-data layer supports Yahoo Finance for temporary MVP data and
-OpenAlgo for broker-backed quotes.
-
-Yahoo Finance does not require an API key:
-
-```bash
-MARKET_DATA_PROVIDER=yahoo
-YAHOO_FINANCE_DEFAULT_EXCHANGE=NSE
-```
-
-The Yahoo adapter uses public search and chart endpoints. It can ground reports
-with company name, exchange, last traded price, day change, OHLC, volume,
-52-week range, sector, industry, and timestamp. Because Yahoo Finance is not a
-licensed production API for this app, treat it as a short-term bridge.
-
-OpenAlgo is self-hosted, so configure your own instance and API key:
-
-```bash
-MARKET_DATA_PROVIDER=openalgo
-OPENALGO_BASE_URL=https://your-openalgo-domain
-OPENALGO_API_KEY=your_openalgo_key
-OPENALGO_DEFAULT_EXCHANGE=NSE
-```
-
-The adapter currently uses OpenAlgo symbol search and quotes. It can ground
-reports with company name, exchange, last traded price, day change, OHLC, volume,
-and timestamp. Fields OpenAlgo quotes do not provide, such as market cap,
-sector, and financial statements, remain unavailable until we add another
-fundamentals provider.
+Set `localStorage.metric_owner = "1"` in your browser to exclude your own
+testing from GA, PostHog, and Microsoft Clarity.
 
 ## Scripts
 

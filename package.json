@@ -11,25 +11,16 @@
     "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^3.0.81",
-    "@hookform/resolvers": "^5.4.0",
     "@neondatabase/serverless": "^1.1.0",
     "@vercel/analytics": "^2.0.1",
-    "ai": "^6.0.191",
-    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.2",
-    "fast-xml-parser": "^5.8.0",
-    "framer-motion": "^12.40.0",
     "lucide-react": "^1.16.0",
-    "nanoid": "^5.1.11",
     "next": "^15.5.18",
     "posthog-js": "^1.395.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hook-form": "^7.76.1",
-    "tailwind-merge": "^3.6.0",
-    "zod": "^4.4.3"
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -43,7 +34,7 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "description": "Metric Finance generates AI-powered equity research reports for NSE and BSE listed stocks. Enter any ticker and get a shareable analysis covering executive summary, contrarian signal, financials, peer comparison, sentiment, and risks.",
+  "description": "Metric Finance is a personalized newsletter service for young professionals investing directly in US equities. This is currently the landing page and signup flow only, ahead of a broader rebuild.",
   "main": "index.js",
   "directories": {
     "lib": "lib"
