@@ -31,7 +31,7 @@
 .nav { display: flex; align-items: center; gap: 30px; color: #9a9aa2; font-size: 13.5px; font-weight: 500; }
 .nav a { transition: color 150ms ease; }
 .nav a:hover { color: #fff; }
-.nav .headerCta { padding: 11px 18px; background: #fff; color: #08080a; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms ease; }
+.nav .headerCta { padding: 8px 14px; background: #fff; color: #08080a; font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms ease; }
 .nav .headerCta:hover { transform: translateY(-2px); }
 .nav .headerCta:active { transform: translateY(0); }
 
@@ -72,8 +72,10 @@
 .searchControl input::placeholder { color: #5f5f66; }
 .searchControl input:disabled { cursor: not-allowed; }
 .results { position: absolute; top: 71px; right: 0; left: 0; z-index: 30; max-height: 284px; overflow: auto; border: 1px solid #2c2c31; background: var(--panel); box-shadow: 0 30px 70px rgba(0,0,0,.75); animation: resultsOpen .18s cubic-bezier(0.16, 1, 0.3, 1) both; transform-origin: top center; }
-.results button { display: grid; grid-template-columns: 96px 1fr auto; align-items: center; gap: 16px; width: 100%; padding: 14px 20px; border: 0; border-bottom: 1px solid rgba(255,255,255,.05); background: transparent; color: #fff; cursor: pointer; text-align: left; transition: background-color 120ms ease, padding-left 120ms ease; }
+.results button { display: grid; grid-template-columns: 26px 96px 1fr auto; align-items: center; gap: 14px; width: 100%; padding: 14px 20px; border: 0; border-bottom: 1px solid rgba(255,255,255,.05); background: transparent; color: #fff; cursor: pointer; text-align: left; transition: background-color 120ms ease, padding-left 120ms ease; }
 .results button:hover { background: #1d1d21; padding-left: 24px; }
+.resultLogo { width: 26px; height: 26px; border-radius: 6px; object-fit: contain; background: #fff; padding: 3px; }
+.resultLogoFallback { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 6px; background: #232328; color: #9a9aa2; font-family: ui-monospace, Menlo, monospace; font-size: 11px; font-weight: 700; }
 @keyframes resultsOpen {
   from { opacity: 0; transform: translateY(-6px) scaleY(.97); }
   to { opacity: 1; transform: translateY(0) scaleY(1); }
@@ -200,7 +202,7 @@
   .logo { font-size: 17px; }
   .nav { gap: 0; }
   .nav > a:not(.headerCta) { display: none; }
-  .nav .headerCta { padding: 10px 13px; font-size: 9.5px; letter-spacing: .08em; }
+  .nav .headerCta { padding: 8px 11px; font-size: 8.5px; letter-spacing: .08em; }
   .hero { padding: 56px 20px 72px; }
   .hero h1 { font-size: clamp(48px, 14vw, 64px); }
   .hero h1 { font-weight: 800; letter-spacing: -.055em; }
@@ -210,7 +212,8 @@
   .mobileStep { display: inline; }
   .searchControl { height: 58px; padding: 0 16px; }
   .searchControl input { font-size: 15px; }
-  .results button { grid-template-columns: 72px 1fr auto; gap: 9px; padding: 13px 14px; }
+  .results button { grid-template-columns: 22px 72px 1fr auto; gap: 8px; padding: 13px 14px; }
+  .resultLogo, .resultLogoFallback { width: 22px; height: 22px; }
   .results span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .pick, .ghost { min-height: 54px; gap: 10px; }
   .pick { padding-left: 14px; }
@@ -249,7 +252,7 @@
 @media (max-width: 360px) {
   .header { padding: 0 13px; }
   .logo { font-size: 15.5px; }
-  .nav .headerCta { padding: 9px 10px; font-size: 8.5px; }
+  .nav .headerCta { padding: 7px 9px; font-size: 7.5px; }
   .hero { padding-right: 16px; padding-left: 16px; }
   .hero h1 { font-size: 46px; }
   .stats strong { font-size: 12.5px; }

@@ -123,6 +123,7 @@ export function NewsletterLanding() {
   const [submitting, setSubmitting] = useState(false);
   const [slide, setSlide] = useState(0);
   const [openFaq, setOpenFaq] = useState(0);
+  const [logoErrors, setLogoErrors] = useState<Set<string>>(new Set());
   const features = useReveal<HTMLElement>();
   const testimonials = useReveal<HTMLElement>();
   const faq = useReveal<HTMLElement>();
@@ -246,6 +247,17 @@ export function NewsletterLanding() {
                     <div id="stock-search-results" className={styles.results} role="listbox">
                       {results.length ? results.map((stock) => (
                         <button type="button" key={stock.symbol} onMouseDown={() => addStock(stock)}>
+                          {logoErrors.has(stock.symbol) ? (
+                            <span className={styles.resultLogoFallback}>{stock.symbol[0]}</span>
+                          ) : (
+                            <img
+                              className={styles.resultLogo}
+                              src={`https://images.financialmodelingprep.com/symbol/${stock.symbol}.png`}
+                              alt=""
+                              loading="lazy"
+                              onError={() => setLogoErrors((current) => new Set(current).add(stock.symbol))}
+                            />
+                          )}
                           <strong>{stock.symbol}</strong>
                           <span>{stock.name}</span>
                           <small>{stock.exchange}</small>
