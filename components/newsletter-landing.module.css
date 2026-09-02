@@ -195,7 +195,8 @@
 .results > p { margin: 0; padding: 17px 20px; color: #627194; font-size: 13.5px; }
 .pickList { display: flex; flex-direction: column; }
 .pick, .ghost { display: flex; align-items: center; gap: 16px; min-height: 58px; border: 1px solid #161f35; border-top: 0; }
-.pick { padding: 0 8px 0 22px; background: #090e19; animation: popIn .3s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.pick { padding: 0 8px 0 22px; background: #090e19; animation: popIn .3s cubic-bezier(0.34, 1.56, 0.64, 1) both; transition: background-color 150ms ease, border-color 150ms ease; }
+.pick:hover { background: #101a2e; border-color: rgba(111,224,221,.35); }
 .pickNumber { width: 16px; color: #404f72; font-family: ui-monospace, Menlo, monospace; font-size: 11px; }
 .pickLogo { flex: none; width: 24px; height: 24px; border-radius: 6px; object-fit: contain; background: #fff; padding: 3px; }
 .pickLogoFallback { display: grid; flex: none; place-items: center; width: 24px; height: 24px; border-radius: 6px; background: #161f35; color: #939aa9; font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; font-weight: 700; }
