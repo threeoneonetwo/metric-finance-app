@@ -301,7 +301,7 @@ export function NewsletterLanding() {
       </section>
 
       <section ref={cta.ref} className={`${styles.finalCta} ${cta.inView ? styles.inView : ""}`}>
-        <h2>Understand stocks like a pro</h2>
+        <h2>Understand stocks<br />like a pro</h2>
         <p>Pick the stocks you care about and get the context you need in plain English every day.</p>
         <a href="#signup">Build my watchlist</a>
       </section>
