@@ -1,4 +1,4 @@
-import { jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const productEvents = pgTable("product_events", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -16,4 +16,15 @@ export const productEvents = pgTable("product_events", {
 export const config = pgTable("config", {
   key: text("key").primaryKey(),
   value: jsonb("value").notNull(),
+});
+
+export const subscribers = pgTable("subscribers", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull().unique(),
+  tickers: jsonb("tickers").$type<string[]>().notNull().default([]),
+  active: boolean("active").notNull().default(true),
+  unsubscribeToken: text("unsubscribe_token").notNull().unique(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  lastSentAt: timestamp("last_sent_at", { withTimezone: true }),
 });

@@ -36,7 +36,7 @@ const STOCKS: Stock[] = [
 ];
 
 const FEATURES = [
-  ["01", "Price action", "What the stock did this week—and the clearest explanation of why it moved."],
+  ["01", "Price action", "What the stock did today—and the clearest explanation of why it moved."],
   ["02", "Fundamentals", "Revenue, margins, cash, and debt translated out of accounting language."],
   ["03", "Peer comparison", "How each company is performing against the businesses it actually competes with."],
   ["04", "News", "The headlines that matter to your holdings, with the rest of the noise removed."],
@@ -80,7 +80,7 @@ const FAQS = [
   },
   {
     question: "How often will I receive it?",
-    answer: "We send one concise briefing each week. You can change your watchlist or unsubscribe at any time.",
+    answer: "We send one concise briefing every trading day. You can change your watchlist or unsubscribe at any time.",
   },
   {
     question: "Can I search by company name?",
@@ -120,6 +120,7 @@ export function NewsletterLanding() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [slide, setSlide] = useState(0);
   const [openFaq, setOpenFaq] = useState(0);
   const features = useReveal<HTMLElement>();
@@ -153,7 +154,7 @@ export function NewsletterLanding() {
     setSubmitted(false);
   }
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (picks.length === 0) {
       setError("Choose at least one stock before subscribing.");
@@ -164,12 +165,27 @@ export function NewsletterLanding() {
       return;
     }
 
-    window.localStorage.setItem(
-      "metric-newsletter-preview",
-      JSON.stringify({ email: email.trim(), stocks: picks, cadence: "weekly", market: "US" }),
-    );
+    setSubmitting(true);
     setError("");
-    setSubmitted(true);
+
+    try {
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), tickers: picks.map((stock) => stock.symbol) }),
+      });
+
+      if (!response.ok) {
+        setError("Something went wrong. Please try again in a moment.");
+        return;
+      }
+
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please try again in a moment.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -188,7 +204,7 @@ export function NewsletterLanding() {
         <div className={styles.heroInner}>
           <div className={`${styles.eyebrow} ${styles.fadeUp}`} style={{ animationDelay: "0ms" }}>
             <span />
-            Free weekly briefing · US markets
+            Free daily briefing · US markets
           </div>
           <h1 className={styles.fadeUp} style={{ animationDelay: "80ms" }}>Stocks explained<br />like you&apos;re 5</h1>
           <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>Agentic analysis for public equities in plain English to help you become a smarter investor for free.</p>
@@ -277,9 +293,11 @@ export function NewsletterLanding() {
                     aria-label="Email address"
                     className={error ? styles.inputError : ""}
                   />
-                  <button type="submit" disabled={!emailValid || picks.length === 0}>Subscribe</button>
+                  <button type="submit" disabled={!emailValid || picks.length === 0 || submitting}>
+                    {submitting ? "Subscribing…" : "Subscribe"}
+                  </button>
                 </div>
-                <p className={error ? styles.error : styles.note}>{error || "One email a week. Unsubscribe at any time."}</p>
+                <p className={error ? styles.error : styles.note}>{error || "One email every trading day. Unsubscribe at any time."}</p>
               </form>
             )}
           </div>
@@ -296,7 +314,7 @@ export function NewsletterLanding() {
         <div className={styles.sectionInner}>
           <div className={styles.sectionHeading}>
             <h2>What lands in your inbox</h2>
-            <p>One weekly email that walks through your stocks and explains what changed in plain English.</p>
+            <p>One daily email that walks through your stocks and explains what changed in plain English.</p>
           </div>
           <div className={styles.features}>
             {FEATURES.map(([number, title, copy], index) => (
@@ -354,7 +372,7 @@ export function NewsletterLanding() {
 
       <section ref={cta.ref} className={`${styles.finalCta} ${cta.inView ? styles.inView : ""}`}>
         <h2>Understand stocks like a pro</h2>
-        <p>Pick the stocks you care about and get the context you need in plain English every week.</p>
+        <p>Pick the stocks you care about and get the context you need in plain English every day.</p>
         <a href="#signup">Build my watchlist</a>
       </section>
 

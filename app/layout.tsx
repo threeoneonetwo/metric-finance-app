@@ -9,14 +9,14 @@ export const metadata: Metadata = {
   applicationName: "Metric Finance",
   title: "Stocks Explained in Plain English | Metric Finance",
   description:
-    "Choose the US stocks you follow and get a free weekly briefing covering price action, fundamentals, peers, and the news that matters.",
+    "Choose the US stocks you follow and get a free daily briefing covering price action, fundamentals, peers, and the news that matters.",
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     title: "Stocks Explained in Plain English | Metric Finance",
     description:
-      "Choose the US stocks you follow and get a free weekly briefing covering price action, fundamentals, peers, and the news that matters.",
+      "Choose the US stocks you follow and get a free daily briefing covering price action, fundamentals, peers, and the news that matters.",
     url: "https://metricfinance.app",
     siteName: "Metric Finance",
     images: [{ url: "https://metricfinance.app/og-image.png", width: 1200, height: 630 }],
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Stocks Explained in Plain English | Metric Finance",
     description:
-      "Choose the US stocks you follow and get a free weekly briefing covering price action, fundamentals, peers, and the news that matters.",
+      "Choose the US stocks you follow and get a free daily briefing covering price action, fundamentals, peers, and the news that matters.",
     images: ["https://metricfinance.app/og-image.png"],
   },
   icons: {
