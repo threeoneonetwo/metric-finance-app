@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --metric-ink: #000000;
-  --metric-black: #000000;
+  --metric-ink: #030711;
+  --metric-black: #030711;
   --metric-cream: #f5f7f2;
   --metric-white: #ffffff;
   --metric-green: #4f8fc6;
@@ -17,11 +17,11 @@
   --metric-surface: #ffffff;
   --metric-surface-dim: #dadada;
   --metric-surface-variant: #e2e2e2;
-  --metric-page-dark: #09090b;
-  --metric-panel-dark: #18181b;
-  --metric-control-dark: #27272a;
-  --metric-border-dark: #303034;
-  --metric-text-dark: #f4f4f5;
+  --metric-page-dark: #050810;
+  --metric-panel-dark: #0f1526;
+  --metric-control-dark: #182238;
+  --metric-border-dark: #24304d;
+  --metric-text-dark: #f4f5f7;
   --background: var(--metric-finance-bg);
   --foreground: var(--metric-ink);
 }
