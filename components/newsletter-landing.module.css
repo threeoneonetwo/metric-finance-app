@@ -69,6 +69,15 @@
   box-shadow: 0 24px 48px rgba(0,0,0,.4);
   text-align: left;
   animation: decorFloatIn 1s cubic-bezier(0.16, 1, 0.3, 1) both, decorFloat 6s ease-in-out 1s infinite;
+  pointer-events: auto;
+  cursor: default;
+  transition: border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
+}
+.decorCard:hover {
+  animation-play-state: paused;
+  border-color: rgba(111, 224, 221, .55);
+  background: rgba(14, 21, 36, .94);
+  box-shadow: 0 30px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(111,224,221,.12), 0 0 28px rgba(111,224,221,.16);
 }
 .decorTicker { animation-delay: .05s, 1.05s; }
 .decorBriefing { animation-delay: .2s, 1.2s; }
