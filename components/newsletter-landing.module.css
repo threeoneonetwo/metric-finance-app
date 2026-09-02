@@ -72,16 +72,23 @@
 
 .decorLabel { display: block; margin-bottom: 10px; color: #6fe0dd; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
 
-.decorTicker { top: 128px; left: 3%; }
-.decorTickerTop { display: flex; align-items: center; justify-content: space-between; font-family: ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 700; color: #fff; }
-.decorChangeUp { color: #6fe0dd; font-size: 12px; }
-.decorSparkline { width: 100%; height: 40px; margin: 10px 0 8px; color: #6fe0dd; }
-.decorCaption { display: block; color: #8a8a92; font-size: 11.5px; }
+/* Mobile-first: small ticker + briefing cards tucked into the top corners. */
+.decorTicker, .decorBriefing {
+  display: block;
+  width: 118px;
+  padding: 10px 11px;
+  top: 6px;
+}
+.decorTicker { left: 3%; }
+.decorTickerTop { display: flex; align-items: center; justify-content: space-between; font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 700; color: #fff; }
+.decorChangeUp { color: #6fe0dd; font-size: 10px; }
+.decorSparkline { width: 100%; height: 28px; margin: 8px 0 6px; color: #6fe0dd; }
+.decorCaption { display: block; color: #8a8a92; font-size: 9.5px; line-height: 1.35; }
 
-.decorBriefing { top: 100px; right: 3%; }
-.decorHeadline { display: block; margin-top: 4px; color: #fff; font-size: 14.5px; font-weight: 700; }
-.decorTextBar { display: block; height: 6px; margin-top: 10px; background: rgba(255,255,255,.09); }
-.decorTextBar:first-of-type { margin-top: 14px; }
+.decorBriefing { right: 3%; }
+.decorHeadline { display: block; margin-top: 4px; color: #fff; font-size: 12px; font-weight: 700; }
+.decorTextBar { display: block; height: 5px; margin-top: 8px; background: rgba(255,255,255,.09); }
+.decorTextBar:first-of-type { margin-top: 10px; }
 
 .decorFundamentals { top: 400px; left: 5%; }
 .decorMetricRow { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; font-size: 11.5px; color: #b6b6be; }
@@ -94,7 +101,7 @@
 .decorBars span { flex: 1; min-height: 6px; background: rgba(255,255,255,.14); }
 .decorBarActive { background: #6fe0dd !important; }
 
-.decorWave { position: absolute; left: 0; bottom: 0; width: 100%; height: 48px; color: rgba(111,224,221,.28); }
+.decorWave { position: absolute; left: 0; bottom: 28px; width: 100%; height: 56px; color: rgba(111,224,221,.45); }
 
 /* Compact desktop: only the two top cards, tucked tight to the edges. */
 @media (min-width: 1180px) {
@@ -102,7 +109,7 @@
   .decorTicker { top: 96px; left: 0.5%; }
   .decorBriefing { top: 78px; right: 0.5%; }
   .decorSparkline { height: 32px; }
-  .decorWave { height: 64px; }
+  .decorWave { bottom: 0; height: 64px; color: rgba(111,224,221,.28); }
 }
 
 /* Full desktop: all four cards, roomier placement. */
@@ -112,7 +119,7 @@
   .decorBriefing { top: 100px; right: 3%; }
   .decorSparkline { height: 40px; }
   .decorFundamentals, .decorPeers { display: block; }
-  .decorWave { height: 90px; }
+  .decorWave { bottom: 0; height: 90px; }
 }
 
 .heroInner { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; text-align: center; }
@@ -270,8 +277,8 @@
   .logo { font-size: 17px; }
   .nav { gap: 0; }
   .nav > a:not(.headerCta) { display: none; }
-  .nav .headerCta { padding: 8px 11px; font-size: 8.5px; letter-spacing: .08em; }
-  .hero { padding: 56px 20px 72px; }
+  .nav .headerCta { padding: 13px 14px; font-size: 9.5px; letter-spacing: .08em; }
+  .hero { padding: 150px 20px 72px; }
   .hero h1 { font-size: clamp(48px, 14vw, 64px); }
   .hero h1 { font-weight: 800; letter-spacing: -.055em; }
   .heroCopy { margin-bottom: 42px; font-size: 16px; line-height: 1.55; }
@@ -295,7 +302,7 @@
   .mobileGhost span { color: #6c6c74; font-family: ui-monospace, Menlo, monospace; font-size: 10px; }
   .emailStep { margin-top: 30px; }
   .emailRow { flex-direction: column; }
-  .emailRow input, .emailRow button { width: 100%; height: 56px; }
+  .emailRow input, .emailRow button { flex: none; width: 100%; height: 56px; }
   .stats { margin-top: 48px; }
   .stats > div { padding: 18px 10px; }
   .stats strong { font-size: 14px; }
@@ -320,7 +327,7 @@
 @media (max-width: 360px) {
   .header { padding: 0 13px; }
   .logo { font-size: 15.5px; }
-  .nav .headerCta { padding: 7px 9px; font-size: 7.5px; }
+  .nav .headerCta { padding: 12px 12px; font-size: 8.5px; }
   .hero { padding-right: 16px; padding-left: 16px; }
   .hero h1 { font-size: 46px; }
   .stats strong { font-size: 12.5px; }
