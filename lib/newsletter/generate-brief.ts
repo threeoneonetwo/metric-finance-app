@@ -57,6 +57,7 @@ export function buildDigestEmail(input: {
   tickers: string[];
   snapshots: Map<string, TickerSnapshot>;
   blurbs: Map<string, string>;
+  manageUrl: string;
   unsubscribeUrl: string;
 }) {
   const rows = input.tickers
@@ -71,12 +72,12 @@ export function buildDigestEmail(input: {
       return {
         html: `
           <tr>
-            <td style="padding:20px 0;border-top:1px solid #232328;">
+            <td style="padding:20px 0;border-top:1px solid #161f35;">
               <table width="100%" cellpadding="0" cellspacing="0"><tr>
                 <td style="font-family:ui-monospace,Menlo,monospace;font-weight:700;font-size:14px;color:#fff;">${ticker}</td>
                 <td align="right" style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:${changeColor};">${changeSign}${(snapshot.dayChangePercent ?? 0).toFixed(2)}%</td>
               </tr></table>
-              <p style="margin:8px 0 0;font-size:14px;line-height:1.6;color:#b6b6be;">${blurb}</p>
+              <p style="margin:8px 0 0;font-size:14px;line-height:1.6;color:#b6b8be;">${blurb}</p>
             </td>
           </tr>`,
         text: `${ticker} (${changeSign}${(snapshot.dayChangePercent ?? 0).toFixed(2)}%): ${blurb}`,
@@ -85,18 +86,21 @@ export function buildDigestEmail(input: {
     .filter((row): row is NonNullable<typeof row> => row !== null);
 
   const html = `
-    <div style="background:#08080a;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
+    <div style="background:#05070d;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;">
         <tr><td style="padding-bottom:24px;color:#fff;font-size:20px;font-weight:800;">Metric Finance</td></tr>
-        <tr><td style="color:#8a8a92;font-size:13px;padding-bottom:8px;">Your daily briefing</td></tr>
+        <tr><td style="color:#7d879f;font-size:13px;padding-bottom:8px;">Your daily briefing</td></tr>
         <tr><td><table width="100%" cellpadding="0" cellspacing="0">${rows.map((r) => r.html).join("")}</table></td></tr>
-        <tr><td style="padding-top:32px;font-size:12px;color:#6c6c74;">
-          Not financial advice. <a href="${input.unsubscribeUrl}" style="color:#8a8a92;">Unsubscribe</a>
+        <tr><td style="padding-top:28px;border-top:1px solid #161f35;">
+          <a href="${input.manageUrl}" style="color:#6fe0dd;font-size:13px;text-decoration:none;">Manage your watchlist &rarr;</a>
+        </td></tr>
+        <tr><td style="padding-top:20px;font-size:12px;color:#56668a;">
+          Not financial advice. <a href="${input.unsubscribeUrl}" style="color:#7d879f;">Unsubscribe</a>
         </td></tr>
       </table>
     </div>`;
 
-  const text = `Metric Finance — Your daily briefing\n\n${rows.map((r) => r.text).join("\n\n")}\n\nNot financial advice. Unsubscribe: ${input.unsubscribeUrl}`;
+  const text = `Metric Finance — Your daily briefing\n\n${rows.map((r) => r.text).join("\n\n")}\n\nManage your watchlist: ${input.manageUrl}\n\nNot financial advice. Unsubscribe: ${input.unsubscribeUrl}`;
 
   return { html, text, hasContent: rows.length > 0 };
 }

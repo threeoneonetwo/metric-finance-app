@@ -51,6 +51,21 @@ export async function findSubscriberByToken(token: string) {
   return subscriber ?? null;
 }
 
+export async function updateTickersByToken(token: string, tickers: string[]) {
+  const db = getDb();
+  if (!db) return null;
+
+  const normalized = tickers.map((ticker) => ticker.trim().toUpperCase()).slice(0, 5);
+
+  const [updated] = await db
+    .update(subscribers)
+    .set({ tickers: normalized, active: true, updatedAt: new Date() })
+    .where(eq(subscribers.unsubscribeToken, token))
+    .returning();
+
+  return updated ?? null;
+}
+
 export async function unsubscribeByToken(token: string) {
   const db = getDb();
   if (!db) return null;

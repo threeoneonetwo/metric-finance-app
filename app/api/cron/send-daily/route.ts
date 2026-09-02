@@ -35,6 +35,7 @@ export async function GET(request: Request) {
       tickers: subscriber.tickers,
       snapshots,
       blurbs,
+      manageUrl: `${baseUrl}/manage?token=${subscriber.unsubscribeToken}`,
       unsubscribeUrl: `${baseUrl}/api/unsubscribe?token=${subscriber.unsubscribeToken}`,
     });
 

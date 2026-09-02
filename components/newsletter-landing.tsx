@@ -1,39 +1,10 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronLeft, ChevronRight, Search, X } from "lucide-react";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./newsletter-landing.module.css";
-
-type Stock = {
-  symbol: string;
-  name: string;
-  exchange: "NASDAQ" | "NYSE";
-};
-
-const STOCKS: Stock[] = [
-  { symbol: "AAPL", name: "Apple Inc.", exchange: "NASDAQ" },
-  { symbol: "MSFT", name: "Microsoft Corporation", exchange: "NASDAQ" },
-  { symbol: "NVDA", name: "NVIDIA Corporation", exchange: "NASDAQ" },
-  { symbol: "AMZN", name: "Amazon.com, Inc.", exchange: "NASDAQ" },
-  { symbol: "GOOGL", name: "Alphabet Inc.", exchange: "NASDAQ" },
-  { symbol: "META", name: "Meta Platforms, Inc.", exchange: "NASDAQ" },
-  { symbol: "TSLA", name: "Tesla, Inc.", exchange: "NASDAQ" },
-  { symbol: "AVGO", name: "Broadcom Inc.", exchange: "NASDAQ" },
-  { symbol: "NFLX", name: "Netflix, Inc.", exchange: "NASDAQ" },
-  { symbol: "COST", name: "Costco Wholesale Corporation", exchange: "NASDAQ" },
-  { symbol: "AMD", name: "Advanced Micro Devices, Inc.", exchange: "NASDAQ" },
-  { symbol: "ADBE", name: "Adobe Inc.", exchange: "NASDAQ" },
-  { symbol: "JPM", name: "JPMorgan Chase & Co.", exchange: "NYSE" },
-  { symbol: "V", name: "Visa Inc.", exchange: "NYSE" },
-  { symbol: "WMT", name: "Walmart Inc.", exchange: "NYSE" },
-  { symbol: "XOM", name: "Exxon Mobil Corporation", exchange: "NYSE" },
-  { symbol: "MA", name: "Mastercard Incorporated", exchange: "NYSE" },
-  { symbol: "KO", name: "The Coca-Cola Company", exchange: "NYSE" },
-  { symbol: "DIS", name: "The Walt Disney Company", exchange: "NYSE" },
-  { symbol: "BRK.B", name: "Berkshire Hathaway Inc.", exchange: "NYSE" },
-  { symbol: "PLTR", name: "Palantir Technologies Inc.", exchange: "NASDAQ" },
-  { symbol: "COIN", name: "Coinbase Global, Inc.", exchange: "NASDAQ" },
-];
+import { StockPicker } from "./stock-picker";
+import type { Stock } from "@/lib/stocks";
 
 const FEATURES = [
   ["01", "Price action", "What the stock did today—and the clearest explanation of why it moved."],
@@ -113,36 +84,7 @@ function useReveal<T extends HTMLElement>() {
   return { ref, inView };
 }
 
-function StockLogo({
-  symbol,
-  hasError,
-  onError,
-  className,
-  fallbackClassName,
-}: {
-  symbol: string;
-  hasError: boolean;
-  onError: (symbol: string) => void;
-  className: string;
-  fallbackClassName: string;
-}) {
-  if (hasError) {
-    return <span className={fallbackClassName}>{symbol[0]}</span>;
-  }
-  return (
-    <img
-      className={className}
-      src={`https://images.financialmodelingprep.com/symbol/${symbol}.png`}
-      alt=""
-      loading="lazy"
-      onError={() => onError(symbol)}
-    />
-  );
-}
-
 export function NewsletterLanding() {
-  const [query, setQuery] = useState("");
-  const [focused, setFocused] = useState(false);
   const [picks, setPicks] = useState<Stock[]>([]);
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -150,38 +92,12 @@ export function NewsletterLanding() {
   const [submitting, setSubmitting] = useState(false);
   const [slide, setSlide] = useState(0);
   const [openFaq, setOpenFaq] = useState(0);
-  const [logoErrors, setLogoErrors] = useState<Set<string>>(new Set());
-  const handleLogoError = (symbol: string) => setLogoErrors((current) => new Set(current).add(symbol));
   const features = useReveal<HTMLElement>();
   const testimonials = useReveal<HTMLElement>();
   const faq = useReveal<HTMLElement>();
   const cta = useReveal<HTMLElement>();
 
-  const results = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-    if (!normalized) return [];
-    return STOCKS.filter(
-      (stock) =>
-        !picks.some((pick) => pick.symbol === stock.symbol) &&
-        (stock.symbol.toLowerCase().includes(normalized) || stock.name.toLowerCase().includes(normalized)),
-    ).slice(0, 6);
-  }, [picks, query]);
-
-  const isFull = picks.length === 5;
   const emailValid = /^\S+@\S+\.\S+$/.test(email.trim());
-
-  function addStock(stock: Stock) {
-    if (isFull || picks.some((pick) => pick.symbol === stock.symbol)) return;
-    setPicks((current) => [...current, stock]);
-    setQuery("");
-    setFocused(false);
-    setError("");
-  }
-
-  function removeStock(symbol: string) {
-    setPicks((current) => current.filter((stock) => stock.symbol !== symbol));
-    setSubmitted(false);
-  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -290,71 +206,12 @@ export function NewsletterLanding() {
               </div>
             ) : (
               <form onSubmit={submit} noValidate>
-                <div className={styles.stepRow}>
-                  <span>
-                    <span className={styles.desktopStep}>Step 1 · Choose up to five stocks you want us to follow</span>
-                    <span className={styles.mobileStep}>Step 1 · Choose up to five stocks</span>
-                  </span>
-                  <span>{picks.length} / 5</span>
-                </div>
-
-                <div className={styles.searchWrap}>
-                  <div className={`${styles.searchControl} ${focused && !isFull ? styles.controlFocused : ""}`}>
-                    <Search size={19} aria-hidden="true" />
-                    <input
-                      value={query}
-                      onChange={(event) => { setQuery(event.target.value); setFocused(true); }}
-                      onFocus={() => setFocused(true)}
-                      onBlur={() => window.setTimeout(() => setFocused(false), 120)}
-                      placeholder={isFull ? "Your watchlist is full" : "Search a company or ticker"}
-                      disabled={isFull}
-                      aria-label="Search a US company or ticker"
-                      role="combobox"
-                      aria-autocomplete="list"
-                      aria-controls="stock-search-results"
-                      aria-expanded={focused && query.trim().length > 0 && !isFull}
-                    />
-                  </div>
-                  {focused && query.trim() && !isFull ? (
-                    <div id="stock-search-results" className={styles.results} role="listbox">
-                      {results.length ? results.map((stock) => (
-                        <button type="button" key={stock.symbol} onMouseDown={() => addStock(stock)}>
-                          <StockLogo symbol={stock.symbol} hasError={logoErrors.has(stock.symbol)} onError={handleLogoError} className={styles.resultLogo} fallbackClassName={styles.resultLogoFallback} />
-                          <strong>{stock.symbol}</strong>
-                          <span>{stock.name}</span>
-                          <small>{stock.exchange}</small>
-                        </button>
-                      )) : <p>No matching company found. Try a ticker instead.</p>}
-                    </div>
-                  ) : null}
-                </div>
-
-                {picks.length > 0 ? (
-                  <div className={styles.pickList}>
-                    {picks.map((stock, index) => (
-                      <div className={styles.pick} key={stock.symbol}>
-                        <span className={styles.pickNumber}>{index + 1}</span>
-                        <StockLogo symbol={stock.symbol} hasError={logoErrors.has(stock.symbol)} onError={handleLogoError} className={styles.pickLogo} fallbackClassName={styles.pickLogoFallback} />
-                        <strong>{stock.symbol}</strong>
-                        <span className={styles.pickName}>{stock.name}</span>
-                        <small>{stock.exchange}</small>
-                        <button type="button" onClick={() => removeStock(stock.symbol)} aria-label={`Remove ${stock.symbol}`}><X size={17} /></button>
-                      </div>
-                    ))}
-                    {Array.from({ length: 5 - picks.length }, (_, index) => (
-                      <div className={styles.ghost} key={`ghost-${index}`}>
-                        <span>{picks.length + index + 1}</span>
-                        This slot is still open
-                      </div>
-                    ))}
-                    {!isFull ? (
-                      <div className={styles.mobileGhost}>
-                        <span>{5 - picks.length}</span>
-                        {5 - picks.length === 1 ? "watchlist slot open" : "watchlist slots open"}
-                      </div>
-                    ) : null}
-                  </div>
-                ) : null}
+                <StockPicker
+                  picks={picks}
+                  onPicksChange={(next) => { setPicks(next); setError(""); setSubmitted(false); }}
+                  label="Step 1 · Choose up to five stocks you want us to follow"
+                  mobileLabel="Step 1 · Choose up to five stocks"
+                />
 
                 <div className={styles.emailStep}>Step 2 · Tell us where to send it</div>
                 <div className={styles.emailRow}>
