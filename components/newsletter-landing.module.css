@@ -68,33 +68,69 @@
   backdrop-filter: blur(10px);
   box-shadow: 0 24px 48px rgba(0,0,0,.4);
   text-align: left;
+  animation: decorFloatIn 1s cubic-bezier(0.16, 1, 0.3, 1) both, decorFloat 6s ease-in-out 1s infinite;
+}
+.decorTicker { animation-delay: .05s, 1.05s; }
+.decorBriefing { animation-delay: .2s, 1.2s; }
+.decorFundamentals { animation-delay: .35s, 1.35s; }
+.decorPeers { animation-delay: .5s, 1.5s; }
+
+@keyframes decorFloatIn {
+  from { opacity: 0; transform: translateY(-16px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes decorFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
 }
 
 .decorLabel { display: block; margin-bottom: 10px; color: #6fe0dd; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
 
 .decorTicker { left: 3%; }
 .decorTickerTop { display: flex; align-items: center; justify-content: space-between; font-family: ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 700; color: #fff; }
-.decorChangeUp { color: #6fe0dd; font-size: 12px; }
+.decorChangeUp { color: #6fe0dd; font-size: 12px; animation: decorPulse 2.4s ease-in-out .8s infinite; }
 .decorSparkline { width: 100%; height: 40px; margin: 10px 0 8px; color: #6fe0dd; }
+.decorSparkline polyline { stroke-dasharray: 220; stroke-dashoffset: 220; animation: decorDraw 1.4s cubic-bezier(0.16, 1, 0.3, 1) .5s forwards; }
+
+@keyframes decorDraw { to { stroke-dashoffset: 0; } }
+@keyframes decorPulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
 .decorCaption { display: block; color: #7d879f; font-size: 11.5px; }
 
 .decorBriefing { right: 3%; }
 .decorHeadline { display: block; margin-top: 4px; color: #fff; font-size: 14.5px; font-weight: 700; }
-.decorTextBar { display: block; height: 6px; margin-top: 10px; background: rgba(255,255,255,.09); }
+.decorTextBar { display: block; height: 6px; margin-top: 10px; background: rgba(255,255,255,.09); transform: scaleX(0); transform-origin: left; animation: decorGrowX .7s cubic-bezier(0.16, 1, 0.3, 1) .9s forwards; }
 .decorTextBar:first-of-type { margin-top: 14px; }
+.decorTextBar:last-of-type { animation-delay: 1.05s; }
 
 .decorFundamentals { top: 400px; left: 5%; }
 .decorMetricRow { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; font-size: 11.5px; color: #b6b8be; }
 .decorMetricRow:first-of-type { margin-top: 12px; }
 .decorMeter { flex: 1; height: 5px; background: rgba(255,255,255,.09); }
-.decorMeter span { display: block; height: 100%; background: #6fe0dd; }
+.decorMeter span { display: block; height: 100%; background: #6fe0dd; transform: scaleX(0); transform-origin: left; animation: decorGrowX .8s cubic-bezier(0.16, 1, 0.3, 1) 1.1s forwards; }
+.decorMetricRow:nth-child(3) .decorMeter span { animation-delay: 1.2s; }
+.decorMetricRow:nth-child(4) .decorMeter span { animation-delay: 1.3s; }
+
+@keyframes decorGrowX { to { transform: scaleX(1); } }
 
 .decorPeers { top: 400px; right: 5%; }
 .decorBars { display: flex; align-items: flex-end; gap: 8px; height: 60px; margin-top: 8px; }
-.decorBars span { flex: 1; min-height: 6px; background: rgba(255,255,255,.14); }
+.decorBars span { flex: 1; min-height: 6px; background: rgba(255,255,255,.14); transform: scaleY(0); transform-origin: bottom; animation: decorGrowY .6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.decorBars span:nth-child(1) { animation-delay: 1.1s; }
+.decorBars span:nth-child(2) { animation-delay: 1.17s; }
+.decorBars span:nth-child(3) { animation-delay: 1.24s; }
+.decorBars span:nth-child(4) { animation-delay: 1.31s; }
+.decorBars span:nth-child(5) { animation-delay: 1.38s; }
+
+@keyframes decorGrowY { to { transform: scaleY(1); } }
 .decorBarActive { background: #6fe0dd !important; }
 
 .decorWave { position: absolute; left: 0; bottom: 28px; width: 100%; height: 56px; color: rgba(111,224,221,.45); }
+.decorWave path { animation: decorDrift 10s ease-in-out infinite; }
+
+@keyframes decorDrift {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(-14px) translateY(4px); }
+}
 
 /* Compact desktop: only the two top cards, tucked tight to the edges. */
 @media (min-width: 1180px) {
