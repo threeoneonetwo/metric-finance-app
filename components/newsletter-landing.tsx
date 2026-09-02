@@ -202,6 +202,50 @@ export function NewsletterLanding() {
 
       <section id="top" className={styles.hero}>
         <div className={styles.heroGrid} />
+
+        <div className={styles.heroDecor} aria-hidden="true">
+          <div className={`${styles.decorCard} ${styles.decorTicker}`}>
+            <div className={styles.decorTickerTop}>
+              <span>AAPL</span>
+              <span className={styles.decorChangeUp}>+1.08%</span>
+            </div>
+            <svg viewBox="0 0 120 40" preserveAspectRatio="none" className={styles.decorSparkline}>
+              <polyline points="0,32 15,27 30,30 45,20 60,23 75,12 90,16 105,6 120,10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span className={styles.decorCaption}>Services revenue at a record</span>
+          </div>
+
+          <div className={`${styles.decorCard} ${styles.decorBriefing}`}>
+            <span className={styles.decorLabel}>Today&apos;s briefing</span>
+            <strong className={styles.decorHeadline}>Why NVDA moved</strong>
+            <span className={styles.decorTextBar} style={{ width: "90%" }} />
+            <span className={styles.decorTextBar} style={{ width: "64%" }} />
+          </div>
+
+          <div className={`${styles.decorCard} ${styles.decorFundamentals}`}>
+            <span className={styles.decorLabel}>Fundamentals · TSLA</span>
+            {[["Margin", 62], ["Cash", 78], ["Debt", 32]].map(([label, pct]) => (
+              <div className={styles.decorMetricRow} key={label}>
+                <span>{label}</span>
+                <span className={styles.decorMeter}><span style={{ width: `${pct}%` }} /></span>
+              </div>
+            ))}
+          </div>
+
+          <div className={`${styles.decorCard} ${styles.decorPeers}`}>
+            <span className={styles.decorLabel}>Peers</span>
+            <div className={styles.decorBars}>
+              {[38, 54, 84, 46, 30].map((height, index) => (
+                <span key={index} style={{ height: `${height}%` }} className={index === 2 ? styles.decorBarActive : ""} />
+              ))}
+            </div>
+          </div>
+
+          <svg className={styles.decorWave} viewBox="0 0 1600 100" preserveAspectRatio="none">
+            <path d="M0,80 C220,20 420,110 640,55 C860,5 1080,95 1300,45 C1420,20 1520,60 1600,35" fill="none" stroke="currentColor" strokeWidth="2" />
+          </svg>
+        </div>
+
         <div className={styles.heroInner}>
           <h1 className={styles.fadeUp} style={{ animationDelay: "0ms" }}>Stocks explained<br />like you&apos;re 5</h1>
           <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "80ms" }}>Agentic analysis for public equities in plain English to help you become a smarter investor for free.</p>
