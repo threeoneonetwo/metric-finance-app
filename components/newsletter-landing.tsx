@@ -192,7 +192,7 @@ export function NewsletterLanding() {
 
         <div className={styles.heroInner}>
           <h1 className={styles.fadeUp} style={{ animationDelay: "0ms" }}>Stocks explained<br />like you&apos;re 5</h1>
-          <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "80ms" }}>A clear, plain-English breakdown of the public equities you follow, to help you become a smarter investor for free.</p>
+          <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "80ms" }}>A bite sized breakdown of only the stocks you&apos;re interested in, to help you become a smarter investor for free.</p>
 
           <div id="signup" className={`${styles.signup} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>
             {submitted ? (
