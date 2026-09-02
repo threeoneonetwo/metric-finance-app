@@ -113,6 +113,33 @@ function useReveal<T extends HTMLElement>() {
   return { ref, inView };
 }
 
+function StockLogo({
+  symbol,
+  hasError,
+  onError,
+  className,
+  fallbackClassName,
+}: {
+  symbol: string;
+  hasError: boolean;
+  onError: (symbol: string) => void;
+  className: string;
+  fallbackClassName: string;
+}) {
+  if (hasError) {
+    return <span className={fallbackClassName}>{symbol[0]}</span>;
+  }
+  return (
+    <img
+      className={className}
+      src={`https://images.financialmodelingprep.com/symbol/${symbol}.png`}
+      alt=""
+      loading="lazy"
+      onError={() => onError(symbol)}
+    />
+  );
+}
+
 export function NewsletterLanding() {
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
@@ -124,6 +151,7 @@ export function NewsletterLanding() {
   const [slide, setSlide] = useState(0);
   const [openFaq, setOpenFaq] = useState(0);
   const [logoErrors, setLogoErrors] = useState<Set<string>>(new Set());
+  const handleLogoError = (symbol: string) => setLogoErrors((current) => new Set(current).add(symbol));
   const features = useReveal<HTMLElement>();
   const testimonials = useReveal<HTMLElement>();
   const faq = useReveal<HTMLElement>();
@@ -291,17 +319,7 @@ export function NewsletterLanding() {
                     <div id="stock-search-results" className={styles.results} role="listbox">
                       {results.length ? results.map((stock) => (
                         <button type="button" key={stock.symbol} onMouseDown={() => addStock(stock)}>
-                          {logoErrors.has(stock.symbol) ? (
-                            <span className={styles.resultLogoFallback}>{stock.symbol[0]}</span>
-                          ) : (
-                            <img
-                              className={styles.resultLogo}
-                              src={`https://images.financialmodelingprep.com/symbol/${stock.symbol}.png`}
-                              alt=""
-                              loading="lazy"
-                              onError={() => setLogoErrors((current) => new Set(current).add(stock.symbol))}
-                            />
-                          )}
+                          <StockLogo symbol={stock.symbol} hasError={logoErrors.has(stock.symbol)} onError={handleLogoError} className={styles.resultLogo} fallbackClassName={styles.resultLogoFallback} />
                           <strong>{stock.symbol}</strong>
                           <span>{stock.name}</span>
                           <small>{stock.exchange}</small>
@@ -311,29 +329,32 @@ export function NewsletterLanding() {
                   ) : null}
                 </div>
 
-                <div className={styles.pickList}>
-                  {picks.map((stock, index) => (
-                    <div className={styles.pick} key={stock.symbol}>
-                      <span className={styles.pickNumber}>{index + 1}</span>
-                      <strong>{stock.symbol}</strong>
-                      <span className={styles.pickName}>{stock.name}</span>
-                      <small>{stock.exchange}</small>
-                      <button type="button" onClick={() => removeStock(stock.symbol)} aria-label={`Remove ${stock.symbol}`}><X size={17} /></button>
-                    </div>
-                  ))}
-                  {Array.from({ length: 5 - picks.length }, (_, index) => (
-                    <div className={styles.ghost} key={`ghost-${index}`}>
-                      <span>{picks.length + index + 1}</span>
-                      This slot is still open
-                    </div>
-                  ))}
-                  {!isFull ? (
-                    <div className={styles.mobileGhost}>
-                      <span>{5 - picks.length}</span>
-                      {5 - picks.length === 1 ? "watchlist slot open" : "watchlist slots open"}
-                    </div>
-                  ) : null}
-                </div>
+                {picks.length > 0 ? (
+                  <div className={styles.pickList}>
+                    {picks.map((stock, index) => (
+                      <div className={styles.pick} key={stock.symbol}>
+                        <span className={styles.pickNumber}>{index + 1}</span>
+                        <StockLogo symbol={stock.symbol} hasError={logoErrors.has(stock.symbol)} onError={handleLogoError} className={styles.pickLogo} fallbackClassName={styles.pickLogoFallback} />
+                        <strong>{stock.symbol}</strong>
+                        <span className={styles.pickName}>{stock.name}</span>
+                        <small>{stock.exchange}</small>
+                        <button type="button" onClick={() => removeStock(stock.symbol)} aria-label={`Remove ${stock.symbol}`}><X size={17} /></button>
+                      </div>
+                    ))}
+                    {Array.from({ length: 5 - picks.length }, (_, index) => (
+                      <div className={styles.ghost} key={`ghost-${index}`}>
+                        <span>{picks.length + index + 1}</span>
+                        This slot is still open
+                      </div>
+                    ))}
+                    {!isFull ? (
+                      <div className={styles.mobileGhost}>
+                        <span>{5 - picks.length}</span>
+                        {5 - picks.length === 1 ? "watchlist slot open" : "watchlist slots open"}
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
 
                 <div className={styles.emailStep}>Step 2 · Tell us where to send it</div>
                 <div className={styles.emailRow}>
