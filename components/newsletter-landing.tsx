@@ -247,30 +247,10 @@ export function NewsletterLanding() {
         </div>
 
         <div className={styles.heroInner}>
-          <div className={`${styles.briefPreview} ${styles.fadeUp}`} aria-hidden="true" style={{ animationDelay: "0ms" }}>
-            <div className={styles.briefPreviewHeader}>
-              <span>Metric Finance</span>
-              <span>Today&apos;s briefing</span>
-            </div>
-            {[
-              { ticker: "AAPL", change: "+1.08%", up: true, blurb: "Services revenue hit a record, easing worries about iPhone growth." },
-              { ticker: "NVDA", change: "-0.42%", up: false, blurb: "Slipped after a peer chipmaker flagged softer datacenter orders." },
-              { ticker: "TSLA", change: "+2.31%", up: true, blurb: "Rose on stronger-than-expected delivery numbers this quarter." },
-            ].map((row) => (
-              <div className={styles.briefRow} key={row.ticker}>
-                <div className={styles.briefRowTop}>
-                  <span>{row.ticker}</span>
-                  <span className={row.up ? styles.briefChangeUp : styles.briefChangeDown}>{row.change}</span>
-                </div>
-                <p>{row.blurb}</p>
-              </div>
-            ))}
-          </div>
+          <h1 className={styles.fadeUp} style={{ animationDelay: "0ms" }}>Stocks explained<br />like you&apos;re 5</h1>
+          <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "80ms" }}>Agentic analysis for public equities in plain English to help you become a smarter investor for free.</p>
 
-          <h1 className={styles.fadeUp} style={{ animationDelay: "80ms" }}>Stocks explained<br />like you&apos;re 5</h1>
-          <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>Agentic analysis for public equities in plain English to help you become a smarter investor for free.</p>
-
-          <div id="signup" className={`${styles.signup} ${styles.fadeUp}`} style={{ animationDelay: "240ms" }}>
+          <div id="signup" className={`${styles.signup} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>
             {submitted ? (
               <div className={styles.success} aria-live="polite">
                 <div className={styles.successTitle}><Check size={20} /> You&apos;re in.</div>
@@ -374,7 +354,7 @@ export function NewsletterLanding() {
             )}
           </div>
 
-          <div className={`${styles.stats} ${styles.fadeUp}`} style={{ animationDelay: "320ms" }}>
+          <div className={`${styles.stats} ${styles.fadeUp}`} style={{ animationDelay: "240ms" }}>
             <div><strong>5000+ stocks</strong><span>Nasdaq &amp; NYSE</span></div>
             <div><strong>Market context</strong><span>Without the noise</span></div>
             <div><strong>AI analysis</strong><span>Metric engine</span></div>

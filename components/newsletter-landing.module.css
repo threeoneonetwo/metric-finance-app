@@ -96,30 +96,8 @@
 
 .decorWave { position: absolute; left: 0; bottom: 28px; width: 100%; height: 56px; color: rgba(111,224,221,.45); }
 
-/* Phone-only: a single briefing-preview illustration, in normal flow above the headline. */
-.briefPreview {
-  max-width: 320px;
-  margin: 0 auto 28px;
-  padding: 16px 18px;
-  border: 1px solid rgba(255,255,255,.1);
-  background: rgba(14,14,17,.82);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 20px 44px rgba(0,0,0,.4);
-  text-align: left;
-}
-.briefPreviewHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
-.briefPreviewHeader span:first-child { color: #fff; }
-.briefPreviewHeader span:last-child { color: #6fe0dd; }
-.briefRow { padding-top: 10px; margin-top: 10px; border-top: 1px solid rgba(255,255,255,.08); }
-.briefRow:first-child { padding-top: 0; margin-top: 0; border-top: 0; }
-.briefRowTop { display: flex; align-items: center; justify-content: space-between; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; font-weight: 700; color: #fff; }
-.briefChangeUp { color: #6fe0dd; font-size: 11px; }
-.briefChangeDown { color: #e08a8a; font-size: 11px; }
-.briefRow p { margin: 5px 0 0; color: #9a9aa2; font-size: 11.5px; line-height: 1.5; }
-
 /* Compact desktop: only the two top cards, tucked tight to the edges. */
 @media (min-width: 1180px) {
-  .briefPreview { display: none; }
   .decorTicker, .decorBriefing { display: block; width: 150px; padding: 13px 15px; }
   .decorTicker { top: 96px; left: 0.5%; }
   .decorBriefing { top: 78px; right: 0.5%; }
