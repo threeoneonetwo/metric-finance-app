@@ -332,7 +332,7 @@ export function NewsletterLanding() {
         <div className={styles.faqInner}>
           <div>
             <span className={styles.kicker}>FAQ</span>
-            <h2>Questions,<br />answered plainly</h2>
+            <h2>Questions, answered plainly</h2>
           </div>
           <div className={styles.faqs}>
             {FAQS.map((item, index) => {
