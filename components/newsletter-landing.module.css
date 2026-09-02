@@ -185,10 +185,9 @@
 .finalCta a { display: inline-block; padding: 19px 38px; background: #fff; color: #08080a; font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms ease; }
 .finalCta a:hover { transform: translateY(-3px); }
 .finalCta a:active { transform: translateY(0); }
-.footer { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 34px 40px; border-top: 1px solid var(--border); color: #6c6c74; font-size: 13px; }
+.footer { display: flex; align-items: center; justify-content: center; text-align: center; gap: 24px; padding: 34px 40px; border-top: 1px solid var(--border); color: #6c6c74; font-size: 13px; }
 .footer a { color: #b6b6be; text-decoration: underline; text-underline-offset: 3px; transition: color 150ms ease; }
 .footer a:hover { color: #fff; }
-.footer > div { display: flex; gap: 24px; }
 
 @media (min-width: 1100px) {
   .header { padding-right: max(40px, calc((100vw - 1200px) / 2)); padding-left: max(40px, calc((100vw - 1200px) / 2)); }
@@ -248,7 +247,7 @@
   .faqInner { gap: 0; }
   .faqAnswerWrap p { padding-right: 20px; }
   .finalCta { padding: 84px 20px 90px; }
-  .footer { align-items: flex-start; padding: 28px 20px; flex-direction: column; line-height: 1.6; }
+  .footer { padding: 28px 20px; line-height: 1.6; }
 }
 
 @media (max-width: 360px) {

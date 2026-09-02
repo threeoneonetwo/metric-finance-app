@@ -362,7 +362,6 @@ export function NewsletterLanding() {
         <span>
           Metric Finance · Built by <a href="https://www.linkedin.com/in/yashnapandugala/" target="_blank" rel="noreferrer">Yashna</a> &amp; <a href="https://www.linkedin.com/in/vanshpandita-real/" target="_blank" rel="noreferrer">Vansh</a> · Not financial advice
         </span>
-        <div><a href="#faq">FAQ</a><a href={PRIVACY_URL} target="_blank" rel="noreferrer">Privacy</a></div>
       </footer>
     </div>
   );
