@@ -52,9 +52,6 @@
 }
 
 .heroInner { position: relative; max-width: 1080px; margin: 0 auto; text-align: center; }
-.eyebrow { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 30px; padding: 7px 14px; border: 1px solid rgba(255,255,255,.14); color: #b6b6be; font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
-.eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: #6ee7a0; animation: pulse 2.4s ease-in-out infinite; }
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
 .hero h1 { max-width: 920px; margin: 0 auto 24px; color: #fff; font-size: clamp(55px, 6.2vw, 88px); font-weight: 800; line-height: .98; letter-spacing: -.05em; text-wrap: balance; }
 .heroCopy { max-width: 640px; margin: 0 auto 54px; color: var(--muted); font-size: 18.5px; line-height: 1.65; }
 
@@ -205,7 +202,6 @@
   .nav > a:not(.headerCta) { display: none; }
   .nav .headerCta { padding: 10px 13px; font-size: 9.5px; letter-spacing: .08em; }
   .hero { padding: 56px 20px 72px; }
-  .eyebrow { margin-bottom: 26px; font-size: 9px; letter-spacing: .13em; }
   .hero h1 { font-size: clamp(48px, 14vw, 64px); }
   .hero h1 { font-weight: 800; letter-spacing: -.055em; }
   .heroCopy { margin-bottom: 42px; font-size: 16px; line-height: 1.55; }
@@ -255,7 +251,6 @@
   .logo { font-size: 15.5px; }
   .nav .headerCta { padding: 9px 10px; font-size: 8.5px; }
   .hero { padding-right: 16px; padding-left: 16px; }
-  .eyebrow { padding-right: 10px; padding-left: 10px; font-size: 8px; }
   .hero h1 { font-size: 46px; }
   .stats strong { font-size: 12.5px; }
 }

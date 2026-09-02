@@ -202,14 +202,10 @@ export function NewsletterLanding() {
       <section id="top" className={styles.hero}>
         <div className={styles.heroGrid} />
         <div className={styles.heroInner}>
-          <div className={`${styles.eyebrow} ${styles.fadeUp}`} style={{ animationDelay: "0ms" }}>
-            <span />
-            Free daily briefing · US markets
-          </div>
-          <h1 className={styles.fadeUp} style={{ animationDelay: "80ms" }}>Stocks explained<br />like you&apos;re 5</h1>
-          <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>Agentic analysis for public equities in plain English to help you become a smarter investor for free.</p>
+          <h1 className={styles.fadeUp} style={{ animationDelay: "0ms" }}>Stocks explained<br />like you&apos;re 5</h1>
+          <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "80ms" }}>Agentic analysis for public equities in plain English to help you become a smarter investor for free.</p>
 
-          <div id="signup" className={`${styles.signup} ${styles.fadeUp}`} style={{ animationDelay: "240ms" }}>
+          <div id="signup" className={`${styles.signup} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>
             {submitted ? (
               <div className={styles.success} aria-live="polite">
                 <div className={styles.successTitle}><Check size={20} /> You&apos;re in.</div>
@@ -302,7 +298,7 @@ export function NewsletterLanding() {
             )}
           </div>
 
-          <div className={`${styles.stats} ${styles.fadeUp}`} style={{ animationDelay: "320ms" }}>
+          <div className={`${styles.stats} ${styles.fadeUp}`} style={{ animationDelay: "240ms" }}>
             <div><strong>5000+ stocks</strong><span>Nasdaq &amp; NYSE</span></div>
             <div><strong>Market context</strong><span>Without the noise</span></div>
             <div><strong>AI analysis</strong><span>Metric engine</span></div>
