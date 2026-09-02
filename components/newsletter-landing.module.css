@@ -72,23 +72,16 @@
 
 .decorLabel { display: block; margin-bottom: 10px; color: #6fe0dd; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
 
-/* Mobile-first: small ticker + briefing cards tucked into the top corners. */
-.decorTicker, .decorBriefing {
-  display: block;
-  width: 118px;
-  padding: 10px 11px;
-  top: 6px;
-}
 .decorTicker { left: 3%; }
-.decorTickerTop { display: flex; align-items: center; justify-content: space-between; font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 700; color: #fff; }
-.decorChangeUp { color: #6fe0dd; font-size: 10px; }
-.decorSparkline { width: 100%; height: 28px; margin: 8px 0 6px; color: #6fe0dd; }
-.decorCaption { display: block; color: #8a8a92; font-size: 9.5px; line-height: 1.35; }
+.decorTickerTop { display: flex; align-items: center; justify-content: space-between; font-family: ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 700; color: #fff; }
+.decorChangeUp { color: #6fe0dd; font-size: 12px; }
+.decorSparkline { width: 100%; height: 40px; margin: 10px 0 8px; color: #6fe0dd; }
+.decorCaption { display: block; color: #8a8a92; font-size: 11.5px; }
 
 .decorBriefing { right: 3%; }
-.decorHeadline { display: block; margin-top: 4px; color: #fff; font-size: 12px; font-weight: 700; }
-.decorTextBar { display: block; height: 5px; margin-top: 8px; background: rgba(255,255,255,.09); }
-.decorTextBar:first-of-type { margin-top: 10px; }
+.decorHeadline { display: block; margin-top: 4px; color: #fff; font-size: 14.5px; font-weight: 700; }
+.decorTextBar { display: block; height: 6px; margin-top: 10px; background: rgba(255,255,255,.09); }
+.decorTextBar:first-of-type { margin-top: 14px; }
 
 .decorFundamentals { top: 400px; left: 5%; }
 .decorMetricRow { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; font-size: 11.5px; color: #b6b6be; }
@@ -103,8 +96,30 @@
 
 .decorWave { position: absolute; left: 0; bottom: 28px; width: 100%; height: 56px; color: rgba(111,224,221,.45); }
 
+/* Phone-only: a single briefing-preview illustration, in normal flow above the headline. */
+.briefPreview {
+  max-width: 320px;
+  margin: 0 auto 28px;
+  padding: 16px 18px;
+  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(14,14,17,.82);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 44px rgba(0,0,0,.4);
+  text-align: left;
+}
+.briefPreviewHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.briefPreviewHeader span:first-child { color: #fff; }
+.briefPreviewHeader span:last-child { color: #6fe0dd; }
+.briefRow { padding-top: 10px; margin-top: 10px; border-top: 1px solid rgba(255,255,255,.08); }
+.briefRow:first-child { padding-top: 0; margin-top: 0; border-top: 0; }
+.briefRowTop { display: flex; align-items: center; justify-content: space-between; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; font-weight: 700; color: #fff; }
+.briefChangeUp { color: #6fe0dd; font-size: 11px; }
+.briefChangeDown { color: #e08a8a; font-size: 11px; }
+.briefRow p { margin: 5px 0 0; color: #9a9aa2; font-size: 11.5px; line-height: 1.5; }
+
 /* Compact desktop: only the two top cards, tucked tight to the edges. */
 @media (min-width: 1180px) {
+  .briefPreview { display: none; }
   .decorTicker, .decorBriefing { display: block; width: 150px; padding: 13px 15px; }
   .decorTicker { top: 96px; left: 0.5%; }
   .decorBriefing { top: 78px; right: 0.5%; }
@@ -278,7 +293,7 @@
   .nav { gap: 0; }
   .nav > a:not(.headerCta) { display: none; }
   .nav .headerCta { padding: 13px 14px; font-size: 9.5px; letter-spacing: .08em; }
-  .hero { padding: 150px 20px 72px; }
+  .hero { padding: 56px 20px 72px; }
   .hero h1 { font-size: clamp(48px, 14vw, 64px); }
   .hero h1 { font-weight: 800; letter-spacing: -.055em; }
   .heroCopy { margin-bottom: 42px; font-size: 16px; line-height: 1.55; }
