@@ -1,4 +1,5 @@
 import type { TickerSnapshot } from "./market-data";
+import { getTickerNews } from "./news";
 
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const MODEL = process.env.CLAUDE_MODEL ?? "claude-haiku-4-5";
@@ -12,7 +13,12 @@ export async function generateTickerBlurbs(snapshots: TickerSnapshot[]): Promise
   const blurbs = new Map<string, string>();
   if (!apiKey || snapshots.length === 0) return blurbs;
 
-  const results = await Promise.all(snapshots.map((snapshot) => generateOneBlurb(snapshot, apiKey)));
+  const results = await Promise.all(
+    snapshots.map(async (snapshot) => {
+      const news = await getTickerNews(snapshot.companyName, snapshot.ticker);
+      return generateOneBlurb(snapshot, news, apiKey);
+    }),
+  );
 
   for (const result of results) {
     if (result) blurbs.set(result.ticker, result.blurb);
@@ -21,9 +27,17 @@ export async function generateTickerBlurbs(snapshots: TickerSnapshot[]): Promise
   return blurbs;
 }
 
-async function generateOneBlurb(snapshot: TickerSnapshot, apiKey: string) {
+async function generateOneBlurb(
+  snapshot: TickerSnapshot,
+  news: Awaited<ReturnType<typeof getTickerNews>>,
+  apiKey: string,
+) {
   const direction = (snapshot.dayChangePercent ?? 0) >= 0 ? "up" : "down";
-  const prompt = `Write one short, plain-English sentence (max 25 words) explaining today's price action for ${snapshot.companyName} (${snapshot.ticker}), which is ${direction} ${Math.abs(snapshot.dayChangePercent ?? 0).toFixed(2)}% today at $${snapshot.price ?? "?"}. No jargon, no hype, no financial advice. Just plainly describe the move.`;
+  const changeLine = `${snapshot.companyName} (${snapshot.ticker}) is ${direction} ${Math.abs(snapshot.dayChangePercent ?? 0).toFixed(2)}% today at $${snapshot.price ?? "?"}.`;
+
+  const prompt = news.length > 0
+    ? `${changeLine}\n\nRecent headlines about this company:\n${news.map((item, i) => `${i + 1}. ${item.title}${item.source ? ` (${item.source})` : ""}`).join("\n")}\n\nWrite one short, plain-English sentence (max 25 words) explaining today's move, grounded in the headlines above if they're relevant to the move — otherwise just describe the price action plainly. No jargon, no hype, no financial advice, no fabricated reasons.`
+    : `${changeLine}\n\nNo recent news was found for this company. Write one short, plain-English sentence (max 25 words) that plainly describes the price move using only the numbers above. Do not invent a reason for the move. No jargon, no hype, no financial advice.`;
 
   try {
     const response = await fetch(ANTHROPIC_URL, {
