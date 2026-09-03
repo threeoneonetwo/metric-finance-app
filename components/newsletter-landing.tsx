@@ -84,6 +84,14 @@ function useReveal<T extends HTMLElement>() {
   return { ref, inView };
 }
 
+function SectionWave() {
+  return (
+    <svg className={styles.sectionWave} viewBox="0 0 1600 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,30 C220,4 420,56 640,28 C860,0 1080,52 1300,24 C1420,8 1520,34 1600,18" fill="none" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
 export function NewsletterLanding() {
   const [picks, setPicks] = useState<Stock[]>([]);
   const [email, setEmail] = useState("");
@@ -258,6 +266,7 @@ export function NewsletterLanding() {
         </div>
       </section>
 
+      <SectionWave />
       <section ref={testimonials.ref} className={`${styles.testimonialsSection} ${testimonials.inView ? styles.inView : ""}`}>
         <div className={styles.sectionInner}>
           <span className={styles.kicker}>From real users</span>
@@ -276,6 +285,7 @@ export function NewsletterLanding() {
         </div>
       </section>
 
+      <SectionWave />
       <section id="faq" ref={faq.ref} className={`${styles.faqSection} ${faq.inView ? styles.inView : ""}`}>
         <div className={styles.faqInner}>
           <div>
@@ -300,12 +310,14 @@ export function NewsletterLanding() {
         </div>
       </section>
 
+      <SectionWave />
       <section ref={cta.ref} className={`${styles.finalCta} ${cta.inView ? styles.inView : ""}`}>
         <h2>Understand stocks<br />like a pro</h2>
         <p>Pick the stocks you care about and get the context you need in plain English every day.</p>
         <a href="#signup">Build my watchlist</a>
       </section>
 
+      <SectionWave />
       <footer className={styles.footer}>
         <span>
           Metric Finance · Built by <a href="https://www.linkedin.com/in/yashnapandugala/" target="_blank" rel="noreferrer">Yashna</a> &amp; <a href="https://www.linkedin.com/in/vanshpandita-real/" target="_blank" rel="noreferrer">Vansh</a> · Not financial advice
