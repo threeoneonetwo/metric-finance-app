@@ -15,7 +15,7 @@ type FmpQuote = {
   symbol?: string;
   name?: string;
   price?: number | null;
-  changesPercentage?: number | null;
+  changePercentage?: number | null;
   dayLow?: number | null;
   dayHigh?: number | null;
   volume?: number | null;
@@ -49,7 +49,7 @@ export async function getTickerSnapshots(tickers: string[]): Promise<Map<string,
           ticker,
           companyName: quote.name ?? ticker,
           price: numberOrNull(quote.price),
-          dayChangePercent: numberOrNull(quote.changesPercentage),
+          dayChangePercent: numberOrNull(quote.changePercentage),
           dayHigh: numberOrNull(quote.dayHigh),
           dayLow: numberOrNull(quote.dayLow),
           volume: numberOrNull(quote.volume),
