@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { listActiveSubscribers, markSubscribersSent } from "@/db/subscribers";
-import { buildDigestEmail, generateTickerBlurbs, hasAnthropicConfig } from "@/lib/newsletter/generate-brief";
+import { generateTickerBlurbs, hasAnthropicConfig } from "@/lib/newsletter/generate-brief";
 import { getTickerSnapshots, hasFmpConfig } from "@/lib/newsletter/market-data";
-import { hasSesConfig, sendEmail } from "@/lib/newsletter/ses";
+import { hasSesConfig } from "@/lib/newsletter/ses";
+import { sendDigestToSubscriber } from "@/lib/newsletter/send-digest";
 
 export const maxDuration = 60;
 
@@ -31,25 +32,12 @@ export async function GET(request: Request) {
   const sentIds: string[] = [];
 
   for (const subscriber of subscribers) {
-    const digest = buildDigestEmail({
-      tickers: subscriber.tickers,
-      snapshots,
-      blurbs,
-      manageUrl: `${baseUrl}/manage?token=${subscriber.unsubscribeToken}`,
-      unsubscribeUrl: `${baseUrl}/api/unsubscribe?token=${subscriber.unsubscribeToken}`,
-    });
-
-    if (!digest.hasContent) continue;
-
     try {
-      await sendEmail({
-        to: subscriber.email,
-        subject: "Your Metric Finance briefing",
-        html: digest.html,
-        text: digest.text,
-      });
-      sent += 1;
-      sentIds.push(subscriber.id);
+      const result = await sendDigestToSubscriber({ subscriber, snapshots, blurbs, baseUrl });
+      if (result.sent) {
+        sent += 1;
+        sentIds.push(subscriber.id);
+      }
     } catch {
       // Skip and continue sending to the rest of the list.
     }

@@ -38,6 +38,19 @@ export async function upsertSubscriber(input: SubscriberInput) {
   return created ?? null;
 }
 
+export async function findSubscriberByEmail(email: string) {
+  const db = getDb();
+  if (!db) return null;
+
+  const [subscriber] = await db
+    .select()
+    .from(subscribers)
+    .where(eq(subscribers.email, email.trim().toLowerCase()))
+    .limit(1);
+
+  return subscriber ?? null;
+}
+
 export async function findSubscriberByToken(token: string) {
   const db = getDb();
   if (!db) return null;
