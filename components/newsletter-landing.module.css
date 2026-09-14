@@ -307,7 +307,7 @@
 .faqAnswerWrap p { margin: 0; padding: 0 60px 24px 2px; color: var(--muted); font-size: 14.5px; line-height: 1.7; }
 .faqAnswerOpen { grid-template-rows: 1fr; opacity: 1; }
 
-.finalCta { position: relative; overflow: hidden; padding: 120px 40px 128px; text-align: center; background: radial-gradient(75% 90% at 50% 118%, #10182c 0%, #060910 60%, #05070d 100%); }
+.finalCta { position: relative; overflow: hidden; padding: 96px 40px 104px; text-align: center; background: radial-gradient(75% 90% at 50% 118%, #10182c 0%, #060910 60%, #05070d 100%); }
 .finalCtaGrid {
   position: absolute; inset: 0; pointer-events: none;
   background-image: linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
