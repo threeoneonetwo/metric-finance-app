@@ -1,8 +1,10 @@
+import { recordBriefing } from "@/db/briefings";
 import { buildDigestEmail } from "./generate-brief";
 import type { TickerSnapshot } from "./market-data";
 import { sendEmail } from "./ses";
 
 type DigestSubscriber = {
+  id: string;
   email: string;
   tickers: string[];
   unsubscribeToken: string;
@@ -29,6 +31,13 @@ export async function sendDigestToSubscriber(input: {
   await sendEmail({
     to: input.subscriber.email,
     subject: "Your Metric Finance briefing",
+    html: digest.html,
+    text: digest.text,
+  });
+
+  await recordBriefing({
+    subscriberId: input.subscriber.id,
+    tickers: input.subscriber.tickers,
     html: digest.html,
     text: digest.text,
   });

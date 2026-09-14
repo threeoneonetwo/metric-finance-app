@@ -18,6 +18,15 @@ export const config = pgTable("config", {
   value: jsonb("value").notNull(),
 });
 
+export const briefings = pgTable("briefings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  subscriberId: uuid("subscriber_id").notNull(),
+  tickers: jsonb("tickers").$type<string[]>().notNull().default([]),
+  html: text("html").notNull(),
+  text: text("text").notNull(),
+  sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const subscribers = pgTable("subscribers", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: text("email").notNull().unique(),

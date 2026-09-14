@@ -231,6 +231,41 @@
 .manageSaved { display: flex; align-items: center; gap: 8px; margin: 14px 0 0; color: #6fe0dd; font-size: 13px; }
 .manageUnsubscribe { display: inline-block; margin-top: 44px; color: #67738f; font-size: 13px; text-decoration: underline; text-underline-offset: 4px; transition: color 150ms ease; }
 .manageUnsubscribe:hover { color: #ebecee; }
+
+/* ── Briefing history ── */
+.briefingHistory { margin-bottom: 48px; }
+.briefingHeading { margin: 0 0 18px; color: #fff; font-size: 19px; font-weight: 800; letter-spacing: -.02em; }
+.briefingSearch {
+  width: 100%; height: 52px; margin-bottom: 16px; padding: 0 18px; border: 1px solid #161f35; outline: 0;
+  background: var(--panel); color: #fff; font-size: 14.5px;
+}
+.briefingSearch:focus { border-color: #334162; }
+.briefingSearch::-webkit-search-cancel-button { filter: invert(1); opacity: .5; }
+.briefingList { border: 1px solid #161f35; }
+.briefingRow { border-bottom: 1px solid #161f35; }
+.briefingRow:last-child { border-bottom: 0; }
+.briefingRowHead {
+  display: flex; align-items: center; gap: 16px; width: 100%; padding: 16px 18px; border: 0;
+  background: none; color: #ebecee; cursor: pointer; text-align: left; transition: background-color 150ms ease;
+}
+.briefingRowHead:hover { background: #0a0f1a; }
+.briefingRowHead svg { flex-shrink: 0; margin-left: auto; color: #67738f; transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1); }
+.briefingChevronOpen { transform: rotate(180deg); }
+.briefingDate { flex-shrink: 0; min-width: 108px; color: #939aa9; font-size: 13px; }
+.briefingTickers { display: flex; flex-wrap: wrap; gap: 8px; }
+.briefingTickers span {
+  padding: 3px 9px; border: 1px solid #232f4d; color: #ebecee; font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px; letter-spacing: .04em;
+}
+.briefingBody {
+  margin: 0; padding: 4px 18px 20px; overflow-x: auto; white-space: pre-wrap; color: #939aa9;
+  font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+  .briefingRowHead { flex-wrap: wrap; gap: 8px 16px; }
+  .briefingDate { min-width: 0; }
+}
 .success { padding: 40px 36px; border: 1px solid #161f35; background: #090e19; animation: fadeUp .5s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .successTitle { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; font-size: 21px; font-weight: 700; }
 .success > p { margin: 0 0 26px; color: #7d879f; font-size: 14.5px; line-height: 1.6; }

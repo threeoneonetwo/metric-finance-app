@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Check } from "lucide-react";
+import { BriefingHistory, type BriefingSummary } from "./briefing-history";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
 import type { Stock } from "@/lib/stocks";
@@ -11,9 +12,10 @@ type ManageWatchlistProps = {
   token: string;
   email: string;
   initialPicks: Stock[];
+  briefings: BriefingSummary[];
 };
 
-export function ManageWatchlist({ token, email, initialPicks }: ManageWatchlistProps) {
+export function ManageWatchlist({ token, email, initialPicks, briefings }: ManageWatchlistProps) {
   const [picks, setPicks] = useState<Stock[]>(initialPicks);
   // Baseline of what's actually stored, so "Saved" survives until the next edit.
   const [savedPicks, setSavedPicks] = useState<Stock[]>(initialPicks);
@@ -62,11 +64,14 @@ export function ManageWatchlist({ token, email, initialPicks }: ManageWatchlistP
 
       <section className={styles.manageSection}>
         <div className={styles.manageInner}>
-          <h1 className={styles.manageHeading}>Manage your watchlist</h1>
+          <h1 className={styles.manageHeading}>Your account</h1>
           <p className={styles.manageSub}>
-            Briefings go to <strong>{email}</strong>. Add or remove stocks below, then save.
+            Briefings go to <strong>{email}</strong>.
           </p>
 
+          <BriefingHistory briefings={briefings} />
+
+          <h2 className={styles.briefingHeading}>Manage your watchlist</h2>
           <div className={styles.signup}>
             <StockPicker
               picks={picks}

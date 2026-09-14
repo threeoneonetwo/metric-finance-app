@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { listBriefingsForSubscriber } from "@/db/briefings";
 import { findSubscriberByToken } from "@/db/subscribers";
 import { ManageWatchlist } from "@/components/manage-watchlist";
 import styles from "@/components/newsletter-landing.module.css";
@@ -40,12 +41,20 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
     );
   }
 
+  const briefings = await listBriefingsForSubscriber(subscriber.id);
+
   return (
     <main>
       <ManageWatchlist
         token={subscriber.unsubscribeToken}
         email={subscriber.email}
         initialPicks={stocksFromSymbols(subscriber.tickers)}
+        briefings={briefings.map((briefing) => ({
+          id: briefing.id,
+          tickers: briefing.tickers,
+          text: briefing.text,
+          sentAt: briefing.sentAt.toISOString(),
+        }))}
       />
     </main>
   );
