@@ -133,13 +133,7 @@
 @keyframes decorGrowY { to { transform: scaleY(1); } }
 .decorBarActive { background: #6fe0dd !important; }
 
-.decorWave { position: absolute; left: 0; bottom: 28px; width: 100%; height: 56px; color: rgba(111,224,221,.45); }
-.decorWave path { animation: decorDrift 10s ease-in-out infinite; }
-
-@keyframes decorDrift {
-  0%, 100% { transform: translateX(0) translateY(0); }
-  50% { transform: translateX(-14px) translateY(4px); }
-}
+.decorWave { position: absolute; left: 0; bottom: 28px; width: 100%; height: 1px; border: none; background: rgba(111,224,221,.45); margin: 0; }
 
 /* Compact desktop: only the two top cards, tucked tight to the edges. */
 @media (min-width: 1180px) {
@@ -147,7 +141,7 @@
   .decorTicker { top: 96px; left: 0.5%; }
   .decorBriefing { top: 78px; right: 0.5%; }
   .decorSparkline { height: 32px; }
-  .decorWave { bottom: 0; height: 64px; color: rgba(111,224,221,.28); }
+  .decorWave { bottom: 0; background: rgba(111,224,221,.28); }
 }
 
 /* Full desktop: all four cards, roomier placement. */
@@ -157,7 +151,7 @@
   .decorBriefing { top: 100px; right: 3%; }
   .decorSparkline { height: 40px; }
   .decorFundamentals, .decorPeers { display: block; }
-  .decorWave { bottom: 0; height: 90px; }
+  .decorWave { bottom: 0; }
 }
 
 .heroInner { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; text-align: center; }

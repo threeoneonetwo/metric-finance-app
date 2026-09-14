@@ -192,9 +192,7 @@ export function NewsletterLanding() {
             </div>
           </div>
 
-          <svg className={styles.decorWave} viewBox="0 0 1600 100" preserveAspectRatio="none">
-            <path d="M0,80 C220,20 420,110 640,55 C860,5 1080,95 1300,45 C1420,20 1520,60 1600,35" fill="none" stroke="currentColor" strokeWidth="2" />
-          </svg>
+          <hr className={styles.decorWave} />
         </div>
 
         <div className={styles.heroInner}>
