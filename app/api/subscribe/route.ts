@@ -51,7 +51,11 @@ export async function POST(request: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, needsVerification: !subscriber.active });
+  return NextResponse.json({
+    ok: true,
+    needsVerification: !subscriber.active,
+    token: subscriber.unsubscribeToken,
+  });
 }
 
 function isSubscribeBody(value: unknown): value is { email: string; tickers: string[]; name?: string } {

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowRight, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
@@ -98,6 +99,16 @@ export function NewsletterLanding() {
   const cta = useReveal<HTMLElement>();
 
   const emailValid = /^\S+@\S+\.\S+$/.test(email.trim());
+  const router = useRouter();
+
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem("mf_token");
+      if (token) router.replace(`/manage?token=${token}`);
+    } catch {
+      // localStorage unavailable (private browsing, etc.) — just show the landing page.
+    }
+  }, [router]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -128,6 +139,13 @@ export function NewsletterLanding() {
       const data = await response.json().catch(() => null);
       setNeedsVerification(Boolean(data?.needsVerification));
       setSubmitted(true);
+      if (data?.token) {
+        try {
+          localStorage.setItem("mf_token", data.token);
+        } catch {
+          // localStorage unavailable — the redirect just won't happen on a later visit.
+        }
+      }
     } catch {
       setError("Something went wrong. Please try again in a moment.");
     } finally {
