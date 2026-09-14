@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
 import type { Stock } from "@/lib/stocks";
@@ -313,9 +313,14 @@ export function NewsletterLanding() {
 
       <SectionWave />
       <section ref={cta.ref} className={`${styles.finalCta} ${cta.inView ? styles.inView : ""}`}>
-        <h2>Understand stocks<br />like a pro</h2>
-        <p>Pick the stocks you care about and get the context you need in plain English every day.</p>
-        <a href="#signup">Build my watchlist</a>
+        <div className={styles.finalCtaGrid} aria-hidden="true" />
+        <div className={styles.finalCtaInner}>
+          <span className={styles.kicker}>Ready when you are</span>
+          <h2>Understand stocks<br />like a pro</h2>
+          <p>Pick the stocks you care about and get the context you need in plain English every day.</p>
+          <a href="#signup">Build my watchlist <ArrowRight size={16} /></a>
+          <span className={styles.finalCtaNote}>Free. No credit card. Unsubscribe anytime.</span>
+        </div>
       </section>
 
       <SectionWave />

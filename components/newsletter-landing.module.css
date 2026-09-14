@@ -279,7 +279,7 @@
 .testimonialHeading button { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(255,255,255,.16); background: transparent; color: #d7d9dc; cursor: pointer; transition: background-color 150ms ease, transform 150ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms ease; }
 .testimonialHeading button:hover { background: #0e1423; transform: translateY(-2px); border-color: rgba(255,255,255,.32); }
 .testimonialHeading button:active { transform: translateY(0); }
-.testimonial { display: flex; min-height: 236px; max-width: 760px; margin: 0 auto; padding: 54px 58px 46px; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255,255,255,.1); background: #080d17; animation: fadeUp .5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.testimonial { display: flex; min-height: 236px; max-width: 720px; margin: 0 auto; padding: 54px 58px 46px; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255,255,255,.1); background: #080d17; animation: fadeUp .5s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .testimonial > p { max-width: 850px; margin: 0 0 40px; color: #ebecee; font-size: 25px; line-height: 1.5; letter-spacing: -.018em; }
 .testimonial footer { display: flex; align-items: center; gap: 12px; color: #697798; font-size: 13px; }
 .testimonial footer > span { width: 34px; height: 1px; background: rgba(255,255,255,.28); }
@@ -307,19 +307,35 @@
 .faqAnswerWrap p { margin: 0; padding: 0 60px 24px 2px; color: var(--muted); font-size: 14.5px; line-height: 1.7; }
 .faqAnswerOpen { grid-template-rows: 1fr; opacity: 1; }
 
-.finalCta { padding: 112px 40px 120px; text-align: center; }
+.finalCta { position: relative; overflow: hidden; padding: 120px 40px 128px; text-align: center; background: radial-gradient(75% 90% at 50% 118%, #10182c 0%, #060910 60%, #05070d 100%); }
+.finalCtaGrid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(70% 65% at 50% 78%, #000, transparent);
+}
+.finalCtaInner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+.finalCta .kicker { margin-bottom: 22px; }
 .finalCta h2 { max-width: 920px; margin: 0 auto 24px; color: #fff; font-size: clamp(55px, 6.2vw, 88px); font-weight: 800; line-height: .98; letter-spacing: -.05em; text-wrap: balance; }
 .finalCta p { max-width: 560px; margin: 0 auto 40px; color: var(--muted); font-size: 17px; line-height: 1.65; }
-.finalCta h2, .finalCta p, .finalCta a {
+.finalCta .kicker, .finalCta h2, .finalCta p, .finalCta a, .finalCtaNote {
   opacity: 0; transform: translateY(20px);
   transition: opacity .6s cubic-bezier(0.16, 1, 0.3, 1), transform .6s cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms ease;
 }
-.finalCta.inView h2 { opacity: 1; transform: translateY(0); }
-.finalCta.inView p { opacity: 1; transform: translateY(0); transition-delay: 100ms; }
-.finalCta.inView a { opacity: 1; transform: translateY(0); transition-delay: 200ms; }
-.finalCta a { display: inline-block; padding: 19px 38px; background: #fff; color: #05070d; font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.finalCta.inView .kicker { opacity: 1; transform: translateY(0); }
+.finalCta.inView h2 { opacity: 1; transform: translateY(0); transition-delay: 60ms; }
+.finalCta.inView p { opacity: 1; transform: translateY(0); transition-delay: 140ms; }
+.finalCta.inView a { opacity: 1; transform: translateY(0); transition-delay: 220ms; }
+.finalCta.inView .finalCtaNote { opacity: 1; transform: translateY(0); transition-delay: 300ms; }
+.finalCta a {
+  display: inline-flex; align-items: center; gap: 10px; padding: 19px 38px; background: #fff; color: #05070d;
+  font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+}
+.finalCta a svg { transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1); }
 .finalCta.inView a:hover { transform: translateY(-3px); transition-duration: 150ms; }
+.finalCta.inView a:hover svg { transform: translateX(3px); }
 .finalCta a:active { transform: translateY(0); }
+.finalCtaNote { display: block; margin-top: 22px; color: #56668a; font-size: 12.5px; letter-spacing: .02em; }
 .footer { display: flex; align-items: center; justify-content: center; text-align: center; gap: 24px; padding: 34px 40px; color: #56668a; font-size: 13px; }
 .footer a { color: #b6b8be; text-decoration: underline; text-underline-offset: 3px; transition: color 150ms ease; }
 .footer a:hover { color: #fff; }
