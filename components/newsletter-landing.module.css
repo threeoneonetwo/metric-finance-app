@@ -359,8 +359,9 @@
   .nav > a:not(.headerCta) { display: none; }
   .nav .headerCta { padding: 13px 14px; font-size: 9.5px; letter-spacing: .08em; }
   .hero { padding: 56px 20px 72px; }
-  .hero h1, .finalCta h2 { font-size: clamp(48px, 14vw, 64px); }
   .hero h1, .finalCta h2 { font-weight: 800; letter-spacing: -.055em; }
+  .hero h1 { font-size: clamp(48px, 14vw, 64px); }
+  .finalCta h2 { font-size: clamp(32px, 8.6vw, 64px); }
   .heroCopy { margin-bottom: 42px; font-size: 16px; line-height: 1.55; }
   .stepRow { align-items: center; font-size: 9px; line-height: 1.5; }
   .desktopStep { display: none; }
@@ -412,7 +413,8 @@
   .logo { font-size: 15.5px; }
   .nav .headerCta { padding: 12px 12px; font-size: 8.5px; }
   .hero { padding-right: 16px; padding-left: 16px; }
-  .hero h1, .finalCta h2 { font-size: 46px; }
+  .hero h1 { font-size: 46px; }
+  .finalCta h2 { font-size: 29px; }
   .stats strong { font-size: 12.5px; }
 }
 
