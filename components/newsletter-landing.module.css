@@ -314,9 +314,9 @@
   background-size: 64px 64px;
   mask-image: radial-gradient(70% 65% at 50% 78%, #000, transparent);
 }
-.finalCtaInner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+.finalCtaInner { position: relative; z-index: 1; max-width: 920px; margin: 0 auto; }
 .finalCta .kicker { margin-bottom: 22px; }
-.finalCta h2 { max-width: 920px; margin: 0 auto 24px; color: #fff; font-size: clamp(55px, 6.2vw, 88px); font-weight: 800; line-height: .98; letter-spacing: -.05em; text-wrap: balance; }
+.finalCta h2 { max-width: 920px; margin: 0 auto 24px; color: #fff; font-size: clamp(55px, 6.2vw, 88px); font-weight: 800; line-height: .98; letter-spacing: -.05em; }
 .finalCta p { max-width: 560px; margin: 0 auto 40px; color: var(--muted); font-size: 17px; line-height: 1.65; }
 .finalCta .kicker, .finalCta h2, .finalCta p, .finalCta a, .finalCtaNote {
   opacity: 0; transform: translateY(20px);
