@@ -316,7 +316,7 @@ export function NewsletterLanding() {
         <div className={styles.finalCtaGrid} aria-hidden="true" />
         <div className={styles.finalCtaInner}>
           <span className={styles.kicker}>Ready when you are</span>
-          <h2>Understand stocks<br />like a pro</h2>
+          <h2>Understand stocks like a pro</h2>
           <p>Pick the stocks you care about and get the context you need in plain English every day.</p>
           <a href="#signup">Build my watchlist <ArrowRight size={16} /></a>
           <span className={styles.finalCtaNote}>Free. No credit card. Unsubscribe anytime.</span>
