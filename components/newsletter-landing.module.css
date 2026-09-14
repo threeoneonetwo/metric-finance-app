@@ -384,9 +384,9 @@
   .emailRow { flex-direction: column; }
   .emailRow input, .emailRow button { flex: none; width: 100%; height: 56px; }
   .stats { margin-top: 48px; }
-  .stats > div { padding: 18px 10px; }
-  .stats strong { font-size: 14px; }
-  .stats span { font-size: 7px; letter-spacing: .1em; }
+  .stats > div { display: flex; flex-direction: column; justify-content: center; min-height: 84px; padding: 14px 8px; }
+  .stats strong { font-size: 12.5px; line-height: 1.25; }
+  .stats span { margin-top: 6px; font-size: 7px; letter-spacing: .1em; }
   .featuresSection, .testimonialsSection, .faqSection { padding: 72px 20px 78px; }
   .manageSection { padding: 48px 20px 72px; }
   .manageSub { margin-bottom: 30px; font-size: 14.5px; }
