@@ -35,12 +35,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Subscriptions are not available right now" }, { status: 503 });
   }
 
-  if (!subscriber.active && subscriber.verificationToken && hasSesConfig()) {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://metricfinance.app";
-    await sendVerificationEmail({
-      to: subscriber.email,
-      verifyUrl: `${baseUrl}/api/verify?token=${subscriber.verificationToken}`,
-    });
+  if (!subscriber.active && subscriber.verificationToken) {
+    if (!hasSesConfig()) {
+      console.error("subscribe: SES is not configured, skipping verification email");
+    } else {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://metricfinance.app";
+      try {
+        await sendVerificationEmail({
+          to: subscriber.email,
+          verifyUrl: `${baseUrl}/api/verify?token=${subscriber.verificationToken}`,
+        });
+      } catch (error) {
+        console.error("subscribe: failed to send verification email", error);
+      }
+    }
   }
 
   return NextResponse.json({ ok: true, needsVerification: !subscriber.active });
