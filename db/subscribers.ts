@@ -6,6 +6,7 @@ import { subscribers } from "./schema";
 export type SubscriberInput = {
   email: string;
   tickers: string[];
+  name?: string;
 };
 
 export async function upsertSubscriber(input: SubscriberInput) {
@@ -14,13 +15,25 @@ export async function upsertSubscriber(input: SubscriberInput) {
 
   const email = input.email.trim().toLowerCase();
   const tickers = input.tickers.map((ticker) => ticker.trim().toUpperCase()).slice(0, 5);
+  const name = input.name?.trim() || undefined;
+  const verificationToken = randomBytes(24).toString("hex");
 
   const [existing] = await db.select().from(subscribers).where(eq(subscribers.email, email)).limit(1);
 
   if (existing) {
+    // Already verified subscribers just update their picks immediately, no re-verification needed.
+    if (existing.active) {
+      const [updated] = await db
+        .update(subscribers)
+        .set({ tickers, name: name ?? existing.name, updatedAt: new Date() })
+        .where(eq(subscribers.email, email))
+        .returning();
+      return updated ?? null;
+    }
+
     const [updated] = await db
       .update(subscribers)
-      .set({ tickers, active: true, updatedAt: new Date() })
+      .set({ tickers, name: name ?? existing.name, verificationToken, updatedAt: new Date() })
       .where(eq(subscribers.email, email))
       .returning();
     return updated ?? null;
@@ -30,12 +43,27 @@ export async function upsertSubscriber(input: SubscriberInput) {
     .insert(subscribers)
     .values({
       email,
+      name,
       tickers,
+      verificationToken,
       unsubscribeToken: randomBytes(24).toString("hex"),
     })
     .returning();
 
   return created ?? null;
+}
+
+export async function verifySubscriberByToken(token: string) {
+  const db = getDb();
+  if (!db) return null;
+
+  const [updated] = await db
+    .update(subscribers)
+    .set({ active: true, verifiedAt: new Date(), verificationToken: null, updatedAt: new Date() })
+    .where(eq(subscribers.verificationToken, token))
+    .returning();
+
+  return updated ?? null;
 }
 
 export async function findSubscriberByEmail(email: string) {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { upsertSubscriber } from "@/db/subscribers";
+import { hasSesConfig, sendVerificationEmail } from "@/lib/newsletter/ses";
 
 const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
 const TICKER_PATTERN = /^[A-Z0-9.]{1,10}$/;
@@ -27,20 +28,31 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid tickers" }, { status: 400 });
   }
 
-  const subscriber = await upsertSubscriber({ email, tickers });
+  const name = typeof body.name === "string" ? body.name.trim().slice(0, 100) : undefined;
+
+  const subscriber = await upsertSubscriber({ email, tickers, name });
   if (!subscriber) {
     return NextResponse.json({ error: "Subscriptions are not available right now" }, { status: 503 });
   }
 
-  return NextResponse.json({ ok: true });
+  if (!subscriber.active && subscriber.verificationToken && hasSesConfig()) {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://metricfinance.app";
+    await sendVerificationEmail({
+      to: subscriber.email,
+      verifyUrl: `${baseUrl}/api/verify?token=${subscriber.verificationToken}`,
+    });
+  }
+
+  return NextResponse.json({ ok: true, needsVerification: !subscriber.active });
 }
 
-function isSubscribeBody(value: unknown): value is { email: string; tickers: string[] } {
+function isSubscribeBody(value: unknown): value is { email: string; tickers: string[]; name?: string } {
   if (!value || typeof value !== "object") return false;
   const body = value as Record<string, unknown>;
   return (
     typeof body.email === "string" &&
     Array.isArray(body.tickers) &&
-    body.tickers.every((ticker) => typeof ticker === "string")
+    body.tickers.every((ticker) => typeof ticker === "string") &&
+    (body.name === undefined || typeof body.name === "string")
   );
 }

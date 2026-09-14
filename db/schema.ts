@@ -21,8 +21,11 @@ export const config = pgTable("config", {
 export const subscribers = pgTable("subscribers", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: text("email").notNull().unique(),
+  name: text("name"),
   tickers: jsonb("tickers").$type<string[]>().notNull().default([]),
-  active: boolean("active").notNull().default(true),
+  active: boolean("active").notNull().default(false),
+  verifiedAt: timestamp("verified_at", { withTimezone: true }),
+  verificationToken: text("verification_token").unique(),
   unsubscribeToken: text("unsubscribe_token").notNull().unique(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
