@@ -260,8 +260,13 @@
 .sectionHeading h2, .testimonialHeading h2 { margin: 0; font-size: clamp(24px, 7.2vw, 52px); font-weight: 800; line-height: 1.06; letter-spacing: -.04em; text-align: center; }
 .sectionHeading > p { max-width: 440px; margin: 0 auto; color: var(--muted); font-size: 15.5px; line-height: 1.65; }
 .features { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--border); background: var(--border); }
-.features article { min-height: 250px; padding: 36px 28px 40px; background: #060910; text-align: center; transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms ease; }
-.features article:hover { transform: translateY(-5px); background: #0a0f1a; }
+.features article {
+  min-height: 250px; padding: 36px 28px 40px; background: #060910; text-align: center;
+  opacity: 0; transform: translateY(26px);
+  transition: opacity .6s cubic-bezier(0.16, 1, 0.3, 1), transform .6s cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms ease;
+}
+.featuresSection.inView .features article { opacity: 1; transform: translateY(0); }
+.features article:hover { transform: translateY(-5px); background: #0a0f1a; transition-duration: 200ms; }
 .features article > span { color: #404f72; font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: .18em; }
 .features h3 { margin: 26px 0 12px; font-size: 19px; font-weight: 800; letter-spacing: -.025em; text-align: center; }
 .features p { margin: 0; color: #727f9c; font-size: 14px; line-height: 1.65; }
@@ -286,6 +291,8 @@
 .faqInner .faqs { width: 100%; }
 .faqs { border-top: 1px solid rgba(255,255,255,.11); }
 .faqs > div { border-bottom: 1px solid rgba(255,255,255,.11); }
+.faqRow { opacity: 0; transform: translateY(18px); transition: opacity .55s cubic-bezier(0.16, 1, 0.3, 1), transform .55s cubic-bezier(0.16, 1, 0.3, 1); }
+.faqSection.inView .faqRow { opacity: 1; transform: translateY(0); }
 .faqs button { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: 100%; padding: 22px 2px; border: 0; background: none; color: #ebecee; cursor: pointer; font-size: 16.5px; text-align: left; transition: color 150ms ease; }
 .faqs button:hover { color: #fff; }
 .faqs button span { color: #697798; font-size: 22px; font-weight: 300; display: inline-block; transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), color 150ms ease; }
@@ -303,8 +310,15 @@
 .finalCta { padding: 112px 40px 120px; text-align: center; }
 .finalCta h2 { max-width: 920px; margin: 0 auto 24px; color: #fff; font-size: clamp(55px, 6.2vw, 88px); font-weight: 800; line-height: .98; letter-spacing: -.05em; text-wrap: balance; }
 .finalCta p { max-width: 560px; margin: 0 auto 40px; color: var(--muted); font-size: 17px; line-height: 1.65; }
-.finalCta a { display: inline-block; padding: 19px 38px; background: #fff; color: #05070d; font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms ease; }
-.finalCta a:hover { transform: translateY(-3px); }
+.finalCta h2, .finalCta p, .finalCta a {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity .6s cubic-bezier(0.16, 1, 0.3, 1), transform .6s cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms ease;
+}
+.finalCta.inView h2 { opacity: 1; transform: translateY(0); }
+.finalCta.inView p { opacity: 1; transform: translateY(0); transition-delay: 100ms; }
+.finalCta.inView a { opacity: 1; transform: translateY(0); transition-delay: 200ms; }
+.finalCta a { display: inline-block; padding: 19px 38px; background: #fff; color: #05070d; font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.finalCta.inView a:hover { transform: translateY(-3px); transition-duration: 150ms; }
 .finalCta a:active { transform: translateY(0); }
 .footer { display: flex; align-items: center; justify-content: center; text-align: center; gap: 24px; padding: 34px 40px; color: #56668a; font-size: 13px; }
 .footer a { color: #b6b8be; text-decoration: underline; text-underline-offset: 3px; transition: color 150ms ease; }

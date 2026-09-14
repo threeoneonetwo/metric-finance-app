@@ -69,12 +69,7 @@ function useReveal<T extends HTMLElement>() {
     const node = ref.current;
     if (!node) return;
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.disconnect();
-        }
-      },
+      ([entry]) => setInView(entry.isIntersecting),
       { threshold: 0.15, rootMargin: "0px 0px -10% 0px" },
     );
     observer.observe(node);
@@ -262,7 +257,7 @@ export function NewsletterLanding() {
           </div>
           <div className={styles.features}>
             {FEATURES.map(([number, title, copy], index) => (
-              <article key={number} style={{ transitionDelay: features.inView ? `${index * 70}ms` : "0ms" }}>
+              <article key={number} style={{ transitionDelay: features.inView ? `${120 + index * 90}ms` : "0ms" }}>
                 <span>{number}</span>
                 <h3>{title}</h3>
                 <p>{copy}</p>
@@ -302,7 +297,7 @@ export function NewsletterLanding() {
             {FAQS.map((item, index) => {
               const open = openFaq === index;
               return (
-                <div key={item.question}>
+                <div key={item.question} className={styles.faqRow} style={{ transitionDelay: faq.inView ? `${120 + index * 70}ms` : "0ms" }}>
                   <button type="button" onClick={() => setOpenFaq(open ? -1 : index)} aria-expanded={open}>
                     {item.question}<span className={open ? styles.faqIconOpen : ""}>+</span>
                   </button>
