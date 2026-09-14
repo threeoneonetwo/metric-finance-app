@@ -85,11 +85,7 @@ function useReveal<T extends HTMLElement>() {
 }
 
 function SectionWave() {
-  return (
-    <svg className={styles.sectionWave} viewBox="0 0 1600 60" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,30 C220,4 420,56 640,28 C860,0 1080,52 1300,24 C1420,8 1520,34 1600,18" fill="none" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  );
+  return <hr className={styles.sectionWave} aria-hidden="true" />;
 }
 
 export function NewsletterLanding() {
@@ -97,6 +93,7 @@ export function NewsletterLanding() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [slide, setSlide] = useState(0);
   const [openFaq, setOpenFaq] = useState(0);
@@ -133,6 +130,8 @@ export function NewsletterLanding() {
         return;
       }
 
+      const data = await response.json().catch(() => null);
+      setNeedsVerification(Boolean(data?.needsVerification));
       setSubmitted(true);
     } catch {
       setError("Something went wrong. Please try again in a moment.");
@@ -205,8 +204,17 @@ export function NewsletterLanding() {
           <div id="signup" className={`${styles.signup} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>
             {submitted ? (
               <div className={styles.success} aria-live="polite">
-                <div className={styles.successTitle}><Check size={20} /> You&apos;re in.</div>
-                <p>Your first briefing will arrive at {email.trim()}.</p>
+                {needsVerification ? (
+                  <>
+                    <div className={styles.successTitle}><Check size={20} /> Check your inbox</div>
+                    <p>We sent a confirmation link to <strong>{email.trim()}</strong>. Click it to start receiving your briefing.</p>
+                  </>
+                ) : (
+                  <>
+                    <div className={styles.successTitle}><Check size={20} /> You&apos;re in.</div>
+                    <p>Your first briefing will arrive at {email.trim()}.</p>
+                  </>
+                )}
                 <div className={styles.successPicks}>
                   {picks.map((stock) => <span key={stock.symbol}>{stock.symbol}</span>)}
                 </div>

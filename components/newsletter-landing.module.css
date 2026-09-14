@@ -251,7 +251,7 @@
 .stats span { display: block; margin-top: 8px; color: #56668a; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
 
 .featuresSection, .faqSection { padding: 96px 40px 104px; }
-.sectionWave { display: block; width: 100%; height: 30px; color: rgba(111,224,221,.3); }
+.sectionWave { display: block; width: 100%; height: 1px; border: none; background: rgba(111,224,221,.18); margin: 0; }
 .featuresSection, .testimonialsSection, .faqSection, .finalCta {
   opacity: 0;
   transform: translateY(32px);
