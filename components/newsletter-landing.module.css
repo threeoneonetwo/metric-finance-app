@@ -262,8 +262,17 @@
   font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; line-height: 1.7;
 }
 
+.briefingEmpty { padding: 28px; border: 1px dashed #232f4d; background: #0a0e18; }
+.briefingEmptyTitle { margin: 0 0 6px; color: #fff; font-size: 15.5px; font-weight: 700; }
+.briefingEmpty > p { margin: 0 0 20px; color: #7d879f; font-size: 13.5px; line-height: 1.6; }
+.briefingPreviewLabel { margin: 0 0 10px; color: #56668a; font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.briefingPreviewRow { display: flex; align-items: center; gap: 16px; padding: 16px 18px; border: 1px solid #161f35; background: #060910; opacity: .5; }
+.briefingPreviewRow .briefingDate { color: #67738f; }
+.briefingPreviewRow svg { flex-shrink: 0; margin-left: auto; color: #454f6b; }
+
 @media (max-width: 760px) {
   .briefingRowHead { flex-wrap: wrap; gap: 8px 16px; }
+  .briefingPreviewRow { flex-wrap: wrap; gap: 8px 16px; }
   .briefingDate { min-width: 0; }
 }
 .success { padding: 40px 36px; border: 1px solid #161f35; background: #090e19; animation: fadeUp .5s cubic-bezier(0.16, 1, 0.3, 1) both; }

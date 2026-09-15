@@ -13,11 +13,13 @@ export type BriefingSummary = {
 
 type BriefingHistoryProps = {
   briefings: BriefingSummary[];
+  watchlistTickers?: string[];
 };
 
 const DATE_FORMAT = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
+const SAMPLE_TICKERS = ["AAPL", "TSLA"];
 
-export function BriefingHistory({ briefings }: BriefingHistoryProps) {
+export function BriefingHistory({ briefings, watchlistTickers = [] }: BriefingHistoryProps) {
   const [query, setQuery] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -35,10 +37,23 @@ export function BriefingHistory({ briefings }: BriefingHistoryProps) {
   }, [briefings, query]);
 
   if (briefings.length === 0) {
+    const previewTickers = watchlistTickers.length > 0 ? watchlistTickers.slice(0, 5) : SAMPLE_TICKERS;
     return (
       <div className={styles.briefingHistory}>
         <h2 className={styles.briefingHeading}>Your briefings</h2>
-        <p className={styles.note}>Nothing sent yet — your first briefing will show up here once it goes out.</p>
+        <div className={styles.briefingEmpty}>
+          <h3 className={styles.briefingEmptyTitle}>Nothing sent yet</h3>
+          <p>Your first briefing will show up here once it goes out.</p>
+
+          <p className={styles.briefingPreviewLabel}>What it&apos;ll look like</p>
+          <div className={styles.briefingPreviewRow}>
+            <span className={styles.briefingDate}>Today</span>
+            <span className={styles.briefingTickers}>
+              {previewTickers.map((ticker) => <span key={ticker}>{ticker}</span>)}
+            </span>
+            <ChevronDown size={16} />
+          </div>
+        </div>
       </div>
     );
   }

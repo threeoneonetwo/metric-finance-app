@@ -68,7 +68,7 @@ export function ManageWatchlist({ token, email, initialPicks, briefings }: Manag
             Briefings go to <strong>{email}</strong>.
           </p>
 
-          <BriefingHistory briefings={briefings} />
+          <BriefingHistory briefings={briefings} watchlistTickers={initialPicks.map((stock) => stock.symbol)} />
 
           <h2 className={styles.briefingHeading}>Manage your watchlist</h2>
           <div className={styles.signup}>
