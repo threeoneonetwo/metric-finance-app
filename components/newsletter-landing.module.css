@@ -6,7 +6,7 @@
   min-height: 100vh;
   background: var(--bg);
   color: #fff;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -266,9 +266,25 @@
 .briefingEmptyTitle { margin: 0 0 6px; color: #fff; font-size: 15.5px; font-weight: 700; }
 .briefingEmpty > p { margin: 0 0 20px; color: #7d879f; font-size: 13.5px; line-height: 1.6; }
 .briefingPreviewLabel { margin: 0 0 10px; color: #56668a; font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
-.briefingPreviewRow { display: flex; align-items: center; gap: 16px; padding: 16px 18px; border: 1px solid #161f35; background: #060910; opacity: .5; }
+.briefingPreviewRow {
+  position: relative; display: flex; align-items: center; gap: 16px; padding: 16px 18px;
+  border: 1px solid #161f35; background: #060910; opacity: .5; overflow: hidden;
+  transition: opacity 150ms ease, border-color 150ms ease;
+}
+.briefingPreviewRow:hover { opacity: .8; border-color: #232f4d; }
 .briefingPreviewRow .briefingDate { color: #67738f; }
 .briefingPreviewRow svg { flex-shrink: 0; margin-left: auto; color: #454f6b; }
+.briefingPreviewRow::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.05) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: briefingShimmer 2.2s ease-in-out infinite;
+}
+
+@keyframes briefingShimmer {
+  0% { background-position: 150% 0; }
+  100% { background-position: -50% 0; }
+}
 
 @media (max-width: 760px) {
   .briefingRowHead { flex-wrap: wrap; gap: 8px 16px; }
