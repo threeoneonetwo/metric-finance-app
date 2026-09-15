@@ -18,8 +18,12 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps
     >
       <Link href="/" className="flex shrink-0 items-center gap-2.5" style={{ fontFamily: "Arial, sans-serif" }}>
         <span
-          className="flex h-10 w-10 items-center justify-center rounded-2xl text-base font-extrabold text-[#0b1220]"
-          style={{ background: "linear-gradient(160deg, #8ea2f2 0%, #4a5fd6 100%)" }}
+          className="flex h-11 w-11 items-center justify-center text-lg font-black text-black"
+          style={{
+            background: "linear-gradient(160deg, #8ea2f2 0%, #4a5fd6 100%)",
+            borderRadius: "30%",
+            border: "1px solid rgba(0,0,0,0.15)",
+          }}
         >
           MF
         </span>
