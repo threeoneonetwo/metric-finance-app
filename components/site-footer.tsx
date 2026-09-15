@@ -32,8 +32,8 @@ export function SiteFooter() {
         <div className="max-w-xs">
           <p className="flex items-center gap-2.5 text-lg font-bold text-white">
             <span
-              className="flex h-7 w-7 items-center justify-center rounded-lg text-xs font-bold text-white"
-              style={{ background: "linear-gradient(135deg, #6fe0dd 0%, #2f6fed 100%)" }}
+              className="flex h-8 w-8 items-center justify-center rounded-xl text-sm font-extrabold text-[#0b1220]"
+              style={{ background: "linear-gradient(160deg, #8ea2f2 0%, #4a5fd6 100%)" }}
             >
               MF
             </span>
