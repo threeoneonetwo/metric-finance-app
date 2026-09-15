@@ -35,7 +35,7 @@ export function SiteFooter() {
               className="flex h-9 w-9 items-center justify-center text-base font-black text-black"
               style={{
                 background: "linear-gradient(160deg, #8ea2f2 0%, #4a5fd6 100%)",
-                borderRadius: "30%",
+                borderRadius: "36%",
                 border: "1px solid rgba(0,0,0,0.15)",
               }}
             >

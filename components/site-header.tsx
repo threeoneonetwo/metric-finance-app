@@ -21,7 +21,7 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps
           className="flex h-11 w-11 items-center justify-center text-lg font-black text-black"
           style={{
             background: "linear-gradient(160deg, #8ea2f2 0%, #4a5fd6 100%)",
-            borderRadius: "30%",
+            borderRadius: "36%",
             border: "1px solid rgba(0,0,0,0.15)",
           }}
         >
