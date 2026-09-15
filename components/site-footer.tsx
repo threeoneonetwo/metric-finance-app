@@ -32,7 +32,7 @@ export function SiteFooter() {
         <div className="max-w-xs">
           <p className="flex items-center gap-2.5 text-lg font-bold text-white">
             <span
-              className="flex h-8 w-8 items-center justify-center rounded-xl text-sm font-extrabold text-[#0b1220]"
+              className="flex h-8 w-8 items-center justify-center rounded-2xl text-sm font-extrabold text-[#0b1220]"
               style={{ background: "linear-gradient(160deg, #8ea2f2 0%, #4a5fd6 100%)" }}
             >
               MF
