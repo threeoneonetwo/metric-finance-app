@@ -1,35 +1,83 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+
+const PRIVACY_URL = "https://metricfinance.notion.site/Privacy-Policy-377bc65fd7b380a7bb9af9f5df0b0911";
+
 export function SiteFooter() {
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      setToken(localStorage.getItem("mf_token"));
+    } catch {
+      // localStorage unavailable — links just fall back to the generic manage page.
+    }
+  }, []);
+
+  const accountHref = token ? `/manage?token=${token}` : "/manage";
+  const unsubscribeHref = token ? `/api/unsubscribe?token=${token}` : "/manage";
+
   return (
     <footer
-      className="mt-auto w-full px-5 pt-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] text-center sm:px-8 sm:pt-6 sm:pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
+      className="w-full px-5 pt-10 sm:px-8 lg:px-10"
       style={{
         borderTop: "1px solid rgba(255,255,255,0.06)",
         background: "rgba(15,21,38,0.94)",
-        backdropFilter: "blur(16px)",
         fontFamily: "Arial, sans-serif",
       }}
     >
-      <p className="text-[10px] font-medium leading-4 tracking-wide text-[#8993ab]">
-        Metric Finance · Built by{" "}
-        <a
-          href="https://www.linkedin.com/in/yashnapandugala/"
-          target="_blank"
-          rel="noreferrer"
-          className="text-white underline decoration-white/40 underline-offset-4 transition-colors hover:decoration-white"
-        >
-          Yashna
-        </a>
-        {" "}&{" "}
-        <a
-          href="https://www.linkedin.com/in/vanshpandita-real/"
-          target="_blank"
-          rel="noreferrer"
-          className="text-white underline decoration-white/40 underline-offset-4 transition-colors hover:decoration-white"
-        >
-          Vansh
-        </a>
-        {" "}· Not financial advice
-      </p>
+      <div className="mx-auto flex max-w-6xl flex-col gap-10 sm:flex-row sm:justify-between">
+        <div className="max-w-xs">
+          <p className="text-lg font-bold text-white">Metric Finance</p>
+          <p className="mt-3 text-sm leading-6 text-[#8993ab]">
+            A daily briefing with personalised analysis on your top five US stocks.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-10 sm:gap-16">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-[#67738f]">Product</p>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li><Link href="/#faq" className="text-[#d7d9dc] transition-colors hover:text-white">FAQ</Link></li>
+              <li><Link href={accountHref} className="text-[#d7d9dc] transition-colors hover:text-white">Your account</Link></li>
+            </ul>
+          </div>
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-[#67738f]">Legal</p>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li><a href={PRIVACY_URL} target="_blank" rel="noreferrer" className="text-[#d7d9dc] transition-colors hover:text-white">Privacy</a></li>
+              <li><a href="#" className="text-[#d7d9dc] transition-colors hover:text-white">Terms</a></li>
+            </ul>
+          </div>
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-[#67738f]">Support</p>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li><a href="#" className="text-[#d7d9dc] transition-colors hover:text-white">Contact</a></li>
+              <li><a href={unsubscribeHref} className="text-[#d7d9dc] transition-colors hover:text-white">Unsubscribe</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="mx-auto mt-10 flex max-w-6xl flex-col gap-2 py-5 text-xs text-[#67738f] sm:flex-row sm:items-center sm:justify-between"
+        style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+      >
+        <p>© {new Date().getFullYear()} Metric Finance</p>
+        <p>
+          Built by{" "}
+          <a href="https://www.linkedin.com/in/yashnapandugala/" target="_blank" rel="noreferrer" className="text-[#8993ab] underline decoration-white/30 underline-offset-4 transition-colors hover:text-white hover:decoration-white">
+            Yashna
+          </a>
+          {" "}&{" "}
+          <a href="https://www.linkedin.com/in/vanshpandita-real/" target="_blank" rel="noreferrer" className="text-[#8993ab] underline decoration-white/30 underline-offset-4 transition-colors hover:text-white hover:decoration-white">
+            Vansh
+          </a>
+          {" "}· Not investment advice · Market data may be delayed
+        </p>
+      </div>
     </footer>
   );
 }

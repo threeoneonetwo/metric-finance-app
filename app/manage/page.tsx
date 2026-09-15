@@ -3,6 +3,7 @@ import Link from "next/link";
 import { listBriefingsForSubscriber } from "@/db/briefings";
 import { findSubscriberByToken } from "@/db/subscribers";
 import { ManageWatchlist } from "@/components/manage-watchlist";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import styles from "@/components/newsletter-landing.module.css";
 import { stocksFromSymbols } from "@/lib/stocks";
@@ -35,6 +36,7 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
               <Link className={styles.manageUnsubscribe} href="/">Back to Metric Finance</Link>
             </div>
           </section>
+          <SiteFooter />
         </div>
       </main>
     );

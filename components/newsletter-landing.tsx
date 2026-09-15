@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
@@ -334,11 +335,7 @@ export function NewsletterLanding() {
       </section>
 
       <SectionWave />
-      <footer className={styles.footer}>
-        <span>
-          Metric Finance · Built by <a href="https://www.linkedin.com/in/yashnapandugala/" target="_blank" rel="noreferrer">Yashna</a> &amp; <a href="https://www.linkedin.com/in/vanshpandita-real/" target="_blank" rel="noreferrer">Vansh</a> · Not financial advice
-        </span>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

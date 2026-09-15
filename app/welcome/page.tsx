@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import styles from "@/components/newsletter-landing.module.css";
 
@@ -33,6 +34,7 @@ export default async function WelcomePage({ searchParams }: WelcomePageProps) {
             )}
           </div>
         </section>
+        <SiteFooter />
       </div>
     </main>
   );

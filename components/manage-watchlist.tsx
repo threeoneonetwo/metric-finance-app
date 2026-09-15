@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { BriefingHistory, type BriefingSummary } from "./briefing-history";
+import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
@@ -105,6 +106,7 @@ export function ManageWatchlist({ token, email, initialPicks, briefings }: Manag
           </a>
         </div>
       </section>
+      <SiteFooter />
     </div>
   );
 }
