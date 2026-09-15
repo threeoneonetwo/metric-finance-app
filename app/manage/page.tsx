@@ -3,6 +3,7 @@ import Link from "next/link";
 import { listBriefingsForSubscriber } from "@/db/briefings";
 import { findSubscriberByToken } from "@/db/subscribers";
 import { ManageWatchlist } from "@/components/manage-watchlist";
+import { SiteHeader } from "@/components/site-header";
 import styles from "@/components/newsletter-landing.module.css";
 import { stocksFromSymbols } from "@/lib/stocks";
 
@@ -23,9 +24,7 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
     return (
       <main>
         <div className={styles.page}>
-          <header className={styles.header}>
-            <Link href="/" className={styles.logo}>Metric Finance</Link>
-          </header>
+          <SiteHeader />
           <section className={styles.manageSection}>
             <div className={styles.manageInner}>
               <h1 className={styles.manageHeading}>We couldn&apos;t find that watchlist</h1>

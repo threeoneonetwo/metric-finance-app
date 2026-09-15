@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiteHeader } from "@/components/site-header";
 import styles from "@/components/newsletter-landing.module.css";
 
 export const metadata: Metadata = {
@@ -17,9 +18,7 @@ export default async function WelcomePage({ searchParams }: WelcomePageProps) {
   return (
     <main>
       <div className={styles.page}>
-        <header className={styles.header}>
-          <Link href="/" className={styles.logo}>Metric Finance</Link>
-        </header>
+        <SiteHeader />
         <section className={styles.manageSection}>
           <div className={styles.manageInner}>
             <h1 className={styles.manageHeading}>You&apos;re confirmed</h1>

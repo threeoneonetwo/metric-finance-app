@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Check } from "lucide-react";
 import { BriefingHistory, type BriefingSummary } from "./briefing-history";
+import { SiteHeader } from "./site-header";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
 import type { Stock } from "@/lib/stocks";
@@ -58,9 +58,7 @@ export function ManageWatchlist({ token, email, initialPicks, briefings }: Manag
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <Link href="/" className={styles.logo}>Metric Finance</Link>
-      </header>
+      <SiteHeader />
 
       <section className={styles.manageSection}>
         <div className={styles.manageInner}>

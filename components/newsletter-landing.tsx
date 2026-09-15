@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { SiteHeader } from "./site-header";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
 import type { Stock } from "@/lib/stocks";
@@ -59,8 +60,6 @@ const FAQS = [
     answer: "Yes. Search by a company name such as Apple or by its ticker, such as AAPL.",
   },
 ];
-
-const PRIVACY_URL = "https://metricfinance.notion.site/Privacy-Policy-377bc65fd7b380a7bb9af9f5df0b0911";
 
 function useReveal<T extends HTMLElement>() {
   const ref = useRef<T | null>(null);
@@ -155,14 +154,7 @@ export function NewsletterLanding() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <a href="#top" className={styles.logo}>Metric Finance</a>
-        <nav className={styles.nav} aria-label="Main navigation">
-          <a href="#faq">FAQ</a>
-          <a href={PRIVACY_URL} target="_blank" rel="noreferrer">Privacy</a>
-          <a href="#signup" className={styles.headerCta}>Subscribe free</a>
-        </nav>
-      </header>
+      <SiteHeader />
 
       <section id="top" className={styles.hero}>
         <div className={styles.heroGrid} />
