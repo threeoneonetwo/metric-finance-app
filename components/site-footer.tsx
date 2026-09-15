@@ -30,19 +30,7 @@ export function SiteFooter() {
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-10 sm:flex-row sm:justify-between">
         <div className="max-w-xs">
-          <p className="flex items-center gap-2.5 text-lg font-bold text-white">
-            <span
-              className="flex h-9 w-9 items-center justify-center text-base font-black text-black"
-              style={{
-                background: "linear-gradient(160deg, #8ea2f2 0%, #4a5fd6 100%)",
-                borderRadius: "36%",
-                border: "1px solid rgba(0,0,0,0.15)",
-              }}
-            >
-              MF
-            </span>
-            Metric Finance
-          </p>
+          <p className="text-lg font-bold text-white">Metric Finance</p>
           <p className="mt-3 text-sm leading-6 text-[#8993ab]">
             A daily briefing with personalised analysis on your top five US stocks.
           </p>

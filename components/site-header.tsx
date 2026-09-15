@@ -16,18 +16,8 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps
         borderBottom: "1px solid #24304d",
       }}
     >
-      <Link href="/" className="flex shrink-0 items-center gap-2.5" style={{ fontFamily: "Arial, sans-serif" }}>
-        <span
-          className="flex h-11 w-11 items-center justify-center text-lg font-black text-black"
-          style={{
-            background: "linear-gradient(160deg, #8ea2f2 0%, #4a5fd6 100%)",
-            borderRadius: "36%",
-            border: "1px solid rgba(0,0,0,0.15)",
-          }}
-        >
-          MF
-        </span>
-        <span className="text-3xl font-bold leading-none tracking-[-0.04em] text-white">Metric Finance</span>
+      <Link href="/" className="shrink-0 text-3xl font-bold leading-none tracking-[-0.04em] text-white" style={{ fontFamily: "Arial, sans-serif" }}>
+        Metric Finance
       </Link>
       <nav className="hidden min-w-0 items-center gap-6 sm:flex" style={{ fontFamily: "Arial, sans-serif" }} aria-label="Main navigation">
         <Link href={faqHref} className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white">
