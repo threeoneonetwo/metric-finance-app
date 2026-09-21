@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-const PRIVACY_URL = "https://metricfinance.notion.site/Privacy-Policy-377bc65fd7b380a7bb9af9f5df0b0911";
-
 export function SiteFooter() {
   const [token, setToken] = useState<string | null>(null);
 
@@ -47,8 +45,8 @@ export function SiteFooter() {
           <div>
             <p className="text-[11px] font-bold uppercase tracking-widest text-[#67738f]">Legal</p>
             <ul className="mt-3 space-y-2 text-sm">
-              <li><a href={PRIVACY_URL} target="_blank" rel="noreferrer" className="text-[#d7d9dc] transition-colors hover:text-white">Privacy</a></li>
-              <li><a href="#" className="text-[#d7d9dc] transition-colors hover:text-white">Terms</a></li>
+              <li><Link href="/privacy" className="text-[#d7d9dc] transition-colors hover:text-white">Privacy</Link></li>
+              <li><Link href="/terms" className="text-[#d7d9dc] transition-colors hover:text-white">Terms</Link></li>
             </ul>
           </div>
           <div>

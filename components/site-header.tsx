@@ -23,14 +23,9 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps
         <Link href={faqHref} className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white">
           FAQ
         </Link>
-        <a
-          href="https://metricfinance.notion.site/Privacy-Policy-377bc65fd7b380a7bb9af9f5df0b0911"
-          target="_blank"
-          rel="noreferrer"
-          className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white"
-        >
+        <Link href="/privacy" className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white">
           Privacy
-        </a>
+        </Link>
       </nav>
       <details className="group relative sm:hidden">
         <summary
@@ -50,14 +45,9 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps
           >
             FAQ
           </Link>
-          <a
-            href="https://metricfinance.notion.site/Privacy-Policy-377bc65fd7b380a7bb9af9f5df0b0911"
-            target="_blank"
-            rel="noreferrer"
-            className="block rounded-xl px-4 py-3.5 text-base font-semibold text-white transition hover:bg-[#182238]"
-          >
-            Privacy
-          </a>
+          <Link href="/privacy" className="block rounded-xl px-4 py-3.5 text-base font-semibold text-white transition hover:bg-[#182238]">
+          Privacy
+        </Link>
         </nav>
       </details>
     </header>
