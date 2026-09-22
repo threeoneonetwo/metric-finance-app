@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Arimo } from "next/font/google";
-import { BriefImageSlot } from "@/components/brief-image-slot";
+import { BriefChart } from "@/components/brief-chart";
 import { BriefShareButton } from "@/components/brief-share-button";
 import { SiteFooter } from "@/components/site-footer";
 
@@ -84,6 +84,13 @@ const CATALYSTS = [
   { when: "TECHNICAL", ticker: "NVDA", what: "$118 support", why: "The level has held twice since August, both times on heavier volume than the approach. It is the line the tape is testing, and a clean break changes the character of the group's selloff." },
 ];
 
+const WTI_HERO = [76.2, 75.8, 77.1, 78.4, 77.9, 79.2, 80.1, 79.6, 81.3, 82.0, 83.4, 82.8, 84.1, 85.6, 86.2, 85.4, 87.1, 88.3, 89.0, 90.2, 91.5, 92.1, 93.8, 94.6, 93.9, 95.2, 96.4, 97.1, 98.5, 100.40];
+const WTI_12MO = [78.2, 76.5, 74.1, 79.8, 83.2, 80.6, 85.4, 89.1, 91.7, 88.3, 94.9, 100.40];
+const SOX_INDEXED = [100, 104.2, 109.6, 115.3, 121.4, 118.7, 125.9, 130.2, 128.6, 122.1, 118.4, 112.5];
+const TENYR_INDEXED = [100, 100.5, 101.2, 100.8, 102.1, 103.6, 104.2, 105.1, 106.4, 107.2, 108.6, 110.3];
+const TAKE_SEMIS = [100, 103, 108, 112, 109, 105, 101, 96, 92, 89, 85, 84];
+const TAKE_INDUSTRIALS = [100, 100.8, 101.5, 101.2, 100.6, 99.8, 99.1, 98.7, 98.9, 98.3, 97.8, 97.5];
+
 const sectionLabel: CSSProperties = {
   fontSize: "12px", fontWeight: 700, letterSpacing: "0.16em", color: "#8798b4",
   paddingBottom: "12px", borderBottom: "1px solid #16203a", marginBottom: "22px",
@@ -121,7 +128,7 @@ export default function BriefPage() {
         </h1>
 
         <div style={{ borderRadius: "14px", overflow: "hidden", border: "1px solid #16203a", marginBottom: "44px" }}>
-          <BriefImageSlot label="Hero image — crude, the pits, or a rates chart" height={320} />
+          <BriefChart label="WTI crude, last 30 sessions" height={320} series={[{ points: WTI_HERO, color: "#ff9aa8", fill: true }]} />
         </div>
 
         <section>
@@ -145,15 +152,19 @@ export default function BriefPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "16px", marginBottom: "20px" }}>
             <div>
               <div style={{ borderRadius: "12px", overflow: "hidden", border: "1px solid #16203a" }}>
-                <BriefImageSlot label="Chart — WTI, 12 months" height={190} />
+                <BriefChart label="WTI crude, trailing twelve months" height={190} series={[{ points: WTI_12MO, color: "#ff9aa8", fill: true }]} />
               </div>
               <div style={{ marginTop: "8px", fontSize: "12px", color: "#8798b4" }}>WTI crude, trailing twelve months</div>
             </div>
             <div>
               <div style={{ borderRadius: "12px", overflow: "hidden", border: "1px solid #16203a" }}>
-                <BriefImageSlot label="Chart — SOX vs 10-year" height={190} />
+                <BriefChart
+                  label="SOX against the 10-year, indexed"
+                  height={190}
+                  series={[{ points: SOX_INDEXED, color: "#8fb0ff" }, { points: TENYR_INDEXED, color: "#ff9aa8" }]}
+                />
               </div>
-              <div style={{ marginTop: "8px", fontSize: "12px", color: "#8798b4" }}>SOX against the 10-year, indexed</div>
+              <div style={{ marginTop: "8px", fontSize: "12px", color: "#8798b4" }}>SOX (blue) against the 10-year (red), indexed to 100</div>
             </div>
           </div>
           <p style={{ ...bodyP, marginBottom: 0 }}>Two things in those numbers are worth separating. Breadth held positive while the index fell 1.2%, which tells you this was a sector rotation and not a de-risking event. And crude&apos;s 3.8% move came on supply news, not demand news, which is the version of a spike that tends to hold.</p>
@@ -227,7 +238,11 @@ export default function BriefPage() {
 
         <section style={{ marginTop: "48px", border: "1px solid #27365a", borderRadius: "14px", background: "#0c1322", overflow: "hidden" }}>
           <div style={{ borderBottom: "1px solid #27365a" }}>
-            <BriefImageSlot label="Image for the take — chart, headline, or photo" height={200} />
+            <BriefChart
+              label="Semis (red) vs industrials (blue), indexed — the divergence the take is about"
+              height={200}
+              series={[{ points: TAKE_SEMIS, color: "#ff9aa8" }, { points: TAKE_INDUSTRIALS, color: "#8fb0ff" }]}
+            />
           </div>
           <div style={{ padding: "32px 30px" }}>
             <div style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "0.16em", color: "#8fb0ff", marginBottom: "18px" }}>THE TAKE</div>
