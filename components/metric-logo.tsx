@@ -1,10 +1,11 @@
-export function MetricLogo({ size = 40 }: { size?: number }) {
+export function MetricLogo({ size = 40, className }: { size?: number; className?: string }) {
   return (
     <span
+      className={className}
       style={{
         width: size,
         height: size,
-        borderRadius: "36%",
+        borderRadius: "40%",
         background: "#8fa8fa",
         display: "inline-flex",
         alignItems: "center",
@@ -12,10 +13,10 @@ export function MetricLogo({ size = 40 }: { size?: number }) {
         flexShrink: 0,
       }}
     >
-      <svg width={size * 0.42} height={size * 0.42} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <rect x="2" y="14" width="4.5" height="8" rx="2.25" fill="#0b1220" />
-        <rect x="9.8" y="8" width="4.5" height="14" rx="2.25" fill="#0b1220" />
-        <rect x="17.6" y="2" width="4.5" height="20" rx="2.25" fill="#0b1220" />
+      <svg width={size * 0.46} height={size * 0.46} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="1" y="14" width="5" height="7" rx="2.5" fill="#0b1220" />
+        <rect x="9.5" y="8" width="5" height="13" rx="2.5" fill="#0b1220" />
+        <rect x="18" y="2" width="5" height="19" rx="2.5" fill="#0b1220" />
       </svg>
     </span>
   );

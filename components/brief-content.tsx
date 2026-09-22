@@ -133,10 +133,12 @@ export function BriefContent() {
       <style>{`
         .brief-header { flex-wrap: wrap; padding: 20px 24px !important; }
         .brief-header .brief-logo { font-size: 20px !important; }
+        .brief-header .brief-logo-badge { transform: scale(0.769); transform-origin: left center; }
         .brief-header nav { gap: 20px !important; }
         @media (min-width: 640px) {
           .brief-header { padding: 26px 40px !important; }
           .brief-header .brief-logo { font-size: 26px !important; }
+          .brief-header .brief-logo-badge { transform: scale(1); }
           .brief-header nav { gap: 32px !important; }
         }
         .brief-metric, .brief-pick, .brief-catalyst, .brief-chart-wrap, .brief-portfolio-stat {
@@ -157,7 +159,7 @@ export function BriefContent() {
       `}</style>
       <header className="brief-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px", background: "#0b1120", borderBottom: "1px solid #16203a" }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <MetricLogo size={32} />
+          <MetricLogo size={26} className="brief-logo-badge" />
           <span className="brief-logo" style={{ fontWeight: 800, letterSpacing: "-0.8px", color: "#f2f5fa" }}>Metric Finance</span>
         </Link>
         <nav style={{ display: "flex", alignItems: "center" }}>
