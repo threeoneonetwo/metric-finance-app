@@ -30,7 +30,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-10 sm:flex-row sm:justify-between">
         <div className="max-w-xs">
           <p className="flex items-center gap-2.5 text-lg font-bold text-white">
-            <MetricLogo size={14} />
+            <MetricLogo size={18} />
             Metric Finance
           </p>
           <p className="mt-3 text-sm leading-6 text-[#8993ab]">

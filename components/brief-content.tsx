@@ -159,7 +159,7 @@ export function BriefContent() {
       `}</style>
       <header className="brief-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px", background: "#0b1120", borderBottom: "1px solid #16203a" }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <MetricLogo size={20} className="brief-logo-badge" />
+          <MetricLogo size={26} className="brief-logo-badge" />
           <span className="brief-logo" style={{ fontWeight: 800, letterSpacing: "-0.8px", color: "#f2f5fa" }}>Metric Finance</span>
         </Link>
         <nav style={{ display: "flex", alignItems: "center" }}>
