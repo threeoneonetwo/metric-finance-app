@@ -10,13 +10,14 @@ type SiteHeaderProps = {
 export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps) {
   return (
     <header
-      className={`mobile-safe-top-nav ${fixed ? "fixed top-0" : "relative"} z-50 flex w-full items-center justify-between gap-4 px-6 sm:px-12 lg:px-20`}
+      className={`mobile-safe-top-nav ${fixed ? "fixed top-0" : "relative"} z-50 flex w-full items-center px-5 sm:px-8 lg:px-10`}
       style={{
         background: "rgba(15,21,38,0.94)",
         backdropFilter: "blur(16px)",
         borderBottom: "1px solid #24304d",
       }}
     >
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4">
       <Link href="/" className="flex shrink-0 items-center gap-2.5" style={{ fontFamily: "Arial, sans-serif" }}>
         <MetricLogo size={30} />
         <span className="text-3xl font-bold leading-none tracking-[-0.04em] text-white">Metric Finance</span>
@@ -52,6 +53,7 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps
         </Link>
         </nav>
       </details>
+      </div>
     </header>
   );
 }
