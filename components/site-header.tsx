@@ -17,8 +17,8 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps
         borderBottom: "1px solid #24304d",
       }}
     >
-      <Link href="/" className="flex shrink-0 items-center gap-3" style={{ fontFamily: "Arial, sans-serif" }}>
-        <MetricLogo size={40} />
+      <Link href="/" className="flex shrink-0 items-center gap-2.5" style={{ fontFamily: "Arial, sans-serif" }}>
+        <MetricLogo size={36} />
         <span className="text-3xl font-bold leading-none tracking-[-0.04em] text-white">Metric Finance</span>
       </Link>
       <nav className="hidden min-w-0 items-center gap-6 sm:flex" style={{ fontFamily: "Arial, sans-serif" }} aria-label="Main navigation">
