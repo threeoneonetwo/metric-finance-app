@@ -3,9 +3,8 @@ export function MetricLogo({ size = 40, className }: { size?: number; className?
     <span
       className={className ? `metric-logo-badge ${className}` : "metric-logo-badge"}
       style={{
-        width: size * 1.5,
+        width: size,
         height: size,
-        borderRadius: "9999px",
         background: "#8fa8fa",
         display: "inline-flex",
         alignItems: "center",
