@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import styles from "./newsletter-landing.module.css";
 
 export type BriefingSummary = {
@@ -14,14 +15,25 @@ export type BriefingSummary = {
 type BriefingHistoryProps = {
   briefings: BriefingSummary[];
   watchlistTickers?: string[];
+  todaysBrief?: { href: string; headline: string };
 };
 
 const DATE_FORMAT = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
 const SAMPLE_TICKERS = ["AAPL", "TSLA"];
 
-export function BriefingHistory({ briefings, watchlistTickers = [] }: BriefingHistoryProps) {
+export function BriefingHistory({ briefings, watchlistTickers = [], todaysBrief }: BriefingHistoryProps) {
   const [query, setQuery] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
+
+  const todaysBriefCard = todaysBrief && (
+    <Link href={todaysBrief.href} className={styles.todaysBriefCard}>
+      <div>
+        <span className={styles.todaysBriefLabel}>Today&apos;s brief</span>
+        <span className={styles.todaysBriefHeadline}>{todaysBrief.headline}</span>
+      </div>
+      <ArrowRight size={18} />
+    </Link>
+  );
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -41,6 +53,7 @@ export function BriefingHistory({ briefings, watchlistTickers = [] }: BriefingHi
     return (
       <div className={styles.briefingHistory}>
         <h2 className={styles.briefingHeading}>Your briefings</h2>
+        {todaysBriefCard}
         <div className={styles.briefingEmpty}>
           <h3 className={styles.briefingEmptyTitle}>Nothing sent yet</h3>
           <p>Your first briefing will show up here once it goes out.</p>
@@ -61,6 +74,7 @@ export function BriefingHistory({ briefings, watchlistTickers = [] }: BriefingHi
   return (
     <div className={styles.briefingHistory}>
       <h2 className={styles.briefingHeading}>Your briefings</h2>
+      {todaysBriefCard}
       <input
         type="search"
         value={query}

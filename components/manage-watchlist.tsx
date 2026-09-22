@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { BriefingHistory, type BriefingSummary } from "./briefing-history";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
@@ -69,15 +68,11 @@ export function ManageWatchlist({ token, email, initialPicks, briefings }: Manag
             Briefings go to <strong>{email}</strong>.
           </p>
 
-          <Link href="/brief" className={styles.todaysBriefCard}>
-            <div>
-              <span className={styles.todaysBriefLabel}>Today&apos;s brief</span>
-              <span className={styles.todaysBriefHeadline}>Everyone is watching the yield. The story is in the barrel.</span>
-            </div>
-            <ArrowRight size={18} />
-          </Link>
-
-          <BriefingHistory briefings={briefings} watchlistTickers={initialPicks.map((stock) => stock.symbol)} />
+          <BriefingHistory
+            briefings={briefings}
+            watchlistTickers={initialPicks.map((stock) => stock.symbol)}
+            todaysBrief={{ href: "/brief", headline: "Everyone is watching the yield. The story is in the barrel." }}
+          />
 
           <h2 className={styles.briefingHeading}>Manage your watchlist</h2>
           <div className={styles.signup}>
