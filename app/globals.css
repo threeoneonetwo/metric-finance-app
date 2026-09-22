@@ -90,9 +90,9 @@ body > main {
 }
 
 .mobile-safe-top-nav {
-  min-height: calc(3.75rem + env(safe-area-inset-top));
-  padding-top: calc(0.25rem + env(safe-area-inset-top));
-  padding-bottom: 0.25rem;
+  min-height: calc(5rem + env(safe-area-inset-top));
+  padding-top: calc(0.75rem + env(safe-area-inset-top));
+  padding-bottom: 0.75rem;
 }
 
 .mobile-safe-page-header {
@@ -114,9 +114,9 @@ body > main {
   }
 
   .mobile-safe-top-nav {
-    min-height: 3.75rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
+    min-height: 5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
   }
 
   .mobile-safe-page-header {

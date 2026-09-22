@@ -10,7 +10,7 @@ type SiteHeaderProps = {
 export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps) {
   return (
     <header
-      className={`mobile-safe-top-nav ${fixed ? "fixed top-0" : "relative"} z-50 flex w-full items-center justify-between gap-4 px-4 sm:px-7 lg:px-10`}
+      className={`mobile-safe-top-nav ${fixed ? "fixed top-0" : "relative"} z-50 flex w-full items-center justify-between gap-4 px-6 sm:px-12 lg:px-20`}
       style={{
         background: "rgba(15,21,38,0.94)",
         backdropFilter: "blur(16px)",
