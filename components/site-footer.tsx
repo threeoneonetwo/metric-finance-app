@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { MetricLogo } from "./metric-logo";
 
 export function SiteFooter() {
   const [token, setToken] = useState<string | null>(null);
@@ -28,7 +29,10 @@ export function SiteFooter() {
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-10 sm:flex-row sm:justify-between">
         <div className="max-w-xs">
-          <p className="text-lg font-bold text-white">Metric Finance</p>
+          <p className="flex items-center gap-2.5 text-lg font-bold text-white">
+            <MetricLogo size={32} />
+            Metric Finance
+          </p>
           <p className="mt-3 text-sm leading-6 text-[#8993ab]">
             A daily briefing with personalised analysis on your top five US stocks.
           </p>

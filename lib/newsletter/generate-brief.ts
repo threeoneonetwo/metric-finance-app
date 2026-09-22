@@ -83,13 +83,18 @@ export function buildDigestEmail(input: {
       const changeColor = (snapshot.dayChangePercent ?? 0) >= 0 ? "#3fae64" : "#c74b4b";
       const changeSign = (snapshot.dayChangePercent ?? 0) >= 0 ? "+" : "";
 
+      const logoUrl = `https://images.financialmodelingprep.com/symbol/${ticker}.png`;
+
       return {
         html: `
           <tr>
             <td style="padding:20px 0;border-top:1px solid #161f35;">
               <table width="100%" cellpadding="0" cellspacing="0"><tr>
-                <td style="font-family:ui-monospace,Menlo,monospace;font-weight:700;font-size:14px;color:#fff;">${ticker}</td>
-                <td align="right" style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:${changeColor};">${changeSign}${(snapshot.dayChangePercent ?? 0).toFixed(2)}%</td>
+                <td width="30" style="padding-right:10px;vertical-align:middle;">
+                  <img src="${logoUrl}" width="24" height="24" alt="${ticker} logo" style="display:block;border-radius:5px;background:#161f35;" />
+                </td>
+                <td style="font-family:ui-monospace,Menlo,monospace;font-weight:700;font-size:14px;color:#fff;vertical-align:middle;">${ticker}</td>
+                <td align="right" style="font-family:ui-monospace,Menlo,monospace;font-size:13px;color:${changeColor};vertical-align:middle;">${changeSign}${(snapshot.dayChangePercent ?? 0).toFixed(2)}%</td>
               </tr></table>
               <p style="margin:8px 0 0;font-size:14px;line-height:1.6;color:#b6b8be;">${blurb}</p>
             </td>
