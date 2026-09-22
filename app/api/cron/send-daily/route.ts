@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { listActiveSubscribers, markSubscribersSent } from "@/db/subscribers";
+import { isSameBriefDay } from "@/lib/newsletter/brief-day";
 import { generateTickerBlurbs, hasAnthropicConfig } from "@/lib/newsletter/generate-brief";
 import { getTickerSnapshots, hasFmpConfig } from "@/lib/newsletter/market-data";
 import { hasSesConfig } from "@/lib/newsletter/ses";
@@ -17,9 +18,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Newsletter send is not fully configured" }, { status: 503 });
   }
 
-  const subscribers = await listActiveSubscribers();
+  const now = new Date();
+  const allActive = await listActiveSubscribers();
+  // Someone who verified since the last run (e.g. after 5pm ET) already got an
+  // immediate first briefing for this brief day — skip them here to avoid a duplicate.
+  const subscribers = allActive.filter(
+    (subscriber) => !subscriber.lastSentAt || !isSameBriefDay(subscriber.lastSentAt, now),
+  );
   if (subscribers.length === 0) {
-    return NextResponse.json({ ok: true, sent: 0, subscribers: 0 });
+    return NextResponse.json({ ok: true, sent: 0, subscribers: allActive.length });
   }
 
   const allTickers = Array.from(new Set(subscribers.flatMap((subscriber) => subscriber.tickers)));
@@ -45,5 +52,5 @@ export async function GET(request: Request) {
 
   await markSubscribersSent(sentIds);
 
-  return NextResponse.json({ ok: true, sent, subscribers: subscribers.length });
+  return NextResponse.json({ ok: true, sent, subscribers: allActive.length });
 }
