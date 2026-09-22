@@ -5,8 +5,8 @@ import Link from "next/link";
 import { Arimo } from "next/font/google";
 import { BriefChart } from "@/components/brief-chart";
 import { BriefShareButton } from "@/components/brief-share-button";
-import { MetricLogo } from "@/components/metric-logo";
 import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
 
 const arimo = Arimo({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
@@ -131,16 +131,6 @@ export function BriefContent() {
   return (
     <div className={arimo.className} style={{ minHeight: "100vh", background: "#04070d", color: "#f2f5fa" }}>
       <style>{`
-        .brief-header { flex-wrap: wrap; padding: 20px 24px !important; }
-        .brief-header .brief-logo { font-size: 20px !important; }
-        .brief-header .brief-logo-badge { transform: scale(0.769); transform-origin: left center; }
-        .brief-header nav { gap: 20px !important; }
-        @media (min-width: 640px) {
-          .brief-header { padding: 26px 40px !important; }
-          .brief-header .brief-logo { font-size: 26px !important; }
-          .brief-header .brief-logo-badge { transform: scale(1); }
-          .brief-header nav { gap: 32px !important; }
-        }
         .brief-metric, .brief-pick, .brief-catalyst, .brief-chart-wrap, .brief-portfolio-stat {
           transition: transform 200ms cubic-bezier(0.16,1,0.3,1), border-color 200ms ease, background-color 200ms ease;
         }
@@ -150,23 +140,8 @@ export function BriefContent() {
         .brief-chart-wrap:hover { border-color: #27365a; }
         .brief-save-btn { transition: background-color 150ms ease, border-color 150ms ease, transform 150ms cubic-bezier(0.16,1,0.3,1); }
         .brief-save-btn:hover { background-color: #141f36; border-color: #3a4c7a; transform: translateY(-2px); }
-        .brief-nav-link { position: relative; }
-        .brief-nav-link::after {
-          content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: #8fb0ff;
-          transform: scaleX(0); transform-origin: left; transition: transform 200ms cubic-bezier(0.16,1,0.3,1);
-        }
-        .brief-nav-link:hover::after { transform: scaleX(1); }
       `}</style>
-      <header className="brief-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px", background: "#0b1120", borderBottom: "1px solid #16203a" }}>
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <MetricLogo size={26} className="brief-logo-badge" />
-          <span className="brief-logo" style={{ fontWeight: 800, letterSpacing: "-0.8px", color: "#f2f5fa" }}>Metric Finance</span>
-        </Link>
-        <nav style={{ display: "flex", alignItems: "center" }}>
-          <Link href="/brief" className="brief-nav-link" style={{ fontSize: "15px", fontWeight: 600, color: "#e6ecf7" }}>Briefings</Link>
-          <Link href="/manage" className="brief-nav-link" style={{ fontSize: "15px", fontWeight: 600, color: "#e6ecf7", marginLeft: "20px" }}>Watchlist</Link>
-        </nav>
-      </header>
+      <SiteHeader />
 
       <main style={{ maxWidth: "860px", margin: "0 auto", padding: "56px 32px 96px" }}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "baseline", justifyContent: "space-between", marginBottom: "12px" }}>
