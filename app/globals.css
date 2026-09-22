@@ -725,3 +725,8 @@ body *::before,
 body *::after {
   border-radius: 0 !important;
 }
+
+/* The logo badge is the one deliberate exception to the square geometry. */
+body .metric-logo-badge {
+  border-radius: 9999px !important;
+}

@@ -1,11 +1,11 @@
 export function MetricLogo({ size = 40, className }: { size?: number; className?: string }) {
   return (
     <span
-      className={className}
+      className={className ? `metric-logo-badge ${className}` : "metric-logo-badge"}
       style={{
-        width: size,
+        width: size * 1.5,
         height: size,
-        borderRadius: "40%",
+        borderRadius: "9999px",
         background: "#8fa8fa",
         display: "inline-flex",
         alignItems: "center",
