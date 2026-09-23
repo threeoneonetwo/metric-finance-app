@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { MetricLogo } from "./metric-logo";
+import { MetricWordmark } from "./metric-wordmark";
 
 type SiteHeaderProps = {
   fixed?: boolean;
@@ -19,8 +19,7 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps
     >
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4">
       <Link href="/" className="flex shrink-0 items-center gap-2.5" style={{ fontFamily: "Arial, sans-serif" }}>
-        <MetricLogo size={30} />
-        <span className="text-3xl font-bold leading-none tracking-[-0.04em] text-white">Metric Finance</span>
+        <MetricWordmark className="text-3xl font-bold leading-none tracking-[-0.04em] text-white" />
       </Link>
       <nav className="hidden min-w-0 items-center gap-6 sm:flex" style={{ fontFamily: "Arial, sans-serif" }} aria-label="Main navigation">
         <Link href={faqHref} className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white">
