@@ -2,10 +2,37 @@ import { NextResponse } from "next/server";
 import { upsertSubscriber } from "@/db/subscribers";
 import { hasSesConfig, sendVerificationEmail } from "@/lib/newsletter/ses";
 
+const rateLimits = new Map<string, { count: number; resetTime: number }>();
+
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 5; // 5 requests per minute
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const record = rateLimits.get(ip);
+  
+  if (!record || now > record.resetTime) {
+    rateLimits.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+  
+  if (record.count >= RATE_LIMIT_MAX) {
+    return false;
+  }
+  
+  record.count++;
+  return true;
+}
+
 const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
 const TICKER_PATTERN = /^[A-Z0-9.]{1,10}$/;
 
 export async function POST(request: Request) {
+    const clientIp = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+  if (!checkRateLimit(clientIp)) {
+    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+  }
+
   let body: unknown;
 
   try {

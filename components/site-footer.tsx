@@ -55,7 +55,7 @@ export function SiteFooter() {
           <div>
             <p className="text-[11px] font-bold uppercase tracking-widest text-[#67738f]">Support</p>
             <ul className="mt-3 space-y-2 text-sm">
-              <li><a href="#" className="text-[#d7d9dc] transition-colors hover:text-white">Contact</a></li>
+              <li><a href="mailto:vanshpandita11@gmail.com" className="text-[#d7d9dc] transition-colors hover:text-white">Contact</a></li>
               <li><a href={unsubscribeHref} className="text-[#d7d9dc] transition-colors hover:text-white">Unsubscribe</a></li>
             </ul>
           </div>
