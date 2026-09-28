@@ -86,10 +86,9 @@ export default function PrivacyPage() {
         <li><strong>Google Analytics</strong> for page views and traffic sources.</li>
         <li><strong>Vercel Analytics</strong> for page views and performance.</li>
         <li>
-          <strong>Microsoft Clarity</strong>, which may record how visitors click, scroll, and move through pages
-          (heatmaps and session replays).
+          <strong>PostHog</strong> for product events such as stock searches, and session replays that may record how
+          visitors click, scroll, and move through pages.
         </li>
-        <li><strong>PostHog</strong> for product events such as stock searches.</li>
       </ul>
       <p>
         These providers may use cookies or similar technologies and have their own privacy policies. You can block

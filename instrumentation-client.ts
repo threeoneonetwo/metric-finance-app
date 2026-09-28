@@ -8,11 +8,15 @@ if (POSTHOG_PROJECT_TOKEN && typeof window !== "undefined") {
   const isOwner = applyOwnerOptOutFromUrl();
 
   if (!isOwner) {
-    posthog.init(POSTHOG_PROJECT_TOKEN, {
-      api_host: POSTHOG_HOST,
-      defaults: "2026-05-30",
-      capture_pageview: "history_change",
-      capture_pageleave: true,
-    });
+    // Deferred until after load so analytics never delays the first paint.
+    const init = () =>
+      posthog.init(POSTHOG_PROJECT_TOKEN, {
+        api_host: POSTHOG_HOST,
+        defaults: "2026-05-30",
+        capture_pageview: "history_change",
+        capture_pageleave: true,
+      });
+    if (document.readyState === "complete") setTimeout(init, 0);
+    else window.addEventListener("load", () => setTimeout(init, 0), { once: true });
   }
 }

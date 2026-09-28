@@ -159,6 +159,11 @@
 .heroCopy { max-width: 640px; margin: 0 auto 54px; color: var(--muted); font-size: 18.5px; line-height: 1.65; }
 
 .fadeUp { animation: fadeUp .8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.heroInner h1.fadeUp { animation-name: slideUp; }
+@keyframes slideUp {
+  from { transform: translateY(22px); }
+  to { transform: translateY(0); }
+}
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(22px); }
   to { opacity: 1; transform: translateY(0); }

@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@/components/google-analytics";
-import { MicrosoftClarity } from "@/components/microsoft-clarity";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -56,7 +55,6 @@ export default function RootLayout({
       <body className="antialiased">
         {children}
         <GoogleAnalytics />
-        <MicrosoftClarity />
         <Analytics />
       </body>
     </html>

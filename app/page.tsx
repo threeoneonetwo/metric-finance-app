@@ -9,9 +9,38 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://metricfinance.app/" },
 };
 
+const STRUCTURED_DATA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://metricfinance.app/#organization",
+      name: "Metric Finance",
+      url: "https://metricfinance.app/",
+      logo: "https://metricfinance.app/icon-512.png",
+      email: "vanshpandita11@gmail.com",
+      founder: [
+        { "@type": "Person", name: "Yashna", sameAs: "https://www.linkedin.com/in/yashnapandugala/" },
+        { "@type": "Person", name: "Vansh", sameAs: "https://www.linkedin.com/in/vanshpandita-real/" },
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://metricfinance.app/#website",
+      name: "Metric Finance",
+      url: "https://metricfinance.app/",
+      publisher: { "@id": "https://metricfinance.app/#organization" },
+    },
+  ],
+};
+
 export default function Home() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
+      />
       <LandingViewEvent />
       <NewsletterLanding />
     </main>

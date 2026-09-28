@@ -62,15 +62,8 @@ NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=your_posthog_project_token
 NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 ```
 
-Microsoft Clarity records sessions and generates heatmaps for the Metric
-Finance project. The project ID can be overridden per environment when needed:
-
-```bash
-NEXT_PUBLIC_CLARITY_PROJECT_ID=your_clarity_project_id
-```
-
 Set `localStorage.metric_owner = "1"` in your browser to exclude your own
-testing from GA, PostHog, and Microsoft Clarity.
+testing from GA and PostHog.
 
 ## Scripts
 
