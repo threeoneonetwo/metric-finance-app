@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { listBriefingsForSubscriber } from "@/db/briefings";
 import { findSubscriberByToken } from "@/db/subscribers";
+import { isValidManageLink } from "@/lib/manage-link";
 import { ManageWatchlist } from "@/components/manage-watchlist";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -14,12 +15,12 @@ export const metadata: Metadata = {
 };
 
 type ManagePageProps = {
-  searchParams: Promise<{ token?: string }>;
+  searchParams: Promise<{ token?: string; exp?: string; sig?: string }>;
 };
 
 export default async function ManagePage({ searchParams }: ManagePageProps) {
-  const { token } = await searchParams;
-  const subscriber = token ? await findSubscriberByToken(token) : null;
+  const { token, exp, sig } = await searchParams;
+  const subscriber = token && isValidManageLink(token, exp, sig) ? await findSubscriberByToken(token) : null;
 
   if (!subscriber) {
     return (
@@ -30,8 +31,8 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
             <div className={styles.manageInner}>
               <h1 className={styles.manageHeading}>We couldn&apos;t find that watchlist</h1>
               <p className={styles.manageSub}>
-                The link may have expired or been copied incompletely. Open the most recent link from
-                your briefing, or subscribe again to start a new watchlist.
+                The link may have expired or been copied incompletely. Open the link in your latest
+                briefing, or enter your email on the homepage and we&apos;ll send you a fresh one.
               </p>
               <Link className={styles.manageUnsubscribe} href="/">Back to Metric Finance</Link>
             </div>
@@ -48,6 +49,8 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
     <main>
       <ManageWatchlist
         token={subscriber.unsubscribeToken}
+        exp={exp!}
+        sig={sig!}
         email={subscriber.email}
         initialPicks={stocksFromSymbols(subscriber.tickers)}
         briefings={briefings.map((briefing) => ({

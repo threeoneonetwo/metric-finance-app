@@ -10,11 +10,11 @@ export const metadata: Metadata = {
 };
 
 type WelcomePageProps = {
-  searchParams: Promise<{ email?: string; token?: string }>;
+  searchParams: Promise<{ email?: string; token?: string; exp?: string; sig?: string }>;
 };
 
 export default async function WelcomePage({ searchParams }: WelcomePageProps) {
-  const { email, token } = await searchParams;
+  const { email, token, exp, sig } = await searchParams;
 
   return (
     <main>
@@ -27,8 +27,8 @@ export default async function WelcomePage({ searchParams }: WelcomePageProps) {
               {email ? <><strong>{email}</strong> is</> : "You're"} set up to receive the daily Metric
               Finance briefing on your watchlist.
             </p>
-            {token && (
-              <Link className={styles.manageUnsubscribe} href={`/manage?token=${token}`}>
+            {token && exp && sig && (
+              <Link className={styles.manageUnsubscribe} href={`/manage?${new URLSearchParams({ token, exp, sig })}`}>
                 Manage your watchlist
               </Link>
             )}

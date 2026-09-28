@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Mail } from 'lucide-react';
 import { SiteHeader } from '@/components/site-header';
@@ -9,14 +9,11 @@ import styles from './confirm-email.module.css';
 
 export default function ConfirmEmailPage() {
   const email = 'vanshpandita11@gmail.com'; // In real app, get from params/state
-  const [isLoading, setIsLoading] = useState(true);
   const leftSectionRef = useRef<HTMLDivElement>(null);
   const rightSectionRef = useRef<HTMLDivElement>(null);
   const stepItemsRef = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
-    setIsLoading(false);
-
     // Scroll reveal animations
     const observer = new IntersectionObserver(
       (entries) => {
@@ -43,7 +40,7 @@ export default function ConfirmEmailPage() {
       <SiteHeader />
 
       <main className={styles.main}>
-        <div className={`${styles.container} ${isLoading ? styles.loading : ''}`}>
+        <div className={styles.container}>
           {/* Left Section */}
           <div ref={leftSectionRef} className={`${styles.leftSection} ${styles.fadeInLeft}`}>
             <div className={styles.badge}>ONE STEP LEFT</div>

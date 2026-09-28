@@ -22,7 +22,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  if (!isEventBody(body) || !ALLOWED_EVENTS.has(body.eventName)) {
+  if (
+    !isEventBody(body) ||
+    !ALLOWED_EVENTS.has(body.eventName) ||
+    (body.ticker?.length ?? 0) > 16 ||
+    JSON.stringify(body.metadata ?? {}).length > 2000
+  ) {
     return NextResponse.json({ error: "Invalid event" }, { status: 400 });
   }
 

@@ -77,7 +77,7 @@ function useReveal<T extends HTMLElement>() {
     return () => observer.disconnect();
   }, []);
 
-  return { ref, inView };
+  return [ref, inView] as const;
 }
 
 function SectionWave() {
@@ -92,22 +92,13 @@ export function NewsletterLanding() {
   const [submitting, setSubmitting] = useState(false);
   const [slide, setSlide] = useState(0);
   const [openFaq, setOpenFaq] = useState(0);
-  const features = useReveal<HTMLElement>();
-  const testimonials = useReveal<HTMLElement>();
-  const faq = useReveal<HTMLElement>();
-  const cta = useReveal<HTMLElement>();
+  const [featuresRef, featuresInView] = useReveal<HTMLElement>();
+  const [testimonialsRef, testimonialsInView] = useReveal<HTMLElement>();
+  const [faqRef, faqInView] = useReveal<HTMLElement>();
+  const [ctaRef, ctaInView] = useReveal<HTMLElement>();
 
   const emailValid = /^\S+@\S+\.\S+$/.test(email.trim());
   const router = useRouter();
-
-  useEffect(() => {
-    try {
-      const token = localStorage.getItem("mf_token");
-      if (token) router.replace(`/manage?token=${token}`);
-    } catch {
-      // localStorage unavailable (private browsing, etc.) — just show the landing page.
-    }
-  }, [router]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -135,20 +126,7 @@ export function NewsletterLanding() {
         return;
       }
 
-      const data = await response.json().catch(() => null);
-      if (data?.needsVerification) {
-        // Redirect to confirmation page
-        router.push("/confirm-email");
-      } else {
-        setSubmitted(true);
-        if (data?.token) {
-          try {
-            localStorage.setItem("mf_token", data.token);
-          } catch {
-            // localStorage unavailable
-          }
-        }
-      }
+      router.push("/confirm-email");
     } catch {
       setError("Something went wrong. Please try again in a moment.");
     } finally {
@@ -254,7 +232,7 @@ export function NewsletterLanding() {
         </div>
       </section>
 
-      <section ref={features.ref} className={`${styles.featuresSection} ${features.inView ? styles.inView : ""}`}>
+      <section ref={featuresRef} className={`${styles.featuresSection} ${featuresInView ? styles.inView : ""}`}>
         <div className={styles.sectionInner}>
           <div className={styles.sectionHeading}>
             <h2>What lands in your inbox</h2>
@@ -262,7 +240,7 @@ export function NewsletterLanding() {
           </div>
           <div className={styles.features}>
             {FEATURES.map(([number, title, copy], index) => (
-              <article key={number} style={{ transitionDelay: features.inView ? `${120 + index * 90}ms` : "0ms" }}>
+              <article key={number} style={{ transitionDelay: featuresInView ? `${120 + index * 90}ms` : "0ms" }}>
                 <span>{number}</span>
                 <h3>{title}</h3>
                 <p>{copy}</p>
@@ -273,7 +251,7 @@ export function NewsletterLanding() {
       </section>
 
       <SectionWave />
-      <section ref={testimonials.ref} className={`${styles.testimonialsSection} ${testimonials.inView ? styles.inView : ""}`}>
+      <section ref={testimonialsRef} className={`${styles.testimonialsSection} ${testimonialsInView ? styles.inView : ""}`}>
         <div className={styles.sectionInner}>
           <span className={styles.kicker}>From real users</span>
           <div className={styles.testimonialHeading}>
@@ -292,7 +270,7 @@ export function NewsletterLanding() {
       </section>
 
       <SectionWave />
-      <section id="faq" ref={faq.ref} className={`${styles.faqSection} ${faq.inView ? styles.inView : ""}`}>
+      <section id="faq" ref={faqRef} className={`${styles.faqSection} ${faqInView ? styles.inView : ""}`}>
         <div className={styles.faqInner}>
           <div>
             <span className={styles.kicker}>FAQ</span>
@@ -302,7 +280,7 @@ export function NewsletterLanding() {
             {FAQS.map((item, index) => {
               const open = openFaq === index;
               return (
-                <div key={item.question} className={styles.faqRow} style={{ transitionDelay: faq.inView ? `${120 + index * 70}ms` : "0ms" }}>
+                <div key={item.question} className={styles.faqRow} style={{ transitionDelay: faqInView ? `${120 + index * 70}ms` : "0ms" }}>
                   <button type="button" onClick={() => setOpenFaq(open ? -1 : index)} aria-expanded={open}>
                     {item.question}<span className={open ? styles.faqIconOpen : ""}>+</span>
                   </button>
@@ -317,7 +295,7 @@ export function NewsletterLanding() {
       </section>
 
       <SectionWave />
-      <section ref={cta.ref} className={`${styles.finalCta} ${cta.inView ? styles.inView : ""}`}>
+      <section ref={ctaRef} className={`${styles.finalCta} ${ctaInView ? styles.inView : ""}`}>
         <div className={styles.finalCtaGrid} aria-hidden="true" />
         <div className={styles.finalCtaInner}>
           <span className={styles.kicker}>Ready when you are</span>

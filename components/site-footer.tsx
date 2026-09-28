@@ -1,23 +1,7 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MetricWordmark } from "./metric-wordmark";
 
 export function SiteFooter() {
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    try {
-      setToken(localStorage.getItem("mf_token"));
-    } catch {
-      // localStorage unavailable — links just fall back to the generic manage page.
-    }
-  }, []);
-
-  const accountHref = token ? `/manage?token=${token}` : "/manage";
-  const unsubscribeHref = token ? `/api/unsubscribe?token=${token}` : "/manage";
-
   return (
     <footer
       className="w-full px-5 pt-10 sm:px-8 lg:px-10"
@@ -42,7 +26,7 @@ export function SiteFooter() {
             <p className="text-[11px] font-bold uppercase tracking-widest text-[#67738f]">Product</p>
             <ul className="mt-3 space-y-2 text-sm">
               <li><Link href="/#faq" className="text-[#d7d9dc] transition-colors hover:text-white">FAQ</Link></li>
-              <li><Link href={accountHref} className="text-[#d7d9dc] transition-colors hover:text-white">Your account</Link></li>
+              <li><Link href="/manage" className="text-[#d7d9dc] transition-colors hover:text-white">Your account</Link></li>
             </ul>
           </div>
           <div>
@@ -56,7 +40,7 @@ export function SiteFooter() {
             <p className="text-[11px] font-bold uppercase tracking-widest text-[#67738f]">Support</p>
             <ul className="mt-3 space-y-2 text-sm">
               <li><a href="mailto:vanshpandita11@gmail.com" className="text-[#d7d9dc] transition-colors hover:text-white">Contact</a></li>
-              <li><a href={unsubscribeHref} className="text-[#d7d9dc] transition-colors hover:text-white">Unsubscribe</a></li>
+              <li><a href="/manage" className="text-[#d7d9dc] transition-colors hover:text-white">Unsubscribe</a></li>
             </ul>
           </div>
         </div>

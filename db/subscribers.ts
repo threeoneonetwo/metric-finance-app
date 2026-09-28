@@ -21,15 +21,8 @@ export async function upsertSubscriber(input: SubscriberInput) {
   const [existing] = await db.select().from(subscribers).where(eq(subscribers.email, email)).limit(1);
 
   if (existing) {
-    // Already verified subscribers just update their picks immediately, no re-verification needed.
-    if (existing.active) {
-      const [updated] = await db
-        .update(subscribers)
-        .set({ tickers, name: name ?? existing.name, updatedAt: new Date() })
-        .where(eq(subscribers.email, email))
-        .returning();
-      return updated ?? null;
-    }
+    // Anyone can submit any email, so never modify a verified subscriber from an unauthenticated signup.
+    if (existing.active) return existing;
 
     const [updated] = await db
       .update(subscribers)

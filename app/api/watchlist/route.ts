@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { updateTickersByToken } from "@/db/subscribers";
+import { isValidManageLink } from "@/lib/manage-link";
 
 const TICKER_PATTERN = /^[A-Z0-9.]{1,10}$/;
 
@@ -21,6 +22,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid tickers" }, { status: 400 });
   }
 
+  if (!isValidManageLink(body.token, body.exp, body.sig)) {
+    return NextResponse.json({ error: "This link has expired" }, { status: 403 });
+  }
+
   const subscriber = await updateTickersByToken(body.token, tickers);
   if (!subscriber) {
     return NextResponse.json({ error: "We couldn't find that subscription" }, { status: 404 });
@@ -29,12 +34,14 @@ export async function POST(request: Request) {
   return NextResponse.json({ ok: true });
 }
 
-function isWatchlistBody(value: unknown): value is { token: string; tickers: string[] } {
+function isWatchlistBody(value: unknown): value is { token: string; exp: string; sig: string; tickers: string[] } {
   if (!value || typeof value !== "object") return false;
   const body = value as Record<string, unknown>;
   return (
     typeof body.token === "string" &&
     body.token.length > 0 &&
+    typeof body.exp === "string" &&
+    typeof body.sig === "string" &&
     Array.isArray(body.tickers) &&
     body.tickers.every((ticker) => typeof ticker === "string")
   );

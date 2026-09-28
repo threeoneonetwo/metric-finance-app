@@ -49,8 +49,8 @@ export default function PrivacyPage() {
 
       <h3>Browser storage</h3>
       <p>
-        After you subscribe, we save a private token in your browser&apos;s local storage. It lets us take you straight to
-        your account page when you come back. Our analytics providers may also set cookies or similar identifiers.
+        We don&apos;t store account tokens in your browser. Links to manage your watchlist are sent by email and expire
+        after 30 days. Our analytics providers may also set cookies or similar identifiers.
       </p>
 
       <h2>2. How we use it</h2>

@@ -11,12 +11,14 @@ import type { Stock } from "@/lib/stocks";
 
 type ManageWatchlistProps = {
   token: string;
+  exp: string;
+  sig: string;
   email: string;
   initialPicks: Stock[];
   briefings: BriefingSummary[];
 };
 
-export function ManageWatchlist({ token, email, initialPicks, briefings }: ManageWatchlistProps) {
+export function ManageWatchlist({ token, exp, sig, email, initialPicks, briefings }: ManageWatchlistProps) {
   const [picks, setPicks] = useState<Stock[]>(initialPicks);
   // Baseline of what's actually stored, so "Saved" survives until the next edit.
   const [savedPicks, setSavedPicks] = useState<Stock[]>(initialPicks);
@@ -40,7 +42,7 @@ export function ManageWatchlist({ token, email, initialPicks, briefings }: Manag
       const response = await fetch("/api/watchlist", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ token, tickers: picks.map((stock) => stock.symbol) }),
+        body: JSON.stringify({ token, exp, sig, tickers: picks.map((stock) => stock.symbol) }),
       });
 
       if (!response.ok) {

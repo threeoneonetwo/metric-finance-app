@@ -1,3 +1,4 @@
+import { manageUrl } from "@/lib/manage-link";
 import { recordBriefing } from "@/db/briefings";
 import { buildDigestEmail } from "./generate-brief";
 import type { TickerSnapshot } from "./market-data";
@@ -20,7 +21,7 @@ export async function sendDigestToSubscriber(input: {
     tickers: input.subscriber.tickers,
     snapshots: input.snapshots,
     blurbs: input.blurbs,
-    manageUrl: `${input.baseUrl}/manage?token=${input.subscriber.unsubscribeToken}`,
+    manageUrl: manageUrl(input.baseUrl, input.subscriber.unsubscribeToken),
     unsubscribeUrl: `${input.baseUrl}/api/unsubscribe?token=${input.subscriber.unsubscribeToken}`,
   });
 

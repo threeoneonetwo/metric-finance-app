@@ -1,37 +1,15 @@
 import { NextResponse } from "next/server";
+import { isRateLimited } from "@/db/rate-limit";
 import { upsertSubscriber } from "@/db/subscribers";
-import { hasSesConfig, sendVerificationEmail } from "@/lib/newsletter/ses";
+import { manageUrl } from "@/lib/manage-link";
+import { hasSesConfig, sendEmail, sendVerificationEmail } from "@/lib/newsletter/ses";
 
-const rateLimits = new Map<string, { count: number; resetTime: number }>();
-
-const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
-const RATE_LIMIT_MAX = 5; // 5 requests per minute
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const record = rateLimits.get(ip);
-  
-  if (!record || now > record.resetTime) {
-    rateLimits.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
-    return true;
-  }
-  
-  if (record.count >= RATE_LIMIT_MAX) {
-    return false;
-  }
-  
-  record.count++;
-  return true;
-}
-
-const EMAIL_PATTERN = /^\S+@\S+\.\S+$/;
+const EMAIL_PATTERN = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/;
 const TICKER_PATTERN = /^[A-Z0-9.]{1,10}$/;
 
 export async function POST(request: Request) {
-    const clientIp = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
-  if (!checkRateLimit(clientIp)) {
-    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
-  }
+  const clientIp =
+    request.headers.get("x-real-ip") || request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
 
   let body: unknown;
 
@@ -46,13 +24,17 @@ export async function POST(request: Request) {
   }
 
   const email = body.email.trim().toLowerCase();
-  if (!EMAIL_PATTERN.test(email)) {
+  if (email.length > 254 || !EMAIL_PATTERN.test(email)) {
     return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
   }
 
   const tickers = body.tickers.map((ticker) => ticker.trim().toUpperCase()).slice(0, 5);
   if (tickers.length === 0 || !tickers.every((ticker) => TICKER_PATTERN.test(ticker))) {
     return NextResponse.json({ error: "Invalid tickers" }, { status: 400 });
+  }
+
+  if (await tooManyRequests(clientIp, email)) {
+    return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
   }
 
   const name = typeof body.name === "string" ? body.name.trim().slice(0, 100) : undefined;
@@ -62,27 +44,32 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Subscriptions are not available right now" }, { status: 503 });
   }
 
-  if (!subscriber.active && subscriber.verificationToken) {
-    if (!hasSesConfig()) {
-      console.error("subscribe: SES is not configured, skipping verification email");
-    } else {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://metricfinance.app";
-      try {
+  if (!hasSesConfig()) {
+    console.error("subscribe: SES is not configured, skipping email");
+  } else {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://metricfinance.app";
+    try {
+      if (!subscriber.active && subscriber.verificationToken) {
         await sendVerificationEmail({
           to: subscriber.email,
           verifyUrl: `${baseUrl}/api/verify?token=${subscriber.verificationToken}`,
         });
-      } catch (error) {
-        console.error("subscribe: failed to send verification email", error);
+      } else if (subscriber.active) {
+        const link = manageUrl(baseUrl, subscriber.unsubscribeToken);
+        await sendEmail({
+          to: subscriber.email,
+          subject: "Manage your Metric Finance watchlist",
+          html: `<p>You're already subscribed to Metric Finance. To change your stocks, use your private link:</p><p><a href="${link}">Manage my watchlist</a></p><p>If you didn't request this, you can ignore this email.</p>`,
+          text: `You're already subscribed to Metric Finance. Manage your watchlist: ${link}\n\nIf you didn't request this, you can ignore this email.`,
+        });
       }
+    } catch (error) {
+      console.error("subscribe: failed to send email", error);
     }
   }
 
-  return NextResponse.json({
-    ok: true,
-    needsVerification: !subscriber.active,
-    token: subscriber.unsubscribeToken,
-  });
+  // Identical response for new and existing emails: no token leak, no account enumeration.
+  return NextResponse.json({ ok: true, needsVerification: true });
 }
 
 function isSubscribeBody(value: unknown): value is { email: string; tickers: string[]; name?: string } {
@@ -94,4 +81,19 @@ function isSubscribeBody(value: unknown): value is { email: string; tickers: str
     body.tickers.every((ticker) => typeof ticker === "string") &&
     (body.name === undefined || typeof body.name === "string")
   );
+}
+
+async function tooManyRequests(ip: string, email: string) {
+  try {
+    // Per-email cap stops someone using the form to flood a victim's inbox.
+    const [ipLimited, emailLimited] = await Promise.all([
+      isRateLimited(`subscribe:ip:${ip}`, 5, 60),
+      isRateLimited(`subscribe:email:${email}`, 3, 60 * 60),
+    ]);
+    return ipLimited || emailLimited;
+  } catch (error) {
+    // Fail open so a rate-limit table outage can't block all signups.
+    console.error("subscribe: rate limit check failed", error);
+    return false;
+  }
 }
