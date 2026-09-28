@@ -4,6 +4,7 @@ import { generateTickerBlurbs, hasAnthropicConfig } from "@/lib/newsletter/gener
 import { getTickerSnapshots, hasFmpConfig } from "@/lib/newsletter/market-data";
 import { hasSesConfig } from "@/lib/newsletter/ses";
 import { sendDigestToSubscriber } from "@/lib/newsletter/send-digest";
+import { sendWelcomeEmail } from "@/lib/newsletter/send-welcome-email";
 
 export const maxDuration = 30;
 
@@ -27,15 +28,34 @@ export async function GET(request: Request) {
 
 async function sendFirstBriefing(subscriber: { id: string; email: string; tickers: string[]; unsubscribeToken: string }) {
   if (subscriber.tickers.length === 0) return;
-  if (!hasFmpConfig() || !hasAnthropicConfig() || !hasSesConfig()) {
-    console.error("verify: newsletter send is not fully configured, skipping first briefing");
+  if (!hasSesConfig()) {
+    console.error("verify: SES is not configured");
+    return;
+  }
+
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://metricfinance.app";
+
+  // Always send welcome email
+  try {
+    await sendWelcomeEmail({
+      to: subscriber.email,
+      tickers: subscriber.tickers,
+      briefUrl: `${baseUrl}/brief`,
+      manageUrl: `${baseUrl}/manage?token=${subscriber.unsubscribeToken}`,
+    });
+  } catch (error) {
+    console.error("verify: failed to send welcome email", error);
+  }
+
+  // Send first briefing if fully configured
+  if (!hasFmpConfig() || !hasAnthropicConfig()) {
+    console.info("verify: skipping first briefing (missing FMP or Anthropic config)");
     return;
   }
 
   try {
     const snapshots = await getTickerSnapshots(subscriber.tickers);
     const blurbs = await generateTickerBlurbs(Array.from(snapshots.values()));
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://metricfinance.app";
 
     const result = await sendDigestToSubscriber({ subscriber, snapshots, blurbs, baseUrl });
     if (result.sent) {
