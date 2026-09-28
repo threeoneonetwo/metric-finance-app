@@ -3,9 +3,9 @@ import { LandingViewEvent } from "@/components/analytics-events";
 import { NewsletterLanding } from "@/components/newsletter-landing";
 
 export const metadata: Metadata = {
-  title: "Stocks Explained in Plain English | Metric Finance",
+  title: "Stocks Explained Like You're 5 for free | Metric Finance",
   description:
-    "Choose the US stocks you follow and get a free daily briefing covering price action, fundamentals, peers, and the news that matters.",
+    "Pick up to 5 US stocks and get a free daily email explaining why each one moved, like you're 5. Earnings, news and price moves, zero jargon. No advice, ever.",
 };
 
 export default function Home() {

@@ -7,16 +7,16 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://metricfinance.app"),
   applicationName: "Metric Finance",
-  title: "Stocks Explained in Plain English | Metric Finance",
+  title: "Stocks Explained Like You're 5 for free | Metric Finance",
   description:
-    "Choose the US stocks you follow and get a free daily briefing covering price action, fundamentals, peers, and the news that matters.",
+    "Pick up to 5 US stocks and get a free daily email explaining why each one moved, like you're 5. Earnings, news and price moves, zero jargon. No advice, ever.",
   formatDetection: {
     telephone: false,
   },
   openGraph: {
-    title: "Stocks Explained in Plain English | Metric Finance",
+    title: "Stocks Explained Like You're 5 for free | Metric Finance",
     description:
-      "Choose the US stocks you follow and get a free daily briefing covering price action, fundamentals, peers, and the news that matters.",
+      "Pick up to 5 US stocks and get a free daily email explaining why each one moved, like you're 5. Earnings, news and price moves, zero jargon. No advice, ever.",
     url: "https://metricfinance.app",
     siteName: "Metric Finance",
     images: [{ url: "https://metricfinance.app/og-image.png", width: 1200, height: 630 }],
@@ -24,9 +24,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Stocks Explained in Plain English | Metric Finance",
+    title: "Stocks Explained Like You're 5 for free | Metric Finance",
     description:
-      "Choose the US stocks you follow and get a free daily briefing covering price action, fundamentals, peers, and the news that matters.",
+      "Pick up to 5 US stocks and get a free daily email explaining why each one moved, like you're 5. Earnings, news and price moves, zero jargon. No advice, ever.",
     images: ["https://metricfinance.app/og-image.png"],
   },
   icons: {
