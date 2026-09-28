@@ -89,7 +89,6 @@ export function NewsletterLanding() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [needsVerification, setNeedsVerification] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [slide, setSlide] = useState(0);
   const [openFaq, setOpenFaq] = useState(0);
@@ -212,17 +211,8 @@ export function NewsletterLanding() {
           <div id="signup" className={`${styles.signup} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>
             {submitted ? (
               <div className={styles.success} aria-live="polite">
-                {needsVerification ? (
-                  <>
-                    <div className={styles.successTitle}><Check size={20} /> Check your inbox</div>
-                    <p>We sent a confirmation link to <strong>{email.trim()}</strong>. Click it to start receiving your briefing.</p>
-                  </>
-                ) : (
-                  <>
-                    <div className={styles.successTitle}><Check size={20} /> You&apos;re in.</div>
-                    <p>Your first briefing will arrive at {email.trim()}.</p>
-                  </>
-                )}
+                <div className={styles.successTitle}><Check size={20} /> You&apos;re in.</div>
+                <p>Your first briefing will arrive at {email.trim()}.</p>
                 <div className={styles.successPicks}>
                   {picks.map((stock) => <span key={stock.symbol}>{stock.symbol}</span>)}
                 </div>

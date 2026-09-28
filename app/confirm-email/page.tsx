@@ -51,7 +51,7 @@ export default function ConfirmEmailPage() {
                 <div className={styles.stepNumber}>3</div>
                 <div>
                   <h3>Welcome email incoming</h3>
-                  <p>You'll receive a welcome email with instructions on whitelisting us</p>
+                  <p>You&apos;ll receive a welcome email with instructions on whitelisting us</p>
                 </div>
               </div>
 
@@ -65,12 +65,12 @@ export default function ConfirmEmailPage() {
             </div>
 
             <div className={styles.help}>
-              <h4>Didn't receive the email?</h4>
+              <h4>Didn&apos;t receive the email?</h4>
               <ul>
                 <li>Check your spam or junk folder</li>
                 <li>Make sure you entered the right email address</li>
                 <li>
-                  Try signing up again — we'll resend the link. Use the same email and stocks.
+                  Try signing up again — we&apos;ll resend the link. Use the same email and stocks.
                 </li>
               </ul>
             </div>
@@ -98,7 +98,7 @@ export default function ConfirmEmailPage() {
                   Confirm my email
                 </div>
                 <p style={{ fontSize: "13px", color: "#8798b4", marginBottom: 0 }}>
-                  If you didn't request this, you can ignore this email.
+                  If you didn&apos;t request this, you can ignore this email.
                 </p>
               </div>
             </div>
