@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
         destination: "https://metricfinance.app/:path*",
         permanent: true,
       },
+      { source: "/r/:ticker*", destination: "/", permanent: true },
+      { source: "/watchlists", destination: "/", permanent: true },
     ];
   },
   async headers() {
