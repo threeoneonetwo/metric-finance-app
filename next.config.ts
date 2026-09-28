@@ -2,6 +2,16 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.metricfinance.app" }],
+        destination: "https://metricfinance.app/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
