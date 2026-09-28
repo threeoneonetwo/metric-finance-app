@@ -137,13 +137,17 @@ export function NewsletterLanding() {
       }
 
       const data = await response.json().catch(() => null);
-      setNeedsVerification(Boolean(data?.needsVerification));
-      setSubmitted(true);
-      if (data?.token) {
-        try {
-          localStorage.setItem("mf_token", data.token);
-        } catch {
-          // localStorage unavailable — the redirect just won't happen on a later visit.
+      if (data?.needsVerification) {
+        // Redirect to confirmation page
+        router.push("/confirm-email");
+      } else {
+        setSubmitted(true);
+        if (data?.token) {
+          try {
+            localStorage.setItem("mf_token", data.token);
+          } catch {
+            // localStorage unavailable
+          }
         }
       }
     } catch {
