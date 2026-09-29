@@ -1,5 +1,7 @@
 import { sendEmail } from "./ses";
 
+const fromEmail = process.env.SES_FROM_EMAIL ?? "briefing@metricfinance.app";
+
 export async function sendWelcomeEmail(input: {
   to: string;
   name?: string;
@@ -11,7 +13,7 @@ export async function sendWelcomeEmail(input: {
   const tickersText = input.tickers.join(", ");
   
   const subject = `Welcome to Metric Finance, ${displayName} — your first brief is ready`;
-  const preheader = `Your five: ${tickersText}. One step to make sure tonight's brief lands in your inbox.`;
+  const preheader = `Your five: ${tickersText}. One step to make sure every brief lands in your inbox.`;
 
   const html = buildWelcomeEmailHTML({
     displayName,
@@ -103,7 +105,7 @@ function buildWelcomeEmailHTML(input: {
 <tr><td class="px" style="padding:0 32px 36px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#141c33" style="background-color:#141c33;border:1px solid #2b3a66;">
 <tr><td style="padding:22px 22px 8px;">
-<p style="margin:12px 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:26px;mso-line-height-rule:exactly;font-weight:bold;letter-spacing:-0.2px;color:#f2f5fa;">Add <strong>brief@metricfinance.app</strong> to your contacts so your brief never lands in spam.</p>
+<p style="margin:12px 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:26px;mso-line-height-rule:exactly;font-weight:bold;letter-spacing:-0.2px;color:#f2f5fa;">Add <strong>${fromEmail}</strong> to your contacts so your brief never lands in spam.</p>
 </td></tr>
 <tr><td style="padding:0 22px 18px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -136,8 +138,8 @@ function buildWelcomeEmailHTML(input: {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
 <td class="stack stack-tile" width="32%" valign="top" style="width:32%;border-top:2px solid #8fa8fa;padding:14px 0 0;">
-<p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:bold;letter-spacing:-0.5px;color:#f2f5fa;">5:00 PM ET</p>
-<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#8798b4;">Every day, after the US close</p>
+<p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:bold;letter-spacing:-0.5px;color:#f2f5fa;">Every morning</p>
+<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#8798b4;">Weekdays, before the US market opens</p>
 </td>
 <td class="stack-gap" width="2%" style="width:2%;font-size:0;line-height:0;">&nbsp;</td>
 <td class="stack stack-tile" width="32%" valign="top" style="width:32%;border-top:2px solid #1a2540;padding:14px 0 0;">
@@ -192,7 +194,7 @@ function buildWelcomeEmailText(input: {
 You're now set to receive daily briefings about ${input.tickersText}.
 
 ADD US TO YOUR CONTACTS
-To make sure our emails land in your inbox, please add brief@metricfinance.app to your contacts:
+To make sure our emails land in your inbox, please add ${fromEmail} to your contacts:
 - Gmail: Drag this email to "Primary" tab
 - Outlook: Right-click our address, then Add to Safe Senders
 - Apple Mail: Tap our name at the top, then Add to VIPs
@@ -205,7 +207,7 @@ ${input.tickersText}
 
 WHEN YOU'LL HEAR FROM US
 • One email per trading day
-• Sent at 5:00 PM ET
+• Sent weekday mornings, before the US market opens
 • Weekends and holidays: no email
 
 READ TODAY'S BRIEF

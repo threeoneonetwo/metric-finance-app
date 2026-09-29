@@ -55,14 +55,18 @@ async function generateOneBlurb(
       signal: AbortSignal.timeout(15000),
     });
 
-    if (!response.ok) return null;
+    if (!response.ok) {
+      console.error(`generate-brief: Anthropic ${response.status} for ${snapshot.ticker}: ${(await response.text()).slice(0, 300)}`);
+      return null;
+    }
 
     const data = (await response.json()) as { content?: Array<{ type: string; text?: string }> };
     const text = data.content?.find((block) => block.type === "text")?.text?.trim();
     if (!text) return null;
 
     return { ticker: snapshot.ticker, blurb: text };
-  } catch {
+  } catch (error) {
+    console.error(`generate-brief: request failed for ${snapshot.ticker}`, error);
     return null;
   }
 }

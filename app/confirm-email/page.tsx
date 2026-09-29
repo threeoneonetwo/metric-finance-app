@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Mail } from 'lucide-react';
 import { SiteHeader } from '@/components/site-header';
@@ -8,12 +8,22 @@ import { SiteFooter } from '@/components/site-footer';
 import styles from './confirm-email.module.css';
 
 export default function ConfirmEmailPage() {
-  const email = 'vanshpandita11@gmail.com'; // In real app, get from params/state
+  const [pending, setPending] = useState<{ email: string; tickers: string[] } | null>(null);
+  const [resend, setResend] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const leftSectionRef = useRef<HTMLDivElement>(null);
   const rightSectionRef = useRef<HTMLDivElement>(null);
   const stepItemsRef = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem('mf_pending_signup');
+      // Reading browser storage is only possible after mount.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      if (saved) setPending(JSON.parse(saved));
+    } catch {
+      // Storage unavailable; the page falls back to generic copy.
+    }
+
     // Scroll reveal animations
     const observer = new IntersectionObserver(
       (entries) => {
@@ -35,6 +45,21 @@ export default function ConfirmEmailPage() {
     return () => observer.disconnect();
   }, []);
 
+  async function resendLink() {
+    if (!pending) return;
+    setResend('sending');
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(pending),
+      });
+      setResend(response.ok ? 'sent' : 'error');
+    } catch {
+      setResend('error');
+    }
+  }
+
   return (
     <div className={styles.page}>
       <SiteHeader />
@@ -50,7 +75,7 @@ export default function ConfirmEmailPage() {
             <div className={styles.emailBlock}>
               <p className={styles.emailLabel}>We sent a confirmation link to</p>
               <div className={styles.emailRow}>
-                <span className={styles.emailAddress}>{email}</span>
+                <span className={styles.emailAddress}>{pending?.email ?? 'your email address'}</span>
                 <Link href="/" className={styles.changeLink}>
                   Change
                 </Link>
@@ -59,7 +84,7 @@ export default function ConfirmEmailPage() {
 
             <div className={styles.actionButtons}>
               <a
-                href={`mailto:${email}`}
+                href="https://mail.google.com/mail/u/0/#inbox"
                 className={`${styles.btn} ${styles.btnPrimary}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -67,7 +92,7 @@ export default function ConfirmEmailPage() {
                 Open Gmail
               </a>
               <a
-                href={`mailto:${email}`}
+                href="https://outlook.live.com/mail/0/inbox"
                 className={`${styles.btn} ${styles.btnSecondary}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -78,19 +103,31 @@ export default function ConfirmEmailPage() {
 
             <div className={styles.noEmailBlock}>
               <span>No email yet?</span>
-              <Link href="/" className={styles.resendLink}>
-                Resend the link
-              </Link>
+              {pending ? (
+                <button
+                  type="button"
+                  onClick={resendLink}
+                  disabled={resend === 'sending' || resend === 'sent'}
+                  className={styles.resendLink}
+                  style={{ background: 'none', border: 0, padding: 0, font: 'inherit' }}
+                >
+                  {resend === 'sending' ? 'Sending…' : resend === 'sent' ? 'Sent again. Check your inbox' : resend === 'error' ? 'Try again in a few minutes' : 'Resend the link'}
+                </button>
+              ) : (
+                <Link href="/#signup" className={styles.resendLink}>
+                  Sign up again
+                </Link>
+              )}
             </div>
 
             <div className={styles.stepsSection}>
               <h3 className={styles.stepsTitle}>WHAT HAPPENS NEXT</h3>
               <div className={styles.stepsList}>
                 {[
-                  { num: '1', title: 'Open your email', desc: 'Look for an email from brief@metricfinance.app', tag: 'YOU ARE HERE' },
+                  { num: '1', title: 'Open your email', desc: 'Look for an email from briefing@metricfinance.app', tag: 'YOU ARE HERE' },
                   { num: '2', title: 'Click the confirmation link', desc: 'The link will verify your email and set up your account', tag: undefined },
                   { num: '3', title: 'Welcome email incoming', desc: 'You\'ll receive a welcome email with instructions on whitelisting us', tag: undefined },
-                  { num: '4', title: 'Your first briefing', desc: 'Your personalized daily briefing arrives at 5:00 PM ET tomorrow', tag: undefined },
+                  { num: '4', title: 'Your first briefing', desc: 'Your first briefing arrives right after you confirm, then every weekday morning', tag: undefined },
                 ].map((step, idx) => (
                   <div
                     key={idx}
@@ -129,7 +166,7 @@ export default function ConfirmEmailPage() {
                   <Mail size={16} />
                   <div>
                     <div className={styles.previewSender}>Metric Finance</div>
-                    <div className={styles.previewEmail}>brief@metricfinance.app</div>
+                    <div className={styles.previewEmail}>briefing@metricfinance.app</div>
                   </div>
                 </div>
                 <div className={styles.previewTime}>Just now</div>

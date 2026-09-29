@@ -126,6 +126,14 @@ export function NewsletterLanding() {
         return;
       }
 
+      try {
+        sessionStorage.setItem(
+          "mf_pending_signup",
+          JSON.stringify({ email: email.trim(), tickers: picks.map((stock) => stock.symbol) }),
+        );
+      } catch {
+        // Storage unavailable; the confirm page falls back to generic copy.
+      }
       router.push("/confirm-email");
     } catch {
       setError("Something went wrong. Please try again in a moment.");

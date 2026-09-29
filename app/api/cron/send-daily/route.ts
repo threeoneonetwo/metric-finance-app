@@ -3,7 +3,7 @@ import { listActiveSubscribers, markSubscribersSent } from "@/db/subscribers";
 import { isSameBriefDay } from "@/lib/newsletter/brief-day";
 import { generateTickerBlurbs, hasAnthropicConfig } from "@/lib/newsletter/generate-brief";
 import { getTickerSnapshots, hasFmpConfig } from "@/lib/newsletter/market-data";
-import { hasSesConfig } from "@/lib/newsletter/ses";
+import { hasSesConfig, sendEmail } from "@/lib/newsletter/ses";
 import { sendDigestToSubscriber } from "@/lib/newsletter/send-digest";
 
 export const maxDuration = 60;
@@ -33,6 +33,12 @@ export async function GET(request: Request) {
   const allTickers = Array.from(new Set(subscribers.flatMap((subscriber) => subscriber.tickers)));
   const snapshots = await getTickerSnapshots(allTickers);
   const blurbs = await generateTickerBlurbs(Array.from(snapshots.values()));
+  if (blurbs.size < snapshots.size) {
+    await alertOwner(
+      `Metric Finance: ${snapshots.size - blurbs.size} of ${snapshots.size} stock explanations failed`,
+      `Today's send could not generate explanations for ${snapshots.size - blurbs.size} of ${snapshots.size} stocks, so those emails went out without them.\n\nMost likely cause: Anthropic API credit ran out or the key is invalid. Check the Vercel logs for "generate-brief" and your Anthropic billing page.`,
+    );
+  }
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://metricfinance.app";
 
@@ -54,4 +60,12 @@ export async function GET(request: Request) {
   await markSubscribersSent(sentIds);
 
   return NextResponse.json({ ok: true, sent, subscribers: allActive.length });
+}
+
+async function alertOwner(subject: string, text: string) {
+  try {
+    await sendEmail({ to: process.env.ALERT_EMAIL ?? "vanshpandita11@gmail.com", subject, text, html: `<pre>${text}</pre>` });
+  } catch (error) {
+    console.error("send-daily: failed to send owner alert", error);
+  }
 }
