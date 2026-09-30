@@ -143,6 +143,7 @@ export function NewsletterLanding() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [slide, setSlide] = useState(0);
+  const [quotePaused, setQuotePaused] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
   const [featuresRef, featuresInView] = useReveal<HTMLElement>();
   const [testimonialsRef, testimonialsInView] = useReveal<HTMLElement>();
@@ -277,19 +278,42 @@ export function NewsletterLanding() {
       <SectionWave />
       <section ref={testimonialsRef} className={`${styles.testimonialsSection} ${testimonialsInView ? styles.inView : ""}`}>
         <div className={styles.sectionInner}>
-          <span className={styles.kicker}>From real users</span>
-          <div className={styles.testimonialHeading}>
+          <div className={styles.quoteHead}>
+            <span className={styles.inboxEyebrow}><i /> From real users</span>
             <h2>Decide with confidence.</h2>
-            <div>
-              <span>{slide + 1} / {TESTIMONIALS.length}</span>
-              <button type="button" onClick={() => setSlide((slide - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)} aria-label="Previous testimonial"><ChevronLeft size={18} /></button>
-              <button type="button" onClick={() => setSlide((slide + 1) % TESTIMONIALS.length)} aria-label="Next testimonial"><ChevronRight size={18} /></button>
+          </div>
+          <div className={styles.quoteStage} onMouseEnter={() => setQuotePaused(true)} onMouseLeave={() => setQuotePaused(false)} onFocus={() => setQuotePaused(true)} onBlur={() => setQuotePaused(false)}>
+            <span className={styles.quoteMark} aria-hidden="true">“</span>
+            <div className={styles.quoteStack}>
+              {TESTIMONIALS.map((item, index) => (
+                <figure key={item.author} className={`${styles.quoteItem} ${index === slide ? styles.quoteActive : ""}`} aria-hidden={index !== slide}>
+                  <blockquote>{item.quote}</blockquote>
+                  <figcaption>
+                    <span className={styles.quoteAvatar}>{item.author.charAt(0)}</span>
+                    <span><strong>{item.author}</strong><small>{item.role}</small></span>
+                  </figcaption>
+                </figure>
+              ))}
             </div>
           </div>
-          <blockquote className={styles.testimonial} key={slide}>
-            <p>“{TESTIMONIALS[slide].quote}”</p>
-            <footer><span /> <strong>{TESTIMONIALS[slide].author}</strong> {TESTIMONIALS[slide].role}</footer>
-          </blockquote>
+          <div className={styles.quoteNav}>
+            <button type="button" onClick={() => setSlide((slide - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)} aria-label="Previous testimonial"><ChevronLeft size={18} /></button>
+            <div className={styles.quoteBars}>
+              {TESTIMONIALS.map((item, index) => (
+                <button
+                  type="button"
+                  key={item.author}
+                  className={`${styles.quoteBar} ${index === slide ? styles.quoteBarActive : ""} ${quotePaused ? styles.quoteBarPaused : ""}`}
+                  onClick={() => setSlide(index)}
+                  aria-label={`Show testimonial ${index + 1}`}
+                  aria-current={index === slide}
+                >
+                  <i onAnimationEnd={() => index === slide && setSlide((slide + 1) % TESTIMONIALS.length)} />
+                </button>
+              ))}
+            </div>
+            <button type="button" onClick={() => setSlide((slide + 1) % TESTIMONIALS.length)} aria-label="Next testimonial"><ChevronRight size={18} /></button>
+          </div>
         </div>
       </section>
 
@@ -320,12 +344,20 @@ export function NewsletterLanding() {
 
       <SectionWave />
       <section ref={ctaRef} className={`${styles.finalCta} ${ctaInView ? styles.inView : ""}`}>
-        <div className={styles.finalCtaInner}>
-          <span className={styles.kicker}>Ready when you are</span>
+        <div className={styles.ctaPanel}>
+          <div className={styles.ctaGlow} aria-hidden="true" />
+          <span className={styles.inboxEyebrow}><i /> Ready when you are</span>
           <h2>Understand stocks like a pro</h2>
           <p>Pick the stocks you care about and get the context you need in plain English every day.</p>
-          <a href="#signup">Build my watchlist <ArrowRight size={16} /></a>
-          <span className={styles.finalCtaNote}>Free. No credit card. Unsubscribe anytime.</span>
+          <div className={styles.ctaActions}>
+            <a href="#signup" className={styles.ctaPrimary}>Build my watchlist <ArrowRight size={16} /></a>
+            <Link href="/brief" className={styles.ctaSecondary}>Read a sample brief</Link>
+          </div>
+          <ul className={styles.ctaPerks}>
+            <li><Check size={14} /> Free</li>
+            <li><Check size={14} /> No credit card</li>
+            <li><Check size={14} /> Unsubscribe anytime</li>
+          </ul>
         </div>
       </section>
 

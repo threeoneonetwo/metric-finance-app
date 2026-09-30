@@ -206,21 +206,9 @@
   transform: translateY(0);
 }
 .sectionInner { max-width: 1080px; margin: 0 auto; }
-.testimonialHeading h2 { margin: 0; font-size: clamp(24px, 7.2vw, 52px); font-weight: 800; line-height: 1.06; letter-spacing: -.04em; text-align: center; }
 
 .testimonialsSection { padding: 96px 40px 104px; }
 .kicker { display: block; margin-bottom: 18px; color: #56668a; font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; text-align: center; }
-.testimonialHeading { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 44px; text-align: center; }
-.testimonialHeading > div { display: flex; align-items: center; gap: 12px; }
-.testimonialHeading > div > span { margin-right: 2px; color: #56668a; font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
-.testimonialHeading button { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(255,255,255,.16); background: transparent; color: #d7d9dc; cursor: pointer; transition: background-color 150ms ease, transform 150ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms ease; }
-.testimonialHeading button:hover { background: #0e1423; transform: translateY(-2px); border-color: rgba(255,255,255,.32); }
-.testimonialHeading button:active { transform: translateY(0); }
-.testimonial { display: flex; min-height: 236px; max-width: 720px; margin: 0 auto; padding: 54px 58px 46px; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255,255,255,.1); background: #080d17; animation: fadeUp .5s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.testimonial > p { max-width: 850px; margin: 0 0 40px; color: #ebecee; font-size: 25px; line-height: 1.5; letter-spacing: -.018em; }
-.testimonial footer { display: flex; align-items: center; gap: 12px; color: #697798; font-size: 13px; }
-.testimonial footer > span { width: 34px; height: 1px; background: rgba(255,255,255,.28); }
-.testimonial footer strong { color: #fff; font-size: 14px; }
 
 .faqInner { display: flex; flex-direction: column; align-items: center; max-width: 720px; margin: 0 auto; gap: 12px; }
 .faqInner > div:first-child { text-align: center; margin-bottom: 28px; }
@@ -244,29 +232,6 @@
 .faqAnswerWrap p { margin: 0; padding: 0 60px 24px 2px; color: var(--muted); font-size: 14.5px; line-height: 1.7; }
 .faqAnswerOpen { grid-template-rows: 1fr; opacity: 1; }
 
-.finalCta { position: relative; overflow: hidden; padding: 96px 40px 104px; text-align: center; background: radial-gradient(75% 90% at 50% 118%, #10182c 0%, #060910 60%, #05070d 100%); }
-.finalCtaInner { position: relative; z-index: 1; max-width: 920px; margin: 0 auto; }
-.finalCta .kicker { margin-bottom: 22px; }
-.finalCta h2 { max-width: 920px; margin: 0 auto 24px; color: #fff; font-size: clamp(22px, 6.2vw, 40px); font-weight: 800; line-height: 1.1; letter-spacing: -.035em; }
-.finalCta p { max-width: 560px; margin: 0 auto 40px; color: var(--muted); font-size: 17px; line-height: 1.65; }
-.finalCta .kicker, .finalCta h2, .finalCta p, .finalCta a, .finalCtaNote {
-  opacity: 0; transform: translateY(20px);
-  transition: opacity .6s cubic-bezier(0.16, 1, 0.3, 1), transform .6s cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms ease;
-}
-.finalCta.inView .kicker { opacity: 1; transform: translateY(0); }
-.finalCta.inView h2 { opacity: 1; transform: translateY(0); transition-delay: 60ms; }
-.finalCta.inView p { opacity: 1; transform: translateY(0); transition-delay: 140ms; }
-.finalCta.inView a { opacity: 1; transform: translateY(0); transition-delay: 220ms; }
-.finalCta.inView .finalCtaNote { opacity: 1; transform: translateY(0); transition-delay: 300ms; }
-.finalCta a {
-  display: inline-flex; align-items: center; gap: 10px; padding: 19px 38px; background: #fff; color: #05070d;
-  font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
-}
-.finalCta a svg { transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1); }
-.finalCta.inView a:hover { transform: translateY(-3px); transition-duration: 150ms; }
-.finalCta.inView a:hover svg { transform: translateX(3px); }
-.finalCta a:active { transform: translateY(0); }
-.finalCtaNote { display: block; margin-top: 22px; color: #56668a; font-size: 12.5px; letter-spacing: .02em; }
 .footer { display: flex; align-items: center; justify-content: center; text-align: center; gap: 24px; padding: 34px 40px; color: #56668a; font-size: 13px; }
 .footer a { color: #b6b8be; text-decoration: underline; text-underline-offset: 3px; transition: color 150ms ease; }
 .footer a:hover { color: #fff; }
@@ -276,7 +241,6 @@
   .hero { padding-top: 86px; padding-bottom: 112px; }
   .featuresSection, .testimonialsSection, .faqSection { padding-top: 108px; padding-bottom: 112px; }
   .sectionInner { max-width: 1120px; }
-  .finalCta { padding-top: 124px; padding-bottom: 128px; }
 }
 
 @media (min-width: 761px) and (max-width: 1099px) {
@@ -321,14 +285,8 @@
   .manageSection { padding: 48px 20px 72px; }
   .manageSub { margin-bottom: 30px; font-size: 14.5px; }
   .manageSave { width: 100%; }
-  .testimonialHeading { align-items: center; margin-bottom: 30px; }
-  .testimonialHeading > div > span { display: none; }
-  .testimonial { min-height: 300px; padding: 34px 26px 30px; }
-  .testimonial > p { font-size: 21px; }
-  .testimonial footer { align-items: flex-start; flex-wrap: wrap; }
   .faqInner { gap: 0; }
   .faqAnswerWrap p { padding-right: 20px; }
-  .finalCta { padding: 84px 20px 90px; }
   .footer { padding: 28px 20px; line-height: 1.6; }
 }
 
@@ -391,9 +349,6 @@
 .successPicks span { border-radius: 8px; }
 .stats { gap: 12px; border: 0; background: none; }
 .stats > div { border: 1px solid var(--border); border-radius: 16px; }
-.testimonial { border-radius: 22px; }
-.testimonialHeading button { border-radius: 12px; }
-.finalCta a { border-radius: 14px; }
 .legalNotice { border-radius: 14px; }
 .signup .sampleLink, .manageInner .manageBack { border-radius: 14px; }
 .todaysBriefCard, .briefingLatestCard { border-radius: 16px; }
@@ -431,40 +386,30 @@
 
 /* ── One line text on phones: sizes scale with the screen instead of wrapping ── */
 @media (max-width: 760px) {
-  .hero h1, .testimonialHeading h2, .faqInner h2, .finalCta h2, .manageHeading,
-  .kicker, .stats strong, .stats span, .stepRow, .success h2, .successTitle, .emailRow button, .sampleLink, .manageBack, .finalCta a {
+  .hero h1, .quoteHead h2, .faqInner h2, .ctaPanel h2, .manageHeading,
+  .kicker, .stats strong, .stats span, .stepRow, .success h2, .successTitle, .emailRow button, .sampleLink, .manageBack, .ctaPrimary, .ctaSecondary {
     white-space: nowrap;
   }
   .hero h1 { font-size: min(64px, calc((100vw - 40px) / 8.9)); letter-spacing: -.045em; }
-  .testimonialHeading h2 { font-size: min(40px, calc((100vw - 40px) / 12.6)); }
-  .faqInner h2, .finalCta h2 { font-size: min(36px, calc((100vw - 40px) / 13.6)); }
+  .faqInner h2 { font-size: min(36px, calc((100vw - 40px) / 13.6)); }
   .manageHeading { font-size: min(36px, calc((100vw - 40px) / 18.5)); }
   .legal h2 { white-space: nowrap; font-size: min(22px, calc((100vw - 40px) / 19)); }
   .stats strong { font-size: min(12.5px, calc((100vw - 88px) / 24)); }
   .stats span { font-size: min(7px, calc((100vw - 88px) / 38)); letter-spacing: .04em; }
-  .emailRow button, .sampleLink, .finalCta a { font-size: min(12.5px, calc((100vw - 40px) / 22)); letter-spacing: .1em; padding-left: 12px; padding-right: 12px; }
+  .emailRow button, .sampleLink { font-size: min(12.5px, calc((100vw - 40px) / 22)); letter-spacing: .1em; padding-left: 12px; padding-right: 12px; }
   .stepRow { font-size: min(9px, calc((100vw - 80px) / 30)); }
   .kicker { font-size: min(10.5px, calc((100vw - 40px) / 26)); letter-spacing: .14em; }
 }
 
 /* ── Compact boxes ── */
 .featuresSection, .testimonialsSection, .faqSection { padding-top: 64px; padding-bottom: 68px; }
-.testimonialHeading { margin-bottom: 26px; gap: 14px; }
-.testimonial { min-height: 0; max-width: 640px; padding: 26px 30px 22px; }
-.testimonial > p { margin-bottom: 20px; font-size: 18px; line-height: 1.5; }
 .stats > div { padding-top: 14px; padding-bottom: 14px; }
-.finalCta { padding-top: 72px; padding-bottom: 76px; }
 @media (min-width: 1100px) {
   .featuresSection, .testimonialsSection, .faqSection { padding-top: 72px; padding-bottom: 76px; }
-  .finalCta { padding-top: 84px; padding-bottom: 88px; }
 }
 @media (max-width: 760px) {
   .featuresSection, .testimonialsSection, .faqSection { padding: 44px 20px 48px; }
-  .testimonialHeading { margin-bottom: 18px; }
-  .testimonial { min-height: 0; padding: 20px 20px 18px; }
-  .testimonial > p { margin-bottom: 14px; font-size: 15.5px; }
   .stats > div { min-height: 64px; padding: 10px 6px; }
-  .finalCta { padding: 52px 20px 56px; }
 }
 
 /* ── Bigger hero headline on phones: three short lines, each one line ── */
@@ -519,3 +464,96 @@
   .inboxHeading h2 { font-size: 52px; }
   .inboxHeading p { max-width: 600px; font-size: 18px; }
 }
+
+/* ── Testimonials: one big pull quote ── */
+.testimonialsSection { position: relative; overflow: hidden; }
+.testimonialsSection::before {
+  content: ""; position: absolute; left: 50%; top: 52%; width: min(900px, 120vw); height: 420px; transform: translate(-50%, -50%);
+  background: radial-gradient(50% 50% at 50% 50%, rgba(122, 162, 255, .09), transparent 70%); pointer-events: none;
+}
+.testimonialsSection .sectionInner { position: relative; }
+.quoteHead { display: flex; flex-direction: column; align-items: center; margin-bottom: 28px; text-align: center; }
+.quoteHead h2 { margin: 0; color: #fff; font-size: 52px; font-weight: 800; line-height: 1.04; letter-spacing: -.045em; white-space: nowrap; }
+.quoteStage { position: relative; max-width: 760px; margin: 0 auto; padding-top: 34px; text-align: center; }
+.quoteMark { position: absolute; top: -6px; left: 50%; transform: translateX(-50%); color: #7aa2ff; font-family: Georgia, serif; font-size: 110px; line-height: 1; opacity: .28; pointer-events: none; user-select: none; }
+.quoteStack { display: grid; }
+.quoteItem { grid-area: 1 / 1; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 26px; margin: 0; opacity: 0; visibility: hidden; transform: translateY(14px); transition: opacity .5s ease, transform .6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear .5s; }
+.quoteActive { opacity: 1; visibility: visible; transform: translateY(0); transition-delay: 0s; }
+.quoteItem blockquote { margin: 0; color: #f1f3f8; font-size: 30px; font-weight: 500; line-height: 1.38; letter-spacing: -.02em; text-wrap: balance; }
+.quoteItem figcaption { display: flex; align-items: center; gap: 14px; text-align: left; }
+.quoteAvatar { display: grid; flex: none; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #7aa2ff, #6fe0dd); color: #05070d; font-size: 18px; font-weight: 800; }
+.quoteItem figcaption strong { display: block; color: #fff; font-size: 15px; }
+.quoteItem figcaption small { display: block; margin-top: 3px; color: #7e88a0; font-size: 13.5px; }
+.quoteNav { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 34px; }
+.quoteNav > button { display: grid; width: 40px; height: 40px; place-items: center; border: 1px solid rgba(255, 255, 255, .14); border-radius: 50%; background: transparent; color: #cfd6e6; cursor: pointer; transition: background-color 150ms ease, border-color 150ms ease, transform 150ms cubic-bezier(0.16, 1, 0.3, 1); }
+.quoteNav > button:hover { background: #0e1423; border-color: rgba(255, 255, 255, .3); transform: translateY(-2px); }
+.quoteBars { display: flex; gap: 8px; }
+.quoteBar { position: relative; width: 44px; height: 14px; padding: 0; border: 0; background: none; cursor: pointer; }
+.quoteBar::before { content: ""; position: absolute; left: 0; right: 0; top: 5px; height: 3px; border-radius: 3px; background: rgba(255, 255, 255, .14); }
+.quoteBar i { position: absolute; left: 0; top: 5px; height: 3px; width: 0; border-radius: 3px; background: #8fa8fa; }
+.quoteBarActive i { animation: quoteFill 7s linear forwards; }
+.quoteBarPaused i { animation-play-state: paused; }
+@keyframes quoteFill { from { width: 0; } to { width: 100%; } }
+
+@media (max-width: 760px) {
+  .quoteHead { margin-bottom: 20px; }
+  .quoteHead h2 { font-size: min(40px, calc((100vw - 40px) / 12.6)); }
+  .quoteStage { padding-top: 26px; }
+  .quoteMark { font-size: 84px; }
+  .quoteItem { gap: 20px; }
+  .quoteItem blockquote { font-size: 19px; line-height: 1.42; }
+  .quoteAvatar { width: 40px; height: 40px; font-size: 16px; }
+  .quoteNav { gap: 12px; margin-top: 26px; }
+  .quoteBar { width: 34px; }
+}
+@media (min-width: 761px) and (max-width: 1023px) {
+  .quoteHead h2 { font-size: 44px; }
+  .quoteItem blockquote { font-size: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quoteBarActive i { animation: none; width: 100%; }
+  .quoteItem { transition: none; }
+}
+
+/* ── Final call to action: glowing panel ── */
+.finalCta { padding: 72px 40px 88px; }
+.ctaPanel {
+  position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; max-width: 880px; margin: 0 auto; padding: 72px 48px 60px; text-align: center;
+  border: 1px solid rgba(143, 168, 250, .22); border-radius: 32px;
+  background: linear-gradient(180deg, rgba(122, 162, 255, .09) 0%, rgba(10, 15, 27, .9) 55%, #070b13 100%);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+.ctaGlow {
+  position: absolute; left: 50%; top: -40%; width: 120%; height: 90%; z-index: 0; pointer-events: none; transform: translateX(-50%);
+  background: radial-gradient(40% 50% at 50% 50%, rgba(122, 162, 255, .28), transparent 70%), radial-gradient(28% 40% at 70% 60%, rgba(111, 224, 221, .14), transparent 70%);
+  filter: blur(30px); animation: glowDrift 16s ease-in-out infinite alternate;
+}
+.ctaPanel > *:not(.ctaGlow) { position: relative; z-index: 1; }
+.ctaPanel h2 { margin: 0 0 18px; color: #fff; font-size: 54px; font-weight: 800; line-height: 1.04; letter-spacing: -.045em; white-space: nowrap; }
+.ctaPanel p { max-width: 520px; margin: 0 0 34px; color: #8d97ae; font-size: 18px; line-height: 1.6; }
+.ctaActions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; }
+.ctaPrimary, .ctaSecondary { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 58px; padding: 0 32px; border-radius: 16px; font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms ease, border-color 150ms ease, box-shadow 200ms ease; }
+.ctaPrimary { position: relative; overflow: hidden; background: #fff; color: #05070d !important; box-shadow: 0 10px 30px rgba(122, 162, 255, .25); }
+.ctaPrimary::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(122, 162, 255, .35) 50%, transparent 65%); transform: translateX(-120%); animation: ctaShine 4.5s ease-in-out 1.5s infinite; }
+@keyframes ctaShine { 0%, 55% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+.ctaPrimary svg { transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1); }
+.ctaPrimary:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(122, 162, 255, .4); }
+.ctaPrimary:hover svg { transform: translateX(3px); }
+.ctaSecondary { border: 1px solid #2b3a66; color: #b3c9ff !important; background: transparent; }
+.ctaSecondary:hover { transform: translateY(-3px); border-color: #8fa8fa; background: rgba(143, 168, 250, .08); color: #fff !important; }
+.ctaPrimary:active, .ctaSecondary:active { transform: translateY(0); }
+.ctaPerks { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; margin: 30px 0 0; padding: 0; list-style: none; color: #7e88a0; font-size: 13.5px; }
+.ctaPerks li { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.ctaPerks svg { color: #6fe0a8; }
+
+@media (max-width: 760px) {
+  .finalCta { padding: 40px 16px 52px; }
+  .ctaPanel { padding: 44px 20px 34px; border-radius: 26px; }
+  .ctaPanel h2 { margin-bottom: 14px; font-size: min(40px, calc((100vw - 72px) / 13.6)); }
+  .ctaPanel p { margin-bottom: 26px; font-size: 16px; }
+  .ctaActions { flex-direction: column; width: 100%; gap: 10px; }
+  .ctaPrimary, .ctaSecondary { width: 100%; height: 54px; padding: 0 12px; font-size: min(12.5px, calc((100vw - 72px) / 24)); letter-spacing: .1em; }
+  .ctaPerks { gap: 8px 16px; margin-top: 22px; font-size: min(13px, calc((100vw - 72px) / 26)); }
+}
+@media (min-width: 761px) and (max-width: 1023px) { .ctaPanel h2 { font-size: 40px; } }
+@media (prefers-reduced-motion: reduce) { .ctaGlow, .ctaPrimary::after { animation: none; } }
