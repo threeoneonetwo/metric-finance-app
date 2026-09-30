@@ -169,7 +169,7 @@ export function NewsletterLanding() {
       <section id="top" className={styles.hero}>
 
         <div className={styles.heroInner}>
-          <h1 className={styles.fadeUp} style={{ animationDelay: "0ms" }}>Stocks explained<br />like you&apos;re 5</h1>
+          <h1 className={styles.fadeUp} style={{ animationDelay: "0ms" }}>Stocks<br className={styles.mobileBreak} /> explained<br />like you&apos;re 5</h1>
           <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "80ms" }}>A bite sized breakdown of only the stocks you&apos;re interested in, to help you become a smarter investor for free.</p>
 
           <div id="signup" className={`${styles.signup} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>

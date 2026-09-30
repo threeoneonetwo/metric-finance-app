@@ -498,3 +498,10 @@
   .stats > div { min-height: 64px; padding: 10px 6px; }
   .finalCta { padding: 52px 20px 56px; }
 }
+
+/* ── Bigger hero headline on phones: three short lines, each one line ── */
+.mobileBreak { display: none; }
+@media (max-width: 760px) {
+  .mobileBreak { display: inline; }
+  .hero h1 { font-size: min(84px, calc((100vw - 40px) / 5.3)); line-height: .96; letter-spacing: -.05em; }
+}
