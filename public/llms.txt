@@ -1,10 +1,10 @@
 # Metric Finance
 
-> Metric Finance explains your stocks like you're 5, for free, by email. Pick up to 5 US stocks and get one short email every weekday morning explaining why each one moved, in plain English with zero jargon.
+> Metric Finance explains your stocks like you're 5, for free. Pick up to 5 US stocks and get one short brief posted every trading day at 5 PM ET, right after the market closes, explaining why each one moved, in plain English with zero jargon.
 
 Metric Finance is for everyday investors, especially young professionals, who own or follow US stocks but find financial news and analyst reports hard to read. It is not a trading platform and never gives buy or sell recommendations.
 
-## What each daily email covers
+## What each daily brief covers
 
 - Price action: what each of your stocks did today and the simplest explanation of why it moved.
 - Fundamentals: revenue, profit margins, cash and debt, translated out of accounting language.
@@ -16,7 +16,7 @@ Metric Finance is for everyday investors, especially young professionals, who ow
 - Price: free.
 - Coverage: a curated list of the most followed US stocks on the Nasdaq and New York Stock Exchange.
 - Watchlist: up to 5 stocks per subscriber; change them or unsubscribe any time.
-- Delivery: one email every weekday morning, covering the previous trading day.
+- Timing: one brief is posted on the website every trading day at 5 PM ET, covering that day's trading. Subscribers get a short email with a link when it is up, and can read every brief on their dashboard.
 - Not investment advice.
 
 ## Links

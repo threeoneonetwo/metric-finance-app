@@ -67,4 +67,4 @@
 .mailShare em { border-radius: 10px; }
 .page .cta { border-radius: 14px; }
 
-@media (max-width: 760px) { .intro h1 { white-space: nowrap; font-size: min(46px, calc((100vw - 40px) / 15.5)); } }
+@media (max-width: 760px) { .intro h1 { white-space: nowrap; font-size: min(46px, calc((100vw - 40px) / 16.4)); } }

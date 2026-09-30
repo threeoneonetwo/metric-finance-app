@@ -34,17 +34,17 @@ export function SampleBrief() {
       <main className={styles.main}>
         <div className={styles.intro}>
           <span className={styles.kicker}>Sample brief</span>
-          <h1>Your next favourite newsletter</h1>
-          <p>One bite sized brief every trading day explaining everything about your stocks, what moved, and why, in words anyone can follow.</p>
+          <h1>Your next favourite daily brief</h1>
+          <p>One bite sized brief, posted on the site every trading day at 5 PM ET, explaining everything about your stocks, what moved, and why, in words anyone can follow. We email you when it is up.</p>
         </div>
 
-        <figure className={styles.mailFrame} aria-label="Example of a Metric Finance daily brief email">
+        <figure className={styles.mailFrame} aria-label="Example of a Metric Finance daily brief">
           <div className={styles.mailBar} aria-hidden="true">
             <span /><span /><span />
-            <em>Inbox</em>
+            <em>metricfinance.app/brief</em>
           </div>
           <div className={styles.mailMeta}>
-            <div className={styles.mailFrom}><strong>Metric Finance</strong><span>briefing@metricfinance.app</span></div>
+            <div className={styles.mailFrom}><strong>Today&apos;s brief</strong><span>Posted at 5:00 PM ET</span></div>
             <div className={styles.mailSubject}>Chip stocks had a day. Here&apos;s why.</div>
           </div>
           <div className={styles.mailBody}>
@@ -100,7 +100,7 @@ export function SampleBrief() {
             </div>
 
             <div className={styles.mailSignoff}>
-              <p>That&apos;s the brief. See you tomorrow morning.</p>
+              <p>That&apos;s the brief. See you tomorrow at 5.</p>
               <div className={styles.mailShare}>
                 <span>Know someone who nods along when people say &quot;capex&quot;? Send them today&apos;s idea, no watchlist attached.</span>
                 <em>Share today&apos;s idea</em>

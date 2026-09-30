@@ -123,8 +123,8 @@ export default function PrivacyPage() {
 
       <h2>6. Keeping your account link private</h2>
       <p>
-        Your briefings contain a personal link to your account page. Anyone who has that link can view your watchlist,
-        change it, or unsubscribe you. Please do not forward your briefings publicly.
+        The emails we send you contain personal links to your briefs and your account page. Anyone who has a link can view your watchlist,
+        change it, or unsubscribe you. Please do not forward those emails publicly.
       </p>
 
       <h2>7. Security and retention</h2>

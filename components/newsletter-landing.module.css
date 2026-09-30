@@ -442,7 +442,7 @@
 @media (max-width: 760px) {
   .inboxHeading { margin-bottom: 26px; }
   .inboxEyebrow { margin-bottom: 16px; font-size: min(10.5px, calc((100vw - 40px) / 28)); letter-spacing: .16em; }
-  .inboxHeading h2 { margin-bottom: 14px; font-size: min(56px, calc((100vw - 40px) / 6.6)); }
+  .inboxHeading h2 { margin-bottom: 14px; font-size: min(56px, calc((100vw - 40px) / 8.3)); }
   .inboxHeading p { font-size: 16px; }
   .inboxRow { grid-template-columns: 26px minmax(0, 1fr) 76px; column-gap: 14px; padding: 20px 0; }
   .inboxNumber { font-size: 12px; }
@@ -454,14 +454,14 @@
 /* Tablets show the site in a phone width column, so keep titles on one line there too */
 @media (min-width: 761px) and (max-width: 1023px) {
   .inboxText h3 { font-size: 20px; white-space: nowrap; }
-  .inboxHeading h2 { font-size: 50px; }
+  .inboxHeading h2 { font-size: 44px; }
 }
 
 /* Desktop: heading on one line, heading and subheading never wider than the list below */
 @media (min-width: 1024px) {
   .inboxBreak { display: none; }
   .inboxHeading { max-width: 600px; }
-  .inboxHeading h2 { font-size: 52px; }
+  .inboxHeading h2 { font-size: 48px; }
   .inboxHeading p { max-width: 600px; font-size: 18px; }
 }
 

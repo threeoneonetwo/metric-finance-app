@@ -127,7 +127,7 @@ export default function ConfirmEmailPage() {
                   { num: '1', title: 'Open your email', desc: 'Look for an email from briefing@metricfinance.app', tag: 'YOU ARE HERE' },
                   { num: '2', title: 'Click the confirmation link', desc: 'The link will verify your email and set up your account', tag: undefined },
                   { num: '3', title: 'Welcome email incoming', desc: 'You\'ll receive a welcome email with instructions on whitelisting us', tag: undefined },
-                  { num: '4', title: 'Your first briefing', desc: 'Your first briefing arrives right after you confirm, then every weekday morning', tag: undefined },
+                  { num: '4', title: 'Your first briefing', desc: 'Your first brief is posted right after you confirm, then every trading day at 5 PM ET. We email you a link each time', tag: undefined },
                 ].map((step, idx) => (
                   <div
                     key={idx}
@@ -174,7 +174,7 @@ export default function ConfirmEmailPage() {
 
               <div className={styles.previewBody}>
                 <h4 className={styles.previewTitle}>Confirm your Metric Finance briefing</h4>
-                <p className={styles.previewText}>Click below to confirm your email and start receiving your daily briefing.</p>
+                <p className={styles.previewText}>Click below to confirm your email and start getting your daily brief.</p>
                 <button className={styles.previewButton}>Confirm my email</button>
                 <p className={styles.previewFooter}>If you didn&apos;t request this, you can ignore this email.</p>
               </div>

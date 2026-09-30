@@ -10,6 +10,7 @@ export function brandedEmail(input: {
   buttonLabel: string;
   buttonUrl: string;
   footnote: string;
+  footerLinks?: { manageUrl: string; unsubscribeUrl: string };
 }) {
   const paragraphs = input.paragraphs
     .map(
@@ -34,7 +35,11 @@ export function brandedEmail(input: {
       </tr></table>
       <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#8798b4;">${escapeHtml(input.footnote)}</p>
     </td></tr>
-    <tr><td style="padding-top:22px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#56668a;">Metric Finance explains your stocks like you're 5. Not investment advice.<br>Button not working? Paste this link into your browser:<br><span style="color:#8798b4;word-break:break-all;">${escapeHtml(input.buttonUrl)}</span></td></tr>
+    <tr><td style="padding-top:22px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#56668a;">Metric Finance explains your stocks like you're 5. Not investment advice.<br>Button not working? Paste this link into your browser:<br><span style="color:#8798b4;word-break:break-all;">${escapeHtml(input.buttonUrl)}</span>${
+      input.footerLinks
+        ? `<br><br><a href="${input.footerLinks.manageUrl}" style="color:#6fe0dd;text-decoration:none;">Your dashboard</a> &middot; <a href="${input.footerLinks.unsubscribeUrl}" style="color:#7d879f;">Unsubscribe</a>`
+        : ""
+    }</td></tr>
   </table>
 </td></tr>
 </table>

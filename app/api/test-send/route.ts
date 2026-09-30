@@ -25,7 +25,7 @@ export async function GET(request: Request) {
   }
 
   if (!hasFmpConfig() || !hasBriefWriterConfig() || !hasSesConfig()) {
-    return NextResponse.json({ error: "Newsletter send is not fully configured" }, { status: 503 });
+    return NextResponse.json({ error: "Daily send is not fully configured" }, { status: 503 });
   }
 
   const email = new URL(request.url).searchParams.get("email");

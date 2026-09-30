@@ -134,17 +134,17 @@ function buildWelcomeEmailHTML(input: {
 </td></tr>
 
 <tr><td class="px" style="padding:36px 32px;border-top:1px solid #1a2540;">
-<p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;font-weight:bold;letter-spacing:1.8px;color:#8798b4;">WHEN IT ARRIVES</p>
+<p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;font-weight:bold;letter-spacing:1.8px;color:#8798b4;">WHEN IT'S POSTED</p>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
 <td class="stack stack-tile" width="32%" valign="top" style="width:32%;border-top:2px solid #8fa8fa;padding:14px 0 0;">
-<p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:bold;letter-spacing:-0.5px;color:#f2f5fa;">Every morning</p>
-<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#8798b4;">Weekdays, before the US market opens</p>
+<p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:bold;letter-spacing:-0.5px;color:#f2f5fa;">Every trading day</p>
+<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#8798b4;">Posted at 5 PM ET, after the close</p>
 </td>
 <td class="stack-gap" width="2%" style="width:2%;font-size:0;line-height:0;">&nbsp;</td>
 <td class="stack stack-tile" width="32%" valign="top" style="width:32%;border-top:2px solid #1a2540;padding:14px 0 0;">
-<p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:bold;letter-spacing:-0.5px;color:#f2f5fa;">One email</p>
-<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#8798b4;">A day, and nothing else</p>
+<p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;font-weight:bold;letter-spacing:-0.5px;color:#f2f5fa;">One brief</p>
+<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#8798b4;">We email you a link</p>
 </td>
 <td class="stack-gap" width="2%" style="width:2%;font-size:0;line-height:0;">&nbsp;</td>
 <td class="stack stack-tile" width="32%" valign="top" style="width:32%;border-top:2px solid #1a2540;padding:14px 0 0;">
@@ -206,8 +206,8 @@ YOUR STOCKS
 ${input.tickersText}
 
 WHEN YOU'LL HEAR FROM US
-• One email per trading day
-• Sent weekday mornings, before the US market opens
+• One brief per trading day, posted on the site at 5 PM ET
+• We email you a link when it is up
 • Weekends and holidays: no email
 
 SEE A SAMPLE BRIEF

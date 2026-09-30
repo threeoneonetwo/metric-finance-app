@@ -23,3 +23,8 @@ export function isValidManageLink(token?: string, exp?: string, sig?: string) {
   const given = Buffer.from(sig, "hex");
   return given.length === expected.length && timingSafeEqual(given, expected);
 }
+
+// Link to one brief on the site. It carries the same signed credentials as the dashboard link.
+export function briefUrl(baseUrl: string, briefingId: string, token: string) {
+  return `${baseUrl}/brief/${briefingId}?${manageLinkParams(token)}`;
+}

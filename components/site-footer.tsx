@@ -17,7 +17,7 @@ export function SiteFooter() {
             <MetricWordmark />
           </p>
           <p className="mt-3 text-sm leading-6 text-[#8993ab]">
-            A daily briefing with personalised analysis on your top five US stocks.
+            Stocks explained like you&apos;re 5.
           </p>
         </div>
 

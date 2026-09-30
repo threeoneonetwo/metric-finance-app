@@ -16,8 +16,13 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Two UTC schedules cover daylight saving; only the one that lands on 5 PM in New York sends.
+  if (!isSendHourInNewYork(new Date())) {
+    return NextResponse.json({ ok: true, skipped: "not 5 PM in New York" });
+  }
+
   if (!hasFmpConfig() || !hasBriefWriterConfig() || !hasSesConfig()) {
-    return NextResponse.json({ error: "Newsletter send is not fully configured" }, { status: 503 });
+    return NextResponse.json({ error: "Daily send is not fully configured" }, { status: 503 });
   }
 
   const now = new Date();
@@ -64,6 +69,11 @@ export async function GET(request: Request) {
   await markSubscribersSent(sentIds);
 
   return NextResponse.json({ ok: true, sent: sentIds.length, subscribers: allActive.length });
+}
+
+function isSendHourInNewYork(date: Date) {
+  const hour = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hour: "2-digit", hour12: false }).format(date);
+  return Number(hour) % 24 === 17;
 }
 
 async function alertOwner(subject: string, text: string) {

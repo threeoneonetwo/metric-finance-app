@@ -1,6 +1,6 @@
 # Metric Finance
 
-Free daily email that explains a subscriber's chosen US stocks (up to 5) "like you're 5". Live at https://metricfinance.app. Owner: Vansh (vanshpandita11@gmail.com).
+Free daily brief, published every trading day at 5 PM ET (after the market closes), that explains a subscriber's chosen US stocks (up to 5) "like you're 5". It is a brief, never call it a newsletter. The brief is posted on the website (`/brief/[id]`, signed link, also listed on the `/manage` dashboard). The daily email is only a notification that links to it. Live at https://metricfinance.app. Owner: Vansh (vanshpandita11@gmail.com).
 
 ## Stack
 Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle ORM on Neon Postgres, Amazon SES for email, Anthropic API for the daily explanations, PostHog + Google Analytics for tracking. Hosted on Vercel.
@@ -25,7 +25,7 @@ Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle O
 - "Manage watchlist" links are HMAC-signed and expire after 30 days (`lib/manage-link.ts`, needs `MANAGE_LINK_SECRET`). Never put the raw `unsubscribeToken` in a URL without a signature, and never return it from `/api/subscribe`.
 - `/api/subscribe` must return the same response for new and existing emails (no account enumeration).
 - Email confirmation uses a POST from a button page (`/api/verify`) so email security scanners can't trigger it. Keep it that way.
-- The daily send runs from a Vercel cron (`vercel.json`, 13:30 UTC, weekdays) and calls `/api/cron/send-daily`, which requires `CRON_SECRET`.
+- The daily send runs from a Vercel cron (`vercel.json`, two weekday entries at 21:00 and 22:00 UTC; the route only runs when it is 5 PM in New York, so daylight saving is handled) and calls `/api/cron/send-daily`, which requires `CRON_SECRET`.
 - Preview deployments share the production database. Don't test signup flows with real addresses on previews.
 - Sender address is `briefing@metricfinance.app` (from `SES_FROM_EMAIL`); never hard-code a different one in copy.
 

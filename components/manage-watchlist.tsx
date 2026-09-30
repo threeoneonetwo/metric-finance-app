@@ -67,13 +67,13 @@ export function ManageWatchlist({ token, exp, sig, email, initialPicks, briefing
         <div className={styles.manageInner}>
           <h1 className={styles.manageHeading}>Your account</h1>
           <p className={styles.manageSub}>
-            Briefings go to <strong>{email}</strong>.
+            We email <strong>{email}</strong> when your brief is posted.
           </p>
 
           <BriefingHistory
             briefings={briefings}
             watchlistTickers={initialPicks.map((stock) => stock.symbol)}
-            todaysBrief={{ href: "/brief", headline: "Everyone is watching the yield. The story is in the barrel." }}
+            linkQuery={`token=${token}&exp=${exp}&sig=${sig}`}
           />
 
           <h2 className={styles.briefingHeading}>Manage your watchlist</h2>

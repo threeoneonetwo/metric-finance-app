@@ -20,7 +20,7 @@ export async function sendVerificationEmail(input: { to: string; verifyUrl: stri
   const html = brandedEmail({
     preheader: "One click and your daily brief starts.",
     heading: "Confirm your email",
-    paragraphs: ["Tap the button to confirm your email. Your first brief follows soon after, then one every weekday morning."],
+    paragraphs: ["Tap the button to confirm your email. Your first brief is posted soon after, then one every trading day at 5 PM ET. We email you a link each time."],
     buttonLabel: "Confirm my email",
     buttonUrl: input.verifyUrl,
     footnote: "If you didn't sign up for Metric Finance, ignore this email and nothing happens.",

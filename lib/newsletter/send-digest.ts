@@ -1,8 +1,9 @@
-import { manageUrl } from "@/lib/manage-link";
+import { briefUrl, manageUrl } from "@/lib/manage-link";
 import { recordBriefing } from "@/db/briefings";
 import type { BriefFacts } from "./brief-data";
 import type { Brief } from "./brief-schema";
 import { renderBriefEmail } from "./render-brief";
+import { renderBriefNotification } from "./render-notification";
 import { sendEmail } from "./ses";
 import { writeBrief } from "./write-brief";
 
@@ -44,22 +45,32 @@ export async function sendDigestToSubscriber(input: {
     unsubscribeUrl,
   });
 
-  await sendEmail({
-    to: input.subscriber.email,
-    subject: email.subject,
-    html: email.html,
-    text: email.text,
-    headers: {
-      "List-Unsubscribe": `<${unsubscribeUrl}>`,
-      "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-    },
-  });
-
-  await recordBriefing({
+  // The full brief is saved first: the email only links to it on the website.
+  const recorded = await recordBriefing({
     subscriberId: input.subscriber.id,
     tickers,
     html: email.html,
     text: email.text,
+  });
+  if (!recorded) return { sent: false, reason: "not-saved" as const };
+
+  const notification = renderBriefNotification({
+    headline: brief.subject,
+    tickers,
+    briefUrl: briefUrl(input.baseUrl, recorded.id, input.subscriber.unsubscribeToken),
+    dashboardUrl: manageUrl(input.baseUrl, input.subscriber.unsubscribeToken),
+    unsubscribeUrl,
+  });
+
+  await sendEmail({
+    to: input.subscriber.email,
+    subject: notification.subject,
+    html: notification.html,
+    text: notification.text,
+    headers: {
+      "List-Unsubscribe": `<${unsubscribeUrl}>`,
+      "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+    },
   });
 
   return { sent: true as const };

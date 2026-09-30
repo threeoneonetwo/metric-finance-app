@@ -8,7 +8,8 @@ import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
-import { STOCKS, type Stock } from "@/lib/stocks";
+import { FAQS } from "@/lib/faqs";
+import { type Stock } from "@/lib/stocks";
 
 const FEATURES = [
   ["01", "Price action", "What the stock did today, and the clearest explanation of why it moved."],
@@ -40,28 +41,6 @@ const TESTIMONIALS = [
   },
 ];
 
-const FAQS = [
-  {
-    question: "What does Metric's analysis cover?",
-    answer: "Each briefing covers price action, fundamentals, peer comparison, and recent news in plain English rather than analyst shorthand.",
-  },
-  {
-    question: "Does Metric give buy or sell recommendations?",
-    answer: "No. Metric explains what a company does and how it is performing so the decision remains yours. Nothing we send is financial advice.",
-  },
-  {
-    question: "Which stocks can I follow?",
-    answer: `You can choose from ${STOCKS.length} of the most followed US companies on the Nasdaq and New York Stock Exchange, and search the list by name or ticker.`,
-  },
-  {
-    question: "How often will I receive it?",
-    answer: "We send one concise briefing every trading day. You can change your watchlist or unsubscribe at any time.",
-  },
-  {
-    question: "Can I search by company name?",
-    answer: "Yes. Search by a company name such as Apple or by its ticker, such as AAPL.",
-  },
-];
 
 function useReveal<T extends HTMLElement>() {
   const ref = useRef<T | null>(null);
@@ -209,7 +188,7 @@ export function NewsletterLanding() {
             {submitted ? (
               <div className={styles.success} aria-live="polite">
                 <div className={styles.successTitle}><Check size={20} /> You&apos;re in.</div>
-                <p>Your first briefing will arrive at {email.trim()}.</p>
+                <p>We will email {email.trim()} when your first brief is up.</p>
                 <div className={styles.successPicks}>
                   {picks.map((stock) => <span key={stock.symbol}>{stock.symbol}</span>)}
                 </div>
@@ -238,7 +217,7 @@ export function NewsletterLanding() {
                     {submitting ? "Subscribing…" : "Subscribe"}
                   </button>
                 </div>
-                <p className={error ? styles.error : styles.note}>{error || "One email every trading day. Unsubscribe at any time."}</p>
+                <p className={error ? styles.error : styles.note}>{error || "We email you when your brief is posted at 5 PM ET. Unsubscribe at any time."}</p>
                 <Link href="/brief" className={styles.sampleLink}>Read a sample brief <ArrowRight size={15} /></Link>
               </form>
             )}
@@ -256,9 +235,9 @@ export function NewsletterLanding() {
       <section ref={featuresRef} className={`${styles.featuresSection} ${featuresInView ? styles.inView : ""}`}>
         <div className={styles.sectionInner}>
           <div className={styles.inboxHeading}>
-            <span className={styles.inboxEyebrow}><i /> Every trading day</span>
-            <h2>What lands<br className={styles.inboxBreak} /> in your inbox</h2>
-            <p>One daily email that walks through your stocks and explains what changed in plain English.</p>
+            <span className={styles.inboxEyebrow}><i /> Every trading day at 5 PM ET</span>
+            <h2>What&apos;s in<br className={styles.inboxBreak} /> your daily brief</h2>
+            <p>One short brief, posted right after the market closes, walks through your stocks and explains what changed in plain English.</p>
           </div>
           <div className={styles.inboxList}>
             {FEATURES.map(([number, title, copy], index) => (

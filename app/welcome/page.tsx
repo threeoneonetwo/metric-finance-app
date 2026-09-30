@@ -29,7 +29,7 @@ export default async function WelcomePage({ searchParams }: WelcomePageProps) {
       }
     >
       {email ? <strong style={{ color: "#fff" }}>{email}</strong> : "You"} {email ? "is" : "are"} set up to get the daily
-      Metric Finance brief. Expect your first one soon, then one every weekday morning.
+      Metric Finance brief. Expect your first one soon, then one posted every trading day at 5 PM ET. We email you a link each time.
     </StatusPage>
   );
 }

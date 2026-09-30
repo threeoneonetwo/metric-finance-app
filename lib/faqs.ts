@@ -1,0 +1,25 @@
+import { STOCKS } from "@/lib/stocks";
+
+// Shared so the page and its structured data always say the same thing.
+export const FAQS = [
+  {
+    question: "What does Metric's analysis cover?",
+    answer: "Each briefing covers price action, fundamentals, peer comparison, and recent news in plain English rather than analyst shorthand.",
+  },
+  {
+    question: "Does Metric give buy or sell recommendations?",
+    answer: "No. Metric explains what a company does and how it is performing so the decision remains yours. Nothing we send is financial advice.",
+  },
+  {
+    question: "Which stocks can I follow?",
+    answer: `You can choose from ${STOCKS.length} of the most followed US companies on the Nasdaq and New York Stock Exchange, and search the list by name or ticker.`,
+  },
+  {
+    question: "How often will I receive it?",
+    answer: "One concise brief is posted on the site every trading day at 5 PM ET, right after the market closes, and we email you a link when it is up. You can change your watchlist or unsubscribe at any time.",
+  },
+  {
+    question: "Can I search by company name?",
+    answer: "Yes. Search by a company name such as Apple or by its ticker, such as AAPL.",
+  },
+];
