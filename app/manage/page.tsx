@@ -4,6 +4,7 @@ import { listBriefingsForSubscriber } from "@/db/briefings";
 import { findSubscriberByToken } from "@/db/subscribers";
 import { isValidManageLink } from "@/lib/manage-link";
 import { ManageWatchlist } from "@/components/manage-watchlist";
+import { RequestManageLink } from "@/components/request-manage-link";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import styles from "@/components/newsletter-landing.module.css";
@@ -29,11 +30,15 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
           <SiteHeader />
           <section className={styles.manageSection}>
             <div className={styles.manageInner}>
-              <h1 className={styles.manageHeading}>We couldn&apos;t find that watchlist</h1>
+              <h1 className={styles.manageHeading}>
+                {token ? "That link has expired" : "Manage your watchlist or unsubscribe"}
+              </h1>
               <p className={styles.manageSub}>
-                The link may have expired or been copied incompletely. Open the link in your latest
-                briefing, or enter your email on the homepage and we&apos;ll send you a fresh one.
+                {token
+                  ? "For your security, account links expire after 30 days. Enter your email and we'll send you a fresh one."
+                  : "Enter the email you signed up with and we'll send you a private link to change your stocks or unsubscribe."}
               </p>
+              <RequestManageLink />
               <Link className={styles.manageUnsubscribe} href="/">Back to Metric Finance</Link>
             </div>
           </section>

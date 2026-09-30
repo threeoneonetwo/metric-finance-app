@@ -128,7 +128,7 @@ function buildWelcomeEmailHTML(input: {
 
 <tr><td class="px" style="padding:0 32px 40px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-<tr><td align="center" bgcolor="#8fa8fa" style="background-color:#8fa8fa;"><a href="${input.briefUrl}" style="display:block;padding:16px 24px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:20px;font-weight:bold;color:#ffffff;text-decoration:none;">Read today's brief →</a></td></tr>
+<tr><td align="center" bgcolor="#8fa8fa" style="background-color:#8fa8fa;"><a href="${input.briefUrl}" style="display:block;padding:16px 24px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:20px;font-weight:bold;color:#ffffff;text-decoration:none;">See a sample brief →</a></td></tr>
 </table>
 <p style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#8798b4;text-align:center;">Your first one is already waiting · 7 min read</p>
 </td></tr>
@@ -210,7 +210,7 @@ WHEN YOU'LL HEAR FROM US
 • Sent weekday mornings, before the US market opens
 • Weekends and holidays: no email
 
-READ TODAY'S BRIEF
+SEE A SAMPLE BRIEF
 ${input.briefUrl}
 
 MANAGE YOUR WATCHLIST

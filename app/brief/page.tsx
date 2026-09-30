@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { BriefContent } from "@/components/brief-content";
 
 export const metadata: Metadata = {
-  title: "Today's Brief | Metric Finance",
-  description: "Everyone is watching the yield. The story is in the barrel.",
+  title: "Sample Brief | Metric Finance",
+  description: "A sample of the daily briefing Metric Finance sends. Illustrative content, not current market analysis.",
   robots: { index: false, follow: false },
 };
 

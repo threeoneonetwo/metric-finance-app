@@ -14,7 +14,8 @@ type WelcomePageProps = {
 };
 
 export default async function WelcomePage({ searchParams }: WelcomePageProps) {
-  const { email, token, exp, sig } = await searchParams;
+  const { email: rawEmail, token, exp, sig } = await searchParams;
+  const email = rawEmail && rawEmail.length <= 254 && /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(rawEmail) ? rawEmail : undefined;
 
   return (
     <main>

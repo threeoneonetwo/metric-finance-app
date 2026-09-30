@@ -144,6 +144,11 @@ export function BriefContent() {
       <SiteHeader />
 
       <main style={{ maxWidth: "860px", margin: "0 auto", padding: "56px 32px 96px" }}>
+        <div role="note" style={{ margin: "0 0 32px", padding: "14px 18px", border: "1px solid #2b3a66", background: "#0c1322", color: "#b9c6dc", fontSize: "14px", lineHeight: 1.5 }}>
+          <strong style={{ color: "#8fa8fa", letterSpacing: "0.12em", fontSize: "12px" }}>SAMPLE BRIEF</strong>
+          <br />
+          This is an illustrative example of the depth of analysis in our briefings. It is not current market commentary or investment advice. Your daily email covers your own stocks.
+        </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "baseline", justifyContent: "space-between", marginBottom: "12px" }}>
           <div style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "0.16em", color: "#8798b4" }}>TUESDAY · SEP 22 · PRE-OPEN</div>
           <div style={{ fontSize: "13px", color: "#8798b4" }}>7 min read</div>

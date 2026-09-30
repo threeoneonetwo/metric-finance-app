@@ -38,6 +38,7 @@ export async function sendEmail(input: { to: string; subject: string; html: stri
   await getClient().send(
     new SendEmailCommand({
       FromEmailAddress: fromEmail,
+      ReplyToAddresses: [process.env.REPLY_TO_EMAIL ?? "vanshpandita11@gmail.com"],
       Destination: { ToAddresses: [input.to] },
       Content: {
         Simple: {
