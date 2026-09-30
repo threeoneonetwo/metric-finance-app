@@ -148,7 +148,6 @@ export function NewsletterLanding() {
       <SiteHeader />
 
       <section id="top" className={styles.hero}>
-        <div className={styles.heroGrid} />
 
         <div className={styles.heroInner}>
           <h1 className={styles.fadeUp} style={{ animationDelay: "0ms" }}>Stocks explained<br />like you&apos;re 5</h1>
@@ -266,7 +265,6 @@ export function NewsletterLanding() {
 
       <SectionWave />
       <section ref={ctaRef} className={`${styles.finalCta} ${ctaInView ? styles.inView : ""}`}>
-        <div className={styles.finalCtaGrid} aria-hidden="true" />
         <div className={styles.finalCtaInner}>
           <span className={styles.kicker}>Ready when you are</span>
           <h2>Understand stocks like a pro</h2>
