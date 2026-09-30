@@ -201,6 +201,7 @@ export function NewsletterLanding() {
         </div>
       </section>
 
+      <SectionWave />
       <section ref={featuresRef} className={`${styles.featuresSection} ${featuresInView ? styles.inView : ""}`}>
         <div className={styles.sectionInner}>
           <div className={styles.sectionHeading}>
