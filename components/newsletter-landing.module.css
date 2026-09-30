@@ -512,9 +512,10 @@
   .inboxHeading h2 { font-size: 50px; }
 }
 
-/* Desktop: heading and subheading spread across one wide line each */
+/* Desktop: heading on one line, heading and subheading never wider than the list below */
 @media (min-width: 1024px) {
   .inboxBreak { display: none; }
-  .inboxHeading h2 { font-size: clamp(52px, 4.6vw, 72px); }
-  .inboxHeading p { max-width: 880px; font-size: 19px; }
+  .inboxHeading { max-width: 600px; }
+  .inboxHeading h2 { font-size: 52px; }
+  .inboxHeading p { max-width: 600px; font-size: 18px; }
 }
