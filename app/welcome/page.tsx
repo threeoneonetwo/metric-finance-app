@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
-import styles from "@/components/newsletter-landing.module.css";
+import { StatusLink, StatusPage } from "@/components/status-page";
 
 export const metadata: Metadata = {
   title: "You're confirmed | Metric Finance",
@@ -15,28 +12,24 @@ type WelcomePageProps = {
 
 export default async function WelcomePage({ searchParams }: WelcomePageProps) {
   const { email: rawEmail, token, exp, sig } = await searchParams;
-  const email = rawEmail && rawEmail.length <= 254 && /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(rawEmail) ? rawEmail : undefined;
+  const email =
+    rawEmail && rawEmail.length <= 254 && /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(rawEmail) ? rawEmail : undefined;
 
   return (
-    <main>
-      <div className={styles.page}>
-        <SiteHeader />
-        <section className={styles.manageSection}>
-          <div className={styles.manageInner}>
-            <h1 className={styles.manageHeading}>You&apos;re confirmed</h1>
-            <p className={styles.manageSub}>
-              {email ? <><strong>{email}</strong> is</> : "You're"} set up to receive the daily Metric
-              Finance briefing on your watchlist.
-            </p>
-            {token && exp && sig && (
-              <Link className={styles.manageUnsubscribe} href={`/manage?${new URLSearchParams({ token, exp, sig })}`}>
-                Manage your watchlist
-              </Link>
-            )}
-          </div>
-        </section>
-        <SiteFooter />
-      </div>
-    </main>
+    <StatusPage
+      tone="success"
+      title="You're confirmed"
+      actions={
+        <>
+          {token && exp && sig && (
+            <StatusLink href={`/manage?${new URLSearchParams({ token, exp, sig })}`}>Manage your watchlist</StatusLink>
+          )}
+          <StatusLink href="/brief" secondary>Read a sample brief</StatusLink>
+        </>
+      }
+    >
+      {email ? <strong style={{ color: "#fff" }}>{email}</strong> : "You"} {email ? "is" : "are"} set up to get the daily
+      Metric Finance brief. Expect your first one soon, then one every weekday morning.
+    </StatusPage>
   );
 }

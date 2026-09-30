@@ -1,0 +1,19 @@
+.page { min-height: 100vh; background: radial-gradient(90% 60% at 50% -6%, #10182c 0%, #060910 58%, #05070d 100%); color: #fff; display: flex; flex-direction: column; }
+.section { flex: 1; display: flex; align-items: center; justify-content: center; padding: 72px 20px 96px; }
+.card { width: 100%; max-width: 580px; text-align: center; animation: statusIn .5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes statusIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+.icon { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; margin-bottom: 28px; border: 1px solid #2b3a66; background: #0c111e; color: #8fa8fa; }
+.success { border-color: #1f4d33; background: #0a1a12; color: #3fae64; }
+.error { border-color: #5a2b2b; background: #1a0d0d; color: #d27a7a; }
+.card h1 { margin: 0 0 14px; color: #fff; font-size: clamp(28px, 5vw, 40px); font-weight: 800; line-height: 1.1; letter-spacing: -.035em; }
+.card p { max-width: 440px; margin: 0 auto 34px; color: #8a94ac; font-size: 16.5px; line-height: 1.65; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+.actions form { display: contents; }
+.page .primary, .page .secondary { display: inline-flex; align-items: center; justify-content: center; height: 54px; padding: 0 34px; font-family: inherit; font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; cursor: pointer; transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms ease, border-color 150ms ease, color 150ms ease; }
+.page .primary { border: 0; background: #fff; color: #05070d; }
+.page .secondary { border: 1px solid #2b3a66; background: transparent; color: #b3c9ff; }
+.page .primary:hover, .page .secondary:hover { transform: translateY(-2px); }
+.page .secondary:hover { border-color: #8fa8fa; background: rgba(143, 168, 250, .08); color: #fff; }
+.page .primary:active, .page .secondary:active { transform: translateY(0); }
+@media (max-width: 480px) { .actions { flex-direction: column; align-items: stretch; } }
+@media (prefers-reduced-motion: reduce) { .card { animation: none; } }

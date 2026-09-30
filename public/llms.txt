@@ -14,7 +14,7 @@ Metric Finance is for everyday investors, especially young professionals, who ow
 ## Key facts
 
 - Price: free.
-- Coverage: US stocks listed on the Nasdaq and New York Stock Exchange.
+- Coverage: a curated list of the most followed US stocks on the Nasdaq and New York Stock Exchange.
 - Watchlist: up to 5 stocks per subscriber; change them or unsubscribe any time.
 - Delivery: one email every weekday morning, covering the previous trading day.
 - Not investment advice.

@@ -1,3 +1,4 @@
+import { brandedEmail } from "./email-template";
 import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2";
 
 export function hasSesConfig() {
@@ -16,14 +17,14 @@ function getClient() {
 }
 
 export async function sendVerificationEmail(input: { to: string; verifyUrl: string }) {
-  const html = `<!doctype html><html><body style="background:#08080a;color:#fff;font-family:Arial,Helvetica,sans-serif;padding:32px;">
-    <div style="max-width:480px;margin:0 auto;">
-      <h1 style="font-size:20px;">Confirm your Metric Finance briefing</h1>
-      <p style="color:#c4c4cc;">Click below to confirm your email and start receiving your daily briefing.</p>
-      <p><a href="${input.verifyUrl}" style="display:inline-block;background:#fff;color:#08080a;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600;">Confirm my email</a></p>
-      <p style="color:#8a8a92;font-size:13px;">If you didn't request this, you can ignore this email.</p>
-    </div>
-  </body></html>`;
+  const html = brandedEmail({
+    preheader: "One click and your daily brief starts.",
+    heading: "Confirm your email",
+    paragraphs: ["Tap the button to confirm your email. Your first brief follows soon after, then one every weekday morning."],
+    buttonLabel: "Confirm my email",
+    buttonUrl: input.verifyUrl,
+    footnote: "If you didn't sign up for Metric Finance, ignore this email and nothing happens.",
+  });
   const text = `Confirm your Metric Finance briefing\n\nClick to confirm your email: ${input.verifyUrl}\n\nIf you didn't request this, you can ignore this email.`;
 
   await sendEmail({ to: input.to, subject: "Confirm your Metric Finance briefing", html, text });

@@ -1,3 +1,5 @@
+import { stripSensitiveParams } from "./analytics-privacy";
+
 export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 export const OWNER_OPT_OUT_KEY = "metric_owner";
@@ -51,8 +53,10 @@ export function pageview(url: string) {
     return;
   }
 
+  const clean = stripSensitiveParams(url);
   getGtag()("config", GA_MEASUREMENT_ID, {
-    page_path: url,
+    page_path: clean,
+    page_location: `${window.location.origin}${clean}`,
   });
 }
 

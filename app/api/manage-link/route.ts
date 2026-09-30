@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isRateLimited } from "@/db/rate-limit";
 import { findSubscriberByEmail } from "@/db/subscribers";
 import { manageUrl } from "@/lib/manage-link";
+import { brandedEmail } from "@/lib/newsletter/email-template";
 import { hasSesConfig, sendEmail } from "@/lib/newsletter/ses";
 
 const EMAIL_PATTERN = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/;
@@ -35,7 +36,14 @@ export async function POST(request: Request) {
         await sendEmail({
           to: subscriber.email,
           subject: "Your Metric Finance account link",
-          html: `<p>Use this private link to change your stocks or unsubscribe:</p><p><a href="${link}">Manage my watchlist</a></p><p>The link works for 30 days. If you didn't request it, you can ignore this email.</p>`,
+          html: brandedEmail({
+            preheader: "Your private link to change your stocks or unsubscribe.",
+            heading: "Your account link",
+            paragraphs: ["Use this private link to change your stocks or unsubscribe. It works for 30 days."],
+            buttonLabel: "Manage my watchlist",
+            buttonUrl: link,
+            footnote: "If you didn't ask for this, ignore this email. Only you can use the link.",
+          }),
           text: `Use this private link to change your stocks or unsubscribe: ${link}\n\nThe link works for 30 days. If you didn't request it, you can ignore this email.`,
         });
       }

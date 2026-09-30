@@ -1,13 +1,14 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
-import type { Stock } from "@/lib/stocks";
+import { STOCKS, type Stock } from "@/lib/stocks";
 
 const FEATURES = [
   ["01", "Price action", "What the stock did today—and the clearest explanation of why it moved."],
@@ -50,7 +51,7 @@ const FAQS = [
   },
   {
     question: "Which stocks can I follow?",
-    answer: "The briefing is designed for publicly traded US companies listed on the Nasdaq and New York Stock Exchange.",
+    answer: `You can choose from ${STOCKS.length} of the most followed US companies on the Nasdaq and New York Stock Exchange, and search the list by name or ticker.`,
   },
   {
     question: "How often will I receive it?",
@@ -228,12 +229,13 @@ export function NewsletterLanding() {
                   </button>
                 </div>
                 <p className={error ? styles.error : styles.note}>{error || "One email every trading day. Unsubscribe at any time."}</p>
+                <Link href="/brief" className={styles.sampleLink}>Read a sample brief <ArrowRight size={15} /></Link>
               </form>
             )}
           </div>
 
           <div className={`${styles.stats} ${styles.fadeUp}`} style={{ animationDelay: "240ms" }}>
-            <div><strong>5000+ stocks</strong><span>Nasdaq &amp; NYSE</span></div>
+            <div><strong>{STOCKS.length} top stocks</strong><span>Nasdaq &amp; NYSE</span></div>
             <div><strong>Market context</strong><span>Without the noise</span></div>
             <div><strong>Daily analysis</strong><span>Metric engine</span></div>
           </div>

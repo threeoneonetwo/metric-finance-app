@@ -491,16 +491,25 @@
 }
 
 /* ── Legal pages (privacy / terms) ── */
-.legal { max-width: 760px; }
-.legalUpdated { margin: 0 0 36px; color: #67738f; font-size: 13px; }
-.legal h2 { margin: 40px 0 12px; color: #fff; font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
-.legal h3 { margin: 24px 0 8px; color: #ebecee; font-size: 15.5px; font-weight: 700; }
-.legal p, .legal li { color: var(--muted); font-size: 15.5px; line-height: 1.75; }
+.legal { max-width: 720px; }
+.legalUpdated { margin: 0 0 40px; color: #7d879f; font-size: 13.5px; }
+.legal h2 { margin: 52px 0 16px; padding-top: 32px; border-top: 1px solid #161f35; color: #fff; font-size: 22px; font-weight: 800; letter-spacing: -.025em; }
+.legal h3 { margin: 28px 0 10px; color: #ebecee; font-size: 16px; font-weight: 700; }
+.legal p, .legal li { color: #a7b1c7; font-size: 16px; line-height: 1.8; }
 .legal p { margin: 0 0 14px; }
-.legal ul { margin: 0 0 14px; padding-left: 22px; }
-.legal li { margin-bottom: 8px; }
+.legal ul { margin: 0 0 16px; padding-left: 24px; list-style: disc; }
+.legal li::marker { color: #56668a; }
+.legal li { margin-bottom: 10px; }
 .legal strong { color: #ebecee; font-weight: 600; }
 .legal a { color: #ebecee; text-decoration: underline; text-underline-offset: 3px; }
 .legal a:hover { color: #fff; }
 .legalNotice { margin: 0 0 28px; padding: 18px 20px; border: 1px solid #232f4d; background: #0a0e18; }
 .legalNotice p { margin: 0; color: #ebecee; }
+.signup .sampleLink { display: flex; width: 100%; align-items: center; justify-content: center; gap: 10px; margin-top: 18px; padding: 0 30px; height: 56px; border: 1px solid #2b3a66; background: transparent; color: #b3c9ff; font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), background-color 150ms ease, border-color 150ms ease, color 150ms ease; }
+.signup .sampleLink svg { transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1); }
+.signup .sampleLink:hover { transform: translateY(-2px); border-color: #8fa8fa; background: rgba(143, 168, 250, .08); color: #fff; }
+.signup .sampleLink:hover svg { transform: translateX(3px); }
+.signup .sampleLink:active { transform: translateY(0); }
+
+.manageInner .manageBack { display: inline-flex; align-items: center; justify-content: center; height: 52px; margin-top: 36px; padding: 0 30px; border: 1px solid #2b3a66; color: #b3c9ff; font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms ease, background-color 150ms ease, color 150ms ease; }
+.manageInner .manageBack:hover { transform: translateY(-2px); border-color: #8fa8fa; background: rgba(143, 168, 250, .08); color: #fff; }

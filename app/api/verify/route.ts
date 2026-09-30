@@ -9,37 +9,25 @@ import { sendWelcomeEmail } from "@/lib/newsletter/send-welcome-email";
 
 export const maxDuration = 30;
 
-// Email security scanners prefetch links, so GET only renders a confirm button; the POST does the work.
+// Email security scanners prefetch links, so GET only shows a confirm button page; the POST does the work.
 export async function GET(request: Request) {
   const token = new URL(request.url).searchParams.get("token");
-  if (!token || !/^[a-f0-9]{48}$/.test(token)) {
-    return new NextResponse("Missing or invalid verification token.", { status: 400 });
-  }
-
-  return new NextResponse(
-    `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Confirm your email | Metric Finance</title></head>
-    <body style="background:#04070d;color:#f2f5fa;font-family:Arial,Helvetica,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;">
-      <form method="post" action="/api/verify" style="text-align:center;padding:24px;">
-        <h1 style="font-size:24px;margin:0 0 12px;">One last click</h1>
-        <p style="color:#8798b4;margin:0 0 24px;">Confirm your email to start your daily Metric Finance briefing.</p>
-        <input type="hidden" name="token" value="${token}">
-        <button type="submit" style="background:#8fa8fa;color:#0b1220;border:0;padding:14px 28px;font-weight:700;font-size:15px;cursor:pointer;">Confirm my email</button>
-      </form>
-    </body></html>`,
-    { status: 200, headers: { "content-type": "text/html; charset=utf-8" } },
-  );
+  const destination = new URL("/verify", request.url);
+  if (token && /^[a-f0-9]{48}$/.test(token)) destination.searchParams.set("token", token);
+  else destination.searchParams.set("error", "invalid");
+  return NextResponse.redirect(destination, 307);
 }
 
 export async function POST(request: Request) {
   const form = await request.formData().catch(() => null);
   const token = form?.get("token");
   if (typeof token !== "string" || !token) {
-    return new NextResponse("Missing verification token.", { status: 400 });
+    return NextResponse.redirect(new URL("/verify?error=invalid", request.url), 303);
   }
 
   const subscriber = await verifySubscriberByToken(token);
   if (!subscriber) {
-    return new NextResponse("That confirmation link is invalid or has already been used.", { status: 404 });
+    return NextResponse.redirect(new URL("/verify?error=invalid", request.url), 303);
   }
 
   await sendFirstBriefing(subscriber);

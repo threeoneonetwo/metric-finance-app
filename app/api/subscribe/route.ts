@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isRateLimited } from "@/db/rate-limit";
 import { upsertSubscriber } from "@/db/subscribers";
 import { manageUrl } from "@/lib/manage-link";
+import { brandedEmail } from "@/lib/newsletter/email-template";
 import { hasSesConfig, sendEmail, sendVerificationEmail } from "@/lib/newsletter/ses";
 
 const EMAIL_PATTERN = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/;
@@ -59,7 +60,14 @@ export async function POST(request: Request) {
         await sendEmail({
           to: subscriber.email,
           subject: "Manage your Metric Finance watchlist",
-          html: `<p>You're already subscribed to Metric Finance. To change your stocks, use your private link:</p><p><a href="${link}">Manage my watchlist</a></p><p>If you didn't request this, you can ignore this email.</p>`,
+          html: brandedEmail({
+            preheader: "Your private link to change your stocks or unsubscribe.",
+            heading: "Your account link",
+            paragraphs: ["Use this private link to change your stocks or unsubscribe. It works for 30 days."],
+            buttonLabel: "Manage my watchlist",
+            buttonUrl: link,
+            footnote: "If you didn't ask for this, ignore this email. Only you can use the link.",
+          }),
           text: `You're already subscribed to Metric Finance. Manage your watchlist: ${link}\n\nIf you didn't request this, you can ignore this email.`,
         });
       }

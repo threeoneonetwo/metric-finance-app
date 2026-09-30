@@ -39,7 +39,7 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
                   : "Enter the email you signed up with and we'll send you a private link to change your stocks or unsubscribe."}
               </p>
               <RequestManageLink />
-              <Link className={styles.manageUnsubscribe} href="/">Back to Metric Finance</Link>
+              <Link className={styles.manageBack} href="/">Back to Metric Finance</Link>
             </div>
           </section>
           <SiteFooter />

@@ -33,7 +33,7 @@ export function RequestManageLink() {
   }
 
   return (
-    <form onSubmit={submit} noValidate style={{ maxWidth: 560 }}>
+    <form onSubmit={submit} noValidate style={{ maxWidth: 640 }}>
       <div className={styles.emailRow}>
         <input
           type="email"

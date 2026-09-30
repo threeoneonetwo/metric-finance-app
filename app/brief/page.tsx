@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { BriefContent } from "@/components/brief-content";
+import { SampleBrief } from "@/components/sample-brief";
 
 export const metadata: Metadata = {
   title: "Sample Brief | Metric Finance",
-  description: "A sample of the daily briefing Metric Finance sends. Illustrative content, not current market analysis.",
+  description: "A sample of the daily brief Metric Finance sends: one sentence on what changed, one story explained, one idea you can use. Illustrative content, not real market data.",
   robots: { index: false, follow: false },
 };
 
 export default function BriefPage() {
-  return <BriefContent />;
+  return <SampleBrief />;
 }
