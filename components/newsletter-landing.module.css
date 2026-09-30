@@ -391,6 +391,26 @@
 .successPicks span { border-radius: 8px; }
 .stats { gap: 12px; border: 0; background: none; }
 .stats > div { border: 1px solid var(--border); border-radius: 16px; }
+.testimonial { border-radius: 22px; }
+.testimonialHeading button { border-radius: 12px; }
+.finalCta a { border-radius: 14px; }
+.legalNotice { border-radius: 14px; }
+.signup .sampleLink, .manageInner .manageBack { border-radius: 14px; }
+.todaysBriefCard, .briefingLatestCard { border-radius: 16px; }
+.briefingSearch { border-radius: 12px; }
+.briefingList { overflow: hidden; border-radius: 16px; }
+.briefingTickers span { border-radius: 6px; }
+
+/* ── Depth: drifting glow and card tilt ── */
+.hero::before {
+  content: ""; position: absolute; inset: -15% -10% auto; height: 110%; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(38% 42% at 26% 32%, rgba(122, 162, 255, .17), transparent 70%),
+    radial-gradient(34% 38% at 74% 44%, rgba(111, 224, 221, .10), transparent 70%);
+  filter: blur(28px);
+  animation: glowDrift 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
 @keyframes glowDrift {
   from { transform: translate3d(-5%, -3%, 0) scale(1); }
   to { transform: translate3d(5%, 4%, 0) scale(1.1); }
@@ -430,6 +450,14 @@
 /* ── Compact boxes ── */
 .featuresSection, .testimonialsSection, .faqSection { padding-top: 64px; padding-bottom: 68px; }
 .testimonialHeading { margin-bottom: 26px; gap: 14px; }
+.testimonial { min-height: 0; max-width: 640px; padding: 26px 30px 22px; }
+.testimonial > p { margin-bottom: 20px; font-size: 18px; line-height: 1.5; }
+.stats > div { padding-top: 14px; padding-bottom: 14px; }
+.finalCta { padding-top: 72px; padding-bottom: 76px; }
+@media (min-width: 1100px) {
+  .featuresSection, .testimonialsSection, .faqSection { padding-top: 72px; padding-bottom: 76px; }
+  .finalCta { padding-top: 84px; padding-bottom: 88px; }
+}
 @media (max-width: 760px) {
   .featuresSection, .testimonialsSection, .faqSection { padding: 44px 20px 48px; }
   .testimonialHeading { margin-bottom: 18px; }
@@ -482,4 +510,11 @@
 @media (min-width: 761px) and (max-width: 1023px) {
   .inboxText h3 { font-size: 20px; white-space: nowrap; }
   .inboxHeading h2 { font-size: 50px; }
+}
+
+/* Desktop: heading and subheading spread across one wide line each */
+@media (min-width: 1024px) {
+  .inboxBreak { display: none; }
+  .inboxHeading h2 { font-size: clamp(52px, 4.6vw, 72px); }
+  .inboxHeading p { max-width: 880px; font-size: 19px; }
 }

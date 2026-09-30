@@ -256,7 +256,7 @@ export function NewsletterLanding() {
         <div className={styles.sectionInner}>
           <div className={styles.inboxHeading}>
             <span className={styles.inboxEyebrow}><i /> Every trading day</span>
-            <h2>What lands<br />in your inbox</h2>
+            <h2>What lands<br className={styles.inboxBreak} /> in your inbox</h2>
             <p>One daily email that walks through your stocks and explains what changed in plain English.</p>
           </div>
           <div className={styles.inboxList}>
