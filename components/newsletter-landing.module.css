@@ -410,3 +410,28 @@
 
 .manageInner .manageBack { display: inline-flex; align-items: center; justify-content: center; height: 52px; margin-top: 36px; padding: 0 30px; border: 1px solid #2b3a66; color: #b3c9ff; font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms ease, background-color 150ms ease, color 150ms ease; }
 .manageInner .manageBack:hover { transform: translateY(-2px); border-color: #8fa8fa; background: rgba(143, 168, 250, .08); color: #fff; }
+
+/* ── Soft edges ── */
+.headerCta { border-radius: 10px; }
+.searchControl { border-radius: 14px; }
+.results { overflow: hidden; border-radius: 14px; }
+.pickList { gap: 8px; margin-top: 8px; }
+.pick, .ghost { border: 1px solid #161f35; border-radius: 12px; }
+.ghost { border-style: dashed; border-color: #131c30; }
+.results small, .pick small { border-radius: 6px; }
+.emailRow input, .emailRow button, .manageSave { border-radius: 14px; }
+.success { border-radius: 20px; }
+.successPicks span { border-radius: 8px; }
+.stats { gap: 12px; border: 0; background: none; }
+.stats > div { border: 1px solid var(--border); border-radius: 16px; }
+.features { gap: 14px; border: 0; background: none; }
+.features article { border: 1px solid var(--border); border-radius: 18px; }
+.testimonial { border-radius: 22px; }
+.testimonialHeading button { border-radius: 12px; }
+.finalCta a { border-radius: 14px; }
+.legalNotice { border-radius: 14px; }
+.signup .sampleLink, .manageInner .manageBack { border-radius: 14px; }
+.todaysBriefCard, .briefingLatestCard { border-radius: 16px; }
+.briefingSearch { border-radius: 12px; }
+.briefingList { overflow: hidden; border-radius: 16px; }
+.briefingTickers span { border-radius: 6px; }

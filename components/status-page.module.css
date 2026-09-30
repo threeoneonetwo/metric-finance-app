@@ -17,3 +17,6 @@
 .page .primary:active, .page .secondary:active { transform: translateY(0); }
 @media (max-width: 480px) { .actions { flex-direction: column; align-items: stretch; } }
 @media (prefers-reduced-motion: reduce) { .card { animation: none; } }
+
+.icon { border-radius: 18px; }
+.page .primary, .page .secondary { border-radius: 14px; }

@@ -718,10 +718,3 @@ body > main.report-page::before {
 .dark-mover-card:hover {
   background: rgba(39, 39, 42, 0.96);
 }
-
-/* Square geometry across the product. */
-body *,
-body *::before,
-body *::after {
-  border-radius: 0 !important;
-}

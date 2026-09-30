@@ -91,7 +91,7 @@ export function renderBriefEmail(input: {
   ${section(`${label("Your watchlist")}<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${glance}</table>`)}
   ${section(`${label("The one change worth understanding")}<h2 style="margin:0 0 12px;font-family:${FONT};font-size:19px;line-height:25px;font-weight:bold;letter-spacing:-0.3px;color:#ffffff;">${esc(brief.lead.title)}</h2>${lead}`)}
   ${section(`${label("The rest of your stocks")}${rest}`)}
-  <tr><td style="padding:24px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="background:#08141a;border:1px solid #1d2f3a;padding:20px;">
+  <tr><td style="padding:24px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="background:#08141a;border:1px solid #1d2f3a;border-radius:14px;padding:20px;">
     ${label("One idea you can use")}
     <h2 style="margin:0 0 8px;font-family:${FONT};font-size:22px;line-height:28px;font-weight:bold;letter-spacing:-0.5px;color:#ffffff;">${esc(brief.idea.term)}</h2>
     <p style="margin:0;font-family:${FONT};font-size:14px;line-height:23px;color:#c4ccd8;">${esc(brief.idea.explanation)}</p>
@@ -99,10 +99,10 @@ export function renderBriefEmail(input: {
   ${section(`${label("What to watch next")}<ul style="margin:0;padding-left:18px;">${watch}</ul>`)}
   <tr><td style="padding:24px 0 8px;">
     <p style="margin:0 0 14px;font-family:${FONT};font-size:15px;line-height:22px;font-weight:bold;color:#dfe3ee;">That's the brief. See you tomorrow morning.</p>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border:1px dashed #2b3a66;padding:16px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border:1px dashed #2b3a66;border-radius:14px;padding:16px;">
       <p style="margin:0 0 12px;font-family:${FONT};font-size:13.5px;line-height:21px;color:#9aa6c0;">Know someone who would like ${esc(brief.idea.term)} explained? Send them today's idea. It shares the explainer only, never your watchlist.</p>
-      <a href="${share.whatsapp}" style="display:inline-block;margin:0 8px 8px 0;padding:11px 16px;background:#ffffff;font-family:${FONT};font-size:12px;font-weight:bold;letter-spacing:1.2px;text-transform:uppercase;color:#05070d;text-decoration:none;">Share on WhatsApp</a>
-      <a href="${share.email}" style="display:inline-block;margin:0 0 8px 0;padding:10px 16px;border:1px solid #2b3a66;font-family:${FONT};font-size:12px;font-weight:bold;letter-spacing:1.2px;text-transform:uppercase;color:#b3c9ff;text-decoration:none;">Share by email</a>
+      <a href="${share.whatsapp}" style="display:inline-block;margin:0 8px 8px 0;padding:11px 16px;border-radius:10px;background:#ffffff;font-family:${FONT};font-size:12px;font-weight:bold;letter-spacing:1.2px;text-transform:uppercase;color:#05070d;text-decoration:none;">Share on WhatsApp</a>
+      <a href="${share.email}" style="display:inline-block;margin:0 0 8px 0;padding:10px 16px;border-radius:10px;border:1px solid #2b3a66;font-family:${FONT};font-size:12px;font-weight:bold;letter-spacing:1.2px;text-transform:uppercase;color:#b3c9ff;text-decoration:none;">Share by email</a>
     </td></tr></table>
   </td></tr>
   <tr><td style="padding-top:22px;font-family:${FONT};font-size:12px;line-height:18px;color:#56668a;">

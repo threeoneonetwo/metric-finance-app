@@ -60,3 +60,9 @@
   .mailGlance { grid-template-columns: 46px 56px minmax(0, 1fr); gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { .mailFrame { transform: none !important; transition-duration: .01ms !important; } }
+
+.mailFrame { overflow: hidden; border-radius: 20px; }
+.mailIdea { border-radius: 14px; }
+.mailShare { border-radius: 14px; }
+.mailShare em { border-radius: 10px; }
+.page .cta { border-radius: 14px; }

@@ -7,11 +7,11 @@
 
 .main {
   flex: 1;
-  padding: 60px 20px;
+  padding: 60px 40px;
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 1152px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -549,7 +549,7 @@
   }
 
   .main {
-    padding: 40px 16px;
+    padding: 40px 20px;
   }
 
   .heading {
