@@ -468,3 +468,33 @@
   .stepRow { font-size: min(9px, calc((100vw - 80px) / 30)); }
   .kicker { font-size: min(10.5px, calc((100vw - 40px) / 26)); letter-spacing: .14em; }
 }
+
+/* ── Compact boxes ── */
+.featuresSection, .testimonialsSection, .faqSection { padding-top: 64px; padding-bottom: 68px; }
+.sectionHeading { margin-bottom: 32px; }
+.testimonialHeading { margin-bottom: 26px; gap: 14px; }
+.features { gap: 12px; }
+.features article { min-height: 0; padding: 22px 20px 24px; }
+.features h3 { margin: 12px 0 8px; }
+.features p { font-size: 13.5px; line-height: 1.55; }
+.testimonial { min-height: 0; max-width: 640px; padding: 26px 30px 22px; }
+.testimonial > p { margin-bottom: 20px; font-size: 18px; line-height: 1.5; }
+.stats > div { padding-top: 14px; padding-bottom: 14px; }
+.finalCta { padding-top: 72px; padding-bottom: 76px; }
+@media (min-width: 1100px) {
+  .featuresSection, .testimonialsSection, .faqSection { padding-top: 72px; padding-bottom: 76px; }
+  .finalCta { padding-top: 84px; padding-bottom: 88px; }
+}
+@media (max-width: 760px) {
+  .featuresSection, .testimonialsSection, .faqSection { padding: 44px 20px 48px; }
+  .sectionHeading { margin-bottom: 22px; gap: 10px; }
+  .testimonialHeading { margin-bottom: 18px; }
+  .features { gap: 10px; }
+  .features article { padding: 16px 18px 18px; }
+  .features h3 { margin: 8px 0 6px; }
+  .features p { font-size: 13px; }
+  .testimonial { min-height: 0; padding: 20px 20px 18px; }
+  .testimonial > p { margin-bottom: 14px; font-size: 15.5px; }
+  .stats > div { min-height: 64px; padding: 10px 6px; }
+  .finalCta { padding: 52px 20px 56px; }
+}
