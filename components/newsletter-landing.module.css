@@ -420,3 +420,51 @@
 .briefingSearch { border-radius: 12px; }
 .briefingList { overflow: hidden; border-radius: 16px; }
 .briefingTickers span { border-radius: 6px; }
+
+/* ── Depth: drifting glow and card tilt ── */
+.hero::before {
+  content: ""; position: absolute; inset: -15% -10% auto; height: 110%; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(38% 42% at 26% 32%, rgba(122, 162, 255, .17), transparent 70%),
+    radial-gradient(34% 38% at 74% 44%, rgba(111, 224, 221, .10), transparent 70%);
+  filter: blur(28px);
+  animation: glowDrift 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes glowDrift {
+  from { transform: translate3d(-5%, -3%, 0) scale(1); }
+  to { transform: translate3d(5%, 4%, 0) scale(1.1); }
+}
+@media (hover: hover) {
+  .featuresSection.inView .features article[data-tilt]:hover,
+  .stats > div[data-tilt]:hover {
+    transform: perspective(900px) translateY(-5px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    border-color: rgba(143, 168, 250, .35);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .35);
+    transition-duration: 160ms;
+  }
+  .stats > div[data-tilt] { transition: transform .3s cubic-bezier(0.16, 1, 0.3, 1), border-color .2s ease, box-shadow .3s ease; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero::before { animation: none; }
+  .featuresSection.inView .features article[data-tilt]:hover, .stats > div[data-tilt]:hover { transform: none; }
+}
+
+/* ── One line text on phones: sizes scale with the screen instead of wrapping ── */
+@media (max-width: 760px) {
+  .hero h1, .sectionHeading h2, .testimonialHeading h2, .faqInner h2, .finalCta h2, .manageHeading, .features h3,
+  .kicker, .stats strong, .stats span, .stepRow, .success h2, .successTitle, .emailRow button, .sampleLink, .manageBack, .finalCta a {
+    white-space: nowrap;
+  }
+  .hero h1 { font-size: min(64px, calc((100vw - 40px) / 8.9)); letter-spacing: -.045em; }
+  .sectionHeading h2, .testimonialHeading h2 { font-size: min(40px, calc((100vw - 40px) / 12.6)); }
+  .faqInner h2, .finalCta h2 { font-size: min(36px, calc((100vw - 40px) / 13.6)); }
+  .manageHeading { font-size: min(36px, calc((100vw - 40px) / 18.5)); }
+  .legal h2 { white-space: nowrap; font-size: min(22px, calc((100vw - 40px) / 19)); }
+  .features h3 { font-size: min(19px, calc((100vw - 88px) / 11)); }
+  .stats strong { font-size: min(12.5px, calc((100vw - 88px) / 24)); }
+  .stats span { font-size: min(7px, calc((100vw - 88px) / 38)); letter-spacing: .04em; }
+  .emailRow button, .sampleLink, .finalCta a { font-size: min(12.5px, calc((100vw - 40px) / 22)); letter-spacing: .1em; padding-left: 12px; padding-right: 12px; }
+  .stepRow { font-size: min(9px, calc((100vw - 80px) / 30)); }
+  .kicker { font-size: min(10.5px, calc((100vw - 40px) / 26)); letter-spacing: .14em; }
+}

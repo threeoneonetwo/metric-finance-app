@@ -81,6 +81,25 @@ function useReveal<T extends HTMLElement>() {
   return [ref, inView] as const;
 }
 
+// Cards lean gently toward the mouse. Touch and pen input is ignored.
+function tiltMove(event: React.PointerEvent<HTMLElement>) {
+  if (event.pointerType !== "mouse") return;
+  const card = (event.target as HTMLElement).closest<HTMLElement>("[data-tilt]");
+  if (!card) return;
+  const box = card.getBoundingClientRect();
+  const x = (event.clientX - box.left) / box.width - 0.5;
+  const y = (event.clientY - box.top) / box.height - 0.5;
+  card.style.setProperty("--ry", `${(x * 6).toFixed(2)}deg`);
+  card.style.setProperty("--rx", `${(-y * 6).toFixed(2)}deg`);
+}
+
+function tiltReset(event: React.PointerEvent<HTMLElement>) {
+  const card = (event.target as HTMLElement).closest<HTMLElement>("[data-tilt]");
+  if (card && event.relatedTarget instanceof Node && card.contains(event.relatedTarget)) return;
+  card?.style.removeProperty("--rx");
+  card?.style.removeProperty("--ry");
+}
+
 function SectionWave() {
   return <hr className={styles.sectionWave} aria-hidden="true" />;
 }
@@ -192,10 +211,10 @@ export function NewsletterLanding() {
             )}
           </div>
 
-          <div className={`${styles.stats} ${styles.fadeUp}`} style={{ animationDelay: "240ms" }}>
-            <div><strong>Top stocks</strong><span>Nasdaq &amp; NYSE</span></div>
-            <div><strong>Market context</strong><span>Without the noise</span></div>
-            <div><strong>Daily analysis</strong><span>Metric engine</span></div>
+          <div className={`${styles.stats} ${styles.fadeUp}`} style={{ animationDelay: "240ms" }} onPointerMove={tiltMove} onPointerOut={tiltReset}>
+            <div data-tilt><strong>Top stocks</strong><span>Nasdaq &amp; NYSE</span></div>
+            <div data-tilt><strong>Market context</strong><span>Without the noise</span></div>
+            <div data-tilt><strong>Daily analysis</strong><span>Metric engine</span></div>
           </div>
         </div>
       </section>
@@ -207,9 +226,9 @@ export function NewsletterLanding() {
             <h2>What lands in your inbox</h2>
             <p>One daily email that walks through your stocks and explains what changed in plain English.</p>
           </div>
-          <div className={styles.features}>
+          <div className={styles.features} onPointerMove={tiltMove} onPointerOut={tiltReset}>
             {FEATURES.map(([number, title, copy], index) => (
-              <article key={number} style={{ transitionDelay: featuresInView ? `${120 + index * 90}ms` : "0ms" }}>
+              <article key={number} data-tilt style={{ transitionDelay: featuresInView ? `${120 + index * 90}ms` : "0ms" }}>
                 <span>{number}</span>
                 <h3>{title}</h3>
                 <p>{copy}</p>

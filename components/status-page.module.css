@@ -20,3 +20,5 @@
 
 .icon { border-radius: 18px; }
 .page .primary, .page .secondary { border-radius: 14px; }
+
+@media (max-width: 760px) { .card h1 { white-space: nowrap; font-size: min(40px, calc((100vw - 88px) / 11)); } }

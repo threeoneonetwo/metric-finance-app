@@ -577,3 +577,5 @@
     text-align: center;
   }
 }
+
+@media (max-width: 768px) { .heading { white-space: nowrap; font-size: min(36px, calc((100vw - 40px) / 10)); } }
