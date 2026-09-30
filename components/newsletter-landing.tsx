@@ -235,7 +235,7 @@ export function NewsletterLanding() {
           </div>
 
           <div className={`${styles.stats} ${styles.fadeUp}`} style={{ animationDelay: "240ms" }}>
-            <div><strong>{STOCKS.length} top stocks</strong><span>Nasdaq &amp; NYSE</span></div>
+            <div><strong>Top stocks</strong><span>Nasdaq &amp; NYSE</span></div>
             <div><strong>Market context</strong><span>Without the noise</span></div>
             <div><strong>Daily analysis</strong><span>Metric engine</span></div>
           </div>

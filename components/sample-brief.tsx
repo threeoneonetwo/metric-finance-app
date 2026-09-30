@@ -34,8 +34,8 @@ export function SampleBrief() {
       <main className={styles.main}>
         <div className={styles.intro}>
           <span className={styles.kicker}>Sample brief</span>
-          <h1>This is how your daily brief looks</h1>
-          <p>One short email every weekday morning. Your stocks, what moved, and why, in words anyone can follow.</p>
+          <h1>Your next favourite newsletter</h1>
+          <p>One bite sized brief every trading day explaining everything about your stocks, what moved, and why, in words anyone can follow.</p>
         </div>
 
         <figure className={styles.mailFrame} aria-label="Example of a Metric Finance daily brief email">
