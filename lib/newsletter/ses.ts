@@ -30,7 +30,7 @@ export async function sendVerificationEmail(input: { to: string; verifyUrl: stri
   await sendEmail({ to: input.to, subject: "Confirm your Metric Finance briefing", html, text });
 }
 
-export async function sendEmail(input: { to: string; subject: string; html: string; text: string }) {
+export async function sendEmail(input: { to: string; subject: string; html: string; text: string; headers?: Record<string, string> }) {
   const fromEmail = process.env.SES_FROM_EMAIL;
   if (!fromEmail) {
     throw new Error("SES_FROM_EMAIL is not configured");
@@ -43,6 +43,7 @@ export async function sendEmail(input: { to: string; subject: string; html: stri
       Destination: { ToAddresses: [input.to] },
       Content: {
         Simple: {
+          Headers: input.headers ? Object.entries(input.headers).map(([Name, Value]) => ({ Name, Value })) : undefined,
           Subject: { Data: input.subject, Charset: "UTF-8" },
           Body: {
             Html: { Data: input.html, Charset: "UTF-8" },

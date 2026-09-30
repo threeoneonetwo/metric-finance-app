@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { listActiveSubscribers, markSubscribersSent } from "@/db/subscribers";
 import { isSameBriefDay } from "@/lib/newsletter/brief-day";
-import { generateTickerBlurbs, hasAnthropicConfig } from "@/lib/newsletter/generate-brief";
-import { getTickerSnapshots, hasFmpConfig } from "@/lib/newsletter/market-data";
+import { gatherBriefFacts } from "@/lib/newsletter/brief-data";
+import { hasFmpConfig } from "@/lib/newsletter/market-data";
 import { hasSesConfig, sendEmail } from "@/lib/newsletter/ses";
-import { sendDigestToSubscriber } from "@/lib/newsletter/send-digest";
+import { sendDigestToSubscriber, type BriefCache } from "@/lib/newsletter/send-digest";
+import { hasBriefWriterConfig } from "@/lib/newsletter/write-brief";
 
 export const maxDuration = 60;
 
@@ -15,7 +16,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!hasFmpConfig() || !hasAnthropicConfig() || !hasSesConfig()) {
+  if (!hasFmpConfig() || !hasBriefWriterConfig() || !hasSesConfig()) {
     return NextResponse.json({ error: "Newsletter send is not fully configured" }, { status: 503 });
   }
 
@@ -31,35 +32,38 @@ export async function GET(request: Request) {
   }
 
   const allTickers = Array.from(new Set(subscribers.flatMap((subscriber) => subscriber.tickers)));
-  const snapshots = await getTickerSnapshots(allTickers);
-  const blurbs = await generateTickerBlurbs(Array.from(snapshots.values()));
-  if (blurbs.size < snapshots.size) {
-    await alertOwner(
-      `Metric Finance: ${snapshots.size - blurbs.size} of ${snapshots.size} stock explanations failed`,
-      `Today's send could not generate explanations for ${snapshots.size - blurbs.size} of ${snapshots.size} stocks, so those emails went out without them.\n\nMost likely cause: Anthropic API credit ran out or the key is invalid. Check the Vercel logs for "generate-brief" and your Anthropic billing page.`,
-    );
-  }
-
+  const facts = await gatherBriefFacts(allTickers);
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://metricfinance.app";
+  const cache: BriefCache = new Map();
 
-  let sent = 0;
   const sentIds: string[] = [];
+  let noBrief = 0;
 
-  for (const subscriber of subscribers) {
-    try {
-      const result = await sendDigestToSubscriber({ subscriber, snapshots, blurbs, baseUrl });
-      if (result.sent) {
-        sent += 1;
-        sentIds.push(subscriber.id);
+  // A few at a time keeps the run inside the time limit without hammering the APIs.
+  const queue = [...subscribers];
+  const worker = async () => {
+    for (let subscriber = queue.shift(); subscriber; subscriber = queue.shift()) {
+      try {
+        const result = await sendDigestToSubscriber({ subscriber, facts, baseUrl, cache });
+        if (result.sent) sentIds.push(subscriber.id);
+        else if (result.reason === "no-brief") noBrief += 1;
+      } catch (error) {
+        console.error("send-daily: failed for one subscriber", error);
       }
-    } catch {
-      // Skip and continue sending to the rest of the list.
     }
+  };
+  await Promise.all(Array.from({ length: 4 }, worker));
+
+  if (noBrief > 0) {
+    await alertOwner(
+      `Metric Finance: ${noBrief} of ${subscribers.length} briefs could not be written`,
+      `Today's send skipped ${noBrief} of ${subscribers.length} subscribers because the brief could not be written, so they got no email.\n\nMost likely cause: Anthropic API credit ran out or the key is invalid. Check the Vercel logs for "write-brief" and your Anthropic billing page.`,
+    );
   }
 
   await markSubscribersSent(sentIds);
 
-  return NextResponse.json({ ok: true, sent, subscribers: allActive.length });
+  return NextResponse.json({ ok: true, sent: sentIds.length, subscribers: allActive.length });
 }
 
 async function alertOwner(subject: string, text: string) {

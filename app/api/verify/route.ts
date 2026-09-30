@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { manageLinkParams, manageUrl } from "@/lib/manage-link";
 import { markSubscribersSent, verifySubscriberByToken } from "@/db/subscribers";
-import { generateTickerBlurbs, hasAnthropicConfig } from "@/lib/newsletter/generate-brief";
-import { getTickerSnapshots, hasFmpConfig } from "@/lib/newsletter/market-data";
+import { gatherBriefFacts } from "@/lib/newsletter/brief-data";
+import { hasFmpConfig } from "@/lib/newsletter/market-data";
 import { hasSesConfig } from "@/lib/newsletter/ses";
 import { sendDigestToSubscriber } from "@/lib/newsletter/send-digest";
+import { hasBriefWriterConfig } from "@/lib/newsletter/write-brief";
 import { sendWelcomeEmail } from "@/lib/newsletter/send-welcome-email";
 
 export const maxDuration = 30;
@@ -60,16 +61,14 @@ async function sendFirstBriefing(subscriber: { id: string; email: string; ticker
   }
 
   // Send first briefing if fully configured
-  if (!hasFmpConfig() || !hasAnthropicConfig()) {
+  if (!hasFmpConfig() || !hasBriefWriterConfig()) {
     console.info("verify: skipping first briefing (missing FMP or Anthropic config)");
     return;
   }
 
   try {
-    const snapshots = await getTickerSnapshots(subscriber.tickers);
-    const blurbs = await generateTickerBlurbs(Array.from(snapshots.values()));
-
-    const result = await sendDigestToSubscriber({ subscriber, snapshots, blurbs, baseUrl });
+    const facts = await gatherBriefFacts(subscriber.tickers);
+    const result = await sendDigestToSubscriber({ subscriber, facts, baseUrl });
     if (result.sent) {
       await markSubscribersSent([subscriber.id]);
     }

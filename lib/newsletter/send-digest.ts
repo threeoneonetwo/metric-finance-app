@@ -1,8 +1,10 @@
 import { manageUrl } from "@/lib/manage-link";
 import { recordBriefing } from "@/db/briefings";
-import { buildDigestEmail } from "./generate-brief";
-import type { TickerSnapshot } from "./market-data";
+import type { BriefFacts } from "./brief-data";
+import type { Brief } from "./brief-schema";
+import { renderBriefEmail } from "./render-brief";
 import { sendEmail } from "./ses";
+import { writeBrief } from "./write-brief";
 
 type DigestSubscriber = {
   id: string;
@@ -11,36 +13,53 @@ type DigestSubscriber = {
   unsubscribeToken: string;
 };
 
+// Two subscribers with the same stocks get the same brief, so it is written once per run.
+export type BriefCache = Map<string, Promise<Brief | null>>;
+
 export async function sendDigestToSubscriber(input: {
   subscriber: DigestSubscriber;
-  snapshots: Map<string, TickerSnapshot>;
-  blurbs: Map<string, string>;
+  facts: BriefFacts;
   baseUrl: string;
+  cache?: BriefCache;
 }) {
-  const digest = buildDigestEmail({
-    tickers: input.subscriber.tickers,
-    snapshots: input.snapshots,
-    blurbs: input.blurbs,
-    manageUrl: manageUrl(input.baseUrl, input.subscriber.unsubscribeToken),
-    unsubscribeUrl: `${input.baseUrl}/api/unsubscribe?token=${input.subscriber.unsubscribeToken}`,
-  });
+  const tickers = input.subscriber.tickers.filter((ticker) => input.facts.tickers.has(ticker));
+  if (tickers.length === 0) return { sent: false, reason: "no-data" as const };
 
-  if (!digest.hasContent) {
-    return { sent: false, reason: "no-content" as const };
+  const key = tickers.join(",");
+  let pending = input.cache?.get(key);
+  if (!pending) {
+    pending = writeBrief(input.facts, tickers);
+    input.cache?.set(key, pending);
   }
+  const brief = await pending;
+  if (!brief) return { sent: false, reason: "no-brief" as const };
+
+  const unsubscribeUrl = `${input.baseUrl}/api/unsubscribe?token=${input.subscriber.unsubscribeToken}`;
+  const email = renderBriefEmail({
+    brief,
+    facts: input.facts,
+    tickers,
+    baseUrl: input.baseUrl,
+    manageUrl: manageUrl(input.baseUrl, input.subscriber.unsubscribeToken),
+    unsubscribeUrl,
+  });
 
   await sendEmail({
     to: input.subscriber.email,
-    subject: "Your Metric Finance briefing",
-    html: digest.html,
-    text: digest.text,
+    subject: email.subject,
+    html: email.html,
+    text: email.text,
+    headers: {
+      "List-Unsubscribe": `<${unsubscribeUrl}>`,
+      "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+    },
   });
 
   await recordBriefing({
     subscriberId: input.subscriber.id,
-    tickers: input.subscriber.tickers,
-    html: digest.html,
-    text: digest.text,
+    tickers,
+    html: email.html,
+    text: email.text,
   });
 
   return { sent: true as const };

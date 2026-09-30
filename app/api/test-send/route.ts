@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { findSubscriberByEmail } from "@/db/subscribers";
-import { generateTickerBlurbs, hasAnthropicConfig } from "@/lib/newsletter/generate-brief";
-import { getTickerSnapshots, hasFmpConfig } from "@/lib/newsletter/market-data";
+import { gatherBriefFacts } from "@/lib/newsletter/brief-data";
+import { hasFmpConfig } from "@/lib/newsletter/market-data";
 import { hasSesConfig } from "@/lib/newsletter/ses";
 import { sendDigestToSubscriber } from "@/lib/newsletter/send-digest";
+import { hasBriefWriterConfig } from "@/lib/newsletter/write-brief";
 
 export const maxDuration = 30;
 
@@ -23,7 +24,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!hasFmpConfig() || !hasAnthropicConfig() || !hasSesConfig()) {
+  if (!hasFmpConfig() || !hasBriefWriterConfig() || !hasSesConfig()) {
     return NextResponse.json({ error: "Newsletter send is not fully configured" }, { status: 503 });
   }
 
@@ -40,11 +41,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "That subscriber has no tickers in their watchlist" }, { status: 400 });
   }
 
-  const snapshots = await getTickerSnapshots(subscriber.tickers);
-  const blurbs = await generateTickerBlurbs(Array.from(snapshots.values()));
+  const facts = await gatherBriefFacts(subscriber.tickers);
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://metricfinance.app";
 
-  const result = await sendDigestToSubscriber({ subscriber, snapshots, blurbs, baseUrl });
+  const result = await sendDigestToSubscriber({ subscriber, facts, baseUrl });
 
   return NextResponse.json({
     ok: result.sent,
