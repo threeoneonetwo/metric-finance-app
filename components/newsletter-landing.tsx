@@ -11,7 +11,7 @@ import { StockPicker } from "./stock-picker";
 import { STOCKS, type Stock } from "@/lib/stocks";
 
 const FEATURES = [
-  ["01", "Price action", "What the stock did today—and the clearest explanation of why it moved."],
+  ["01", "Price action", "What the stock did today, and the clearest explanation of why it moved."],
   ["02", "Fundamentals", "Revenue, margins, cash, and debt translated out of accounting language."],
   ["03", "Peer comparison", "How each company is performing against the businesses it actually competes with."],
   ["04", "News", "The headlines that matter to your holdings, with the rest of the noise removed."],
@@ -98,6 +98,38 @@ function tiltReset(event: React.PointerEvent<HTMLElement>) {
   if (card && event.relatedTarget instanceof Node && card.contains(event.relatedTarget)) return;
   card?.style.removeProperty("--rx");
   card?.style.removeProperty("--ry");
+}
+
+// Small chart style thumbnails that hint at what each part of the brief shows.
+function FeatureGlyph({ kind }: { kind: number }) {
+  return (
+    <svg className={styles.inboxGlyph} viewBox="0 0 84 60" aria-hidden="true">
+      {kind === 0 && <polyline points="8,42 22,34 34,38 48,24 60,28 76,14" fill="none" stroke="#6fe0a8" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />}
+      {kind === 1 && (
+        <g fill="#7aa2ff">
+          <rect x="14" y="26" width="10" height="22" rx="2" />
+          <rect x="30" y="12" width="10" height="36" rx="2" />
+          <rect x="46" y="32" width="10" height="16" rx="2" opacity=".55" />
+          <rect x="62" y="20" width="10" height="28" rx="2" />
+        </g>
+      )}
+      {kind === 2 && (
+        <g>
+          <rect x="14" y="14" width="56" height="7" rx="3.5" fill="#b3c9ff" />
+          <rect x="14" y="27" width="40" height="7" rx="3.5" fill="#7aa2ff" />
+          <rect x="14" y="40" width="26" height="7" rx="3.5" fill="#7aa2ff" opacity=".55" />
+        </g>
+      )}
+      {kind === 3 && (
+        <g fill="#7aa2ff">
+          <rect x="14" y="14" width="44" height="6" rx="3" fill="#b3c9ff" />
+          <rect x="14" y="27" width="56" height="5" rx="2.5" opacity=".6" />
+          <rect x="14" y="37" width="50" height="5" rx="2.5" opacity=".4" />
+          <rect x="14" y="47" width="34" height="5" rx="2.5" opacity=".3" />
+        </g>
+      )}
+    </svg>
+  );
 }
 
 function SectionWave() {
@@ -222,16 +254,20 @@ export function NewsletterLanding() {
       <SectionWave />
       <section ref={featuresRef} className={`${styles.featuresSection} ${featuresInView ? styles.inView : ""}`}>
         <div className={styles.sectionInner}>
-          <div className={styles.sectionHeading}>
-            <h2>What lands in your inbox</h2>
+          <div className={styles.inboxHeading}>
+            <span className={styles.inboxEyebrow}><i /> Every trading day</span>
+            <h2>What lands<br />in your inbox</h2>
             <p>One daily email that walks through your stocks and explains what changed in plain English.</p>
           </div>
-          <div className={styles.features} onPointerMove={tiltMove} onPointerOut={tiltReset}>
+          <div className={styles.inboxList}>
             {FEATURES.map(([number, title, copy], index) => (
-              <article key={number} data-tilt style={{ transitionDelay: featuresInView ? `${120 + index * 90}ms` : "0ms" }}>
-                <span>{number}</span>
-                <h3>{title}</h3>
-                <p>{copy}</p>
+              <article className={styles.inboxRow} key={number} style={{ transitionDelay: featuresInView ? `${120 + index * 90}ms` : "0ms" }}>
+                <span className={styles.inboxNumber}>{number}</span>
+                <div className={styles.inboxText}>
+                  <h3>{title}</h3>
+                  <p>{copy}</p>
+                </div>
+                <FeatureGlyph kind={index} />
               </article>
             ))}
           </div>

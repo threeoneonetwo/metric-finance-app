@@ -206,20 +206,7 @@
   transform: translateY(0);
 }
 .sectionInner { max-width: 1080px; margin: 0 auto; }
-.sectionHeading { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-bottom: 48px; text-align: center; }
-.sectionHeading h2, .testimonialHeading h2 { margin: 0; font-size: clamp(24px, 7.2vw, 52px); font-weight: 800; line-height: 1.06; letter-spacing: -.04em; text-align: center; }
-.sectionHeading > p { max-width: 440px; margin: 0 auto; color: var(--muted); font-size: 15.5px; line-height: 1.65; }
-.features { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--border); background: var(--border); }
-.features article {
-  min-height: 250px; padding: 36px 28px 40px; background: #060910; text-align: center;
-  opacity: 0; transform: translateY(26px);
-  transition: opacity .6s cubic-bezier(0.16, 1, 0.3, 1), transform .6s cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms ease;
-}
-.featuresSection.inView .features article { opacity: 1; transform: translateY(0); }
-.features article:hover { transform: translateY(-5px); background: #0a0f1a; transition-duration: 200ms; }
-.features article > span { color: #404f72; font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: .18em; }
-.features h3 { margin: 26px 0 12px; font-size: 19px; font-weight: 800; letter-spacing: -.025em; text-align: center; }
-.features p { margin: 0; color: #727f9c; font-size: 14px; line-height: 1.65; }
+.testimonialHeading h2 { margin: 0; font-size: clamp(24px, 7.2vw, 52px); font-weight: 800; line-height: 1.06; letter-spacing: -.04em; text-align: center; }
 
 .testimonialsSection { padding: 96px 40px 104px; }
 .kicker { display: block; margin-bottom: 18px; color: #56668a; font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; text-align: center; }
@@ -293,7 +280,6 @@
 }
 
 @media (min-width: 761px) and (max-width: 1099px) {
-  .features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 760px) {
@@ -335,10 +321,6 @@
   .manageSection { padding: 48px 20px 72px; }
   .manageSub { margin-bottom: 30px; font-size: 14.5px; }
   .manageSave { width: 100%; }
-  .sectionHeading { align-items: center; margin-bottom: 34px; flex-direction: column; gap: 18px; }
-  .features { grid-template-columns: 1fr; }
-  .features article { min-height: 0; padding: 28px 24px 30px; }
-  .features h3 { margin-top: 18px; }
   .testimonialHeading { align-items: center; margin-bottom: 30px; }
   .testimonialHeading > div > span { display: none; }
   .testimonial { min-height: 300px; padding: 34px 26px 30px; }
@@ -367,7 +349,7 @@
     scroll-behavior: auto !important;
   }
   .featuresSection, .testimonialsSection, .faqSection, .finalCta,
-  .features article {
+  .inboxRow {
     transform: none !important;
   }
 }
@@ -409,34 +391,11 @@
 .successPicks span { border-radius: 8px; }
 .stats { gap: 12px; border: 0; background: none; }
 .stats > div { border: 1px solid var(--border); border-radius: 16px; }
-.features { gap: 14px; border: 0; background: none; }
-.features article { border: 1px solid var(--border); border-radius: 18px; }
-.testimonial { border-radius: 22px; }
-.testimonialHeading button { border-radius: 12px; }
-.finalCta a { border-radius: 14px; }
-.legalNotice { border-radius: 14px; }
-.signup .sampleLink, .manageInner .manageBack { border-radius: 14px; }
-.todaysBriefCard, .briefingLatestCard { border-radius: 16px; }
-.briefingSearch { border-radius: 12px; }
-.briefingList { overflow: hidden; border-radius: 16px; }
-.briefingTickers span { border-radius: 6px; }
-
-/* ── Depth: drifting glow and card tilt ── */
-.hero::before {
-  content: ""; position: absolute; inset: -15% -10% auto; height: 110%; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(38% 42% at 26% 32%, rgba(122, 162, 255, .17), transparent 70%),
-    radial-gradient(34% 38% at 74% 44%, rgba(111, 224, 221, .10), transparent 70%);
-  filter: blur(28px);
-  animation: glowDrift 18s ease-in-out infinite alternate;
-  will-change: transform;
-}
 @keyframes glowDrift {
   from { transform: translate3d(-5%, -3%, 0) scale(1); }
   to { transform: translate3d(5%, 4%, 0) scale(1.1); }
 }
 @media (hover: hover) {
-  .featuresSection.inView .features article[data-tilt]:hover,
   .stats > div[data-tilt]:hover {
     transform: perspective(900px) translateY(-5px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
     border-color: rgba(143, 168, 250, .35);
@@ -447,21 +406,20 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .hero::before { animation: none; }
-  .featuresSection.inView .features article[data-tilt]:hover, .stats > div[data-tilt]:hover { transform: none; }
+  .stats > div[data-tilt]:hover { transform: none; }
 }
 
 /* ── One line text on phones: sizes scale with the screen instead of wrapping ── */
 @media (max-width: 760px) {
-  .hero h1, .sectionHeading h2, .testimonialHeading h2, .faqInner h2, .finalCta h2, .manageHeading, .features h3,
+  .hero h1, .testimonialHeading h2, .faqInner h2, .finalCta h2, .manageHeading,
   .kicker, .stats strong, .stats span, .stepRow, .success h2, .successTitle, .emailRow button, .sampleLink, .manageBack, .finalCta a {
     white-space: nowrap;
   }
   .hero h1 { font-size: min(64px, calc((100vw - 40px) / 8.9)); letter-spacing: -.045em; }
-  .sectionHeading h2, .testimonialHeading h2 { font-size: min(40px, calc((100vw - 40px) / 12.6)); }
+  .testimonialHeading h2 { font-size: min(40px, calc((100vw - 40px) / 12.6)); }
   .faqInner h2, .finalCta h2 { font-size: min(36px, calc((100vw - 40px) / 13.6)); }
   .manageHeading { font-size: min(36px, calc((100vw - 40px) / 18.5)); }
   .legal h2 { white-space: nowrap; font-size: min(22px, calc((100vw - 40px) / 19)); }
-  .features h3 { font-size: min(19px, calc((100vw - 88px) / 11)); }
   .stats strong { font-size: min(12.5px, calc((100vw - 88px) / 24)); }
   .stats span { font-size: min(7px, calc((100vw - 88px) / 38)); letter-spacing: .04em; }
   .emailRow button, .sampleLink, .finalCta a { font-size: min(12.5px, calc((100vw - 40px) / 22)); letter-spacing: .1em; padding-left: 12px; padding-right: 12px; }
@@ -471,28 +429,10 @@
 
 /* ── Compact boxes ── */
 .featuresSection, .testimonialsSection, .faqSection { padding-top: 64px; padding-bottom: 68px; }
-.sectionHeading { margin-bottom: 32px; }
 .testimonialHeading { margin-bottom: 26px; gap: 14px; }
-.features { gap: 12px; }
-.features article { min-height: 0; padding: 22px 20px 24px; }
-.features h3 { margin: 12px 0 8px; }
-.features p { font-size: 13.5px; line-height: 1.55; }
-.testimonial { min-height: 0; max-width: 640px; padding: 26px 30px 22px; }
-.testimonial > p { margin-bottom: 20px; font-size: 18px; line-height: 1.5; }
-.stats > div { padding-top: 14px; padding-bottom: 14px; }
-.finalCta { padding-top: 72px; padding-bottom: 76px; }
-@media (min-width: 1100px) {
-  .featuresSection, .testimonialsSection, .faqSection { padding-top: 72px; padding-bottom: 76px; }
-  .finalCta { padding-top: 84px; padding-bottom: 88px; }
-}
 @media (max-width: 760px) {
   .featuresSection, .testimonialsSection, .faqSection { padding: 44px 20px 48px; }
-  .sectionHeading { margin-bottom: 22px; gap: 10px; }
   .testimonialHeading { margin-bottom: 18px; }
-  .features { gap: 10px; }
-  .features article { padding: 16px 18px 18px; }
-  .features h3 { margin: 8px 0 6px; }
-  .features p { font-size: 13px; }
   .testimonial { min-height: 0; padding: 20px 20px 18px; }
   .testimonial > p { margin-bottom: 14px; font-size: 15.5px; }
   .stats > div { min-height: 64px; padding: 10px 6px; }
@@ -504,4 +444,42 @@
 @media (max-width: 760px) {
   .mobileBreak { display: inline; }
   .hero h1 { font-size: min(84px, calc((100vw - 40px) / 5.3)); line-height: .96; letter-spacing: -.05em; }
+}
+
+/* ── What lands in your inbox: editorial list ── */
+.inboxHeading { display: flex; flex-direction: column; align-items: center; margin: 0 auto 36px; text-align: center; }
+.inboxEyebrow { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px; color: #8fa8fa; font-family: ui-monospace, Menlo, monospace; font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+.inboxEyebrow i { display: block; width: 8px; height: 8px; border-radius: 2px; background: #7aa2ff; }
+.inboxHeading h2 { margin: 0 0 20px; color: #fff; font-size: clamp(44px, 4.6vw, 64px); font-weight: 800; line-height: 1.02; letter-spacing: -.045em; white-space: nowrap; }
+.inboxHeading p { max-width: 470px; margin: 0; color: var(--muted); font-size: 18px; line-height: 1.6; }
+.inboxList { max-width: 600px; margin: 0 auto; border-bottom: 1px solid var(--border); }
+.inboxRow {
+  display: grid; grid-template-columns: 34px minmax(0, 1fr) 96px; align-items: center; column-gap: 20px;
+  padding: 28px 0; border-top: 1px solid var(--border);
+  opacity: 0; transform: translateY(22px);
+  transition: opacity .6s cubic-bezier(0.16, 1, 0.3, 1), transform .6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.featuresSection.inView .inboxRow { opacity: 1; transform: translateY(0); }
+.inboxNumber { align-self: start; padding-top: 6px; color: #7aa2ff; font-family: ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 700; }
+.inboxText h3 { margin: 0 0 8px; color: #fff; font-size: 26px; font-weight: 800; letter-spacing: -.03em; line-height: 1.15; }
+.inboxText p { margin: 0; color: #8a94ab; font-size: 16px; line-height: 1.55; }
+.inboxGlyph { width: 96px; height: 69px; border: 1px solid #1a2540; border-radius: 10px; background: #0a101d; transition: border-color 200ms ease, transform 300ms cubic-bezier(0.16, 1, 0.3, 1); }
+.inboxRow:hover .inboxGlyph { border-color: #2b3a66; transform: scale(1.06); }
+
+@media (max-width: 760px) {
+  .inboxHeading { margin-bottom: 26px; }
+  .inboxEyebrow { margin-bottom: 16px; font-size: min(10.5px, calc((100vw - 40px) / 28)); letter-spacing: .16em; }
+  .inboxHeading h2 { margin-bottom: 14px; font-size: min(56px, calc((100vw - 40px) / 6.6)); }
+  .inboxHeading p { font-size: 16px; }
+  .inboxRow { grid-template-columns: 26px minmax(0, 1fr) 76px; column-gap: 14px; padding: 20px 0; }
+  .inboxNumber { font-size: 12px; }
+  .inboxText h3 { margin-bottom: 6px; font-size: min(21px, calc((100vw - 40px) / 15)); white-space: nowrap; }
+  .inboxText p { font-size: 14px; line-height: 1.5; }
+  .inboxGlyph { width: 76px; height: 54px; border-radius: 9px; }
+}
+@media (prefers-reduced-motion: reduce) { .inboxRow { opacity: 1; transform: none; transition: none; } }
+/* Tablets show the site in a phone width column, so keep titles on one line there too */
+@media (min-width: 761px) and (max-width: 1023px) {
+  .inboxText h3 { font-size: 20px; white-space: nowrap; }
+  .inboxHeading h2 { font-size: 50px; }
 }
