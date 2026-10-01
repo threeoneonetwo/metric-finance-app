@@ -16,18 +16,49 @@ function getClient() {
   return client;
 }
 
-export async function sendVerificationEmail(input: { to: string; verifyUrl: string }) {
+const STEP_NUMBER = "display:inline-block;width:26px;height:26px;border-radius:13px;background:#8fa8fa;color:#0b1220;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:bold;text-align:center;";
+const STEP_TITLE = "font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:26px;font-weight:bold;color:#f2f5fa;";
+const STEP_BODY = "margin:4px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#9aa6c0;";
+
+// One email does both jobs: asks the reader to save our address, then to confirm they are a real person.
+export function buildVerificationEmail(input: { verifyUrl: string }) {
+  const from = process.env.SES_FROM_EMAIL ?? "briefing@metricfinance.app";
+  const steps = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:6px 0 18px;">
+<tr><td width="40" valign="top" style="padding:0 0 18px;"><span style="${STEP_NUMBER}">1</span></td><td valign="top" style="padding:0 0 18px;">
+<div style="${STEP_TITLE}">Add us to your contacts</div>
+<p style="${STEP_BODY}">Save <strong style="color:#f2f5fa;">${from}</strong> so your briefs reach your main inbox, not spam.</p>
+<p style="${STEP_BODY}">Gmail: drag this email to the Primary tab.<br>Outlook: right click our name, then Add to Safe Senders.<br>Apple Mail: tap our name, then Add to VIPs.</p>
+</td></tr>
+<tr><td width="40" valign="top" style="padding:0;"><span style="${STEP_NUMBER}">2</span></td><td valign="top" style="padding:0;">
+<div style="${STEP_TITLE}">Confirm your email</div>
+<p style="${STEP_BODY}">One tap tells us you're a real person. You'll land on your dashboard with your first brief on its way.</p>
+</td></tr></table>`;
   const html = brandedEmail({
-    preheader: "One click and your daily brief starts.",
-    heading: "Confirm your email",
-    paragraphs: ["Tap the button to confirm your email. Your first brief is posted soon after, then one every trading day at 5 PM ET. We email you a link each time."],
+    preheader: "Add us to your contacts, then confirm. It takes 20 seconds.",
+    heading: "Two quick steps and you're in",
+    paragraphs: ["Do these two things to start getting your daily brief."],
+    extraHtml: steps,
     buttonLabel: "Confirm my email",
     buttonUrl: input.verifyUrl,
     footnote: "If you didn't sign up for Metric Finance, ignore this email and nothing happens.",
   });
-  const text = `Confirm your Metric Finance briefing\n\nClick to confirm your email: ${input.verifyUrl}\n\nIf you didn't request this, you can ignore this email.`;
+  const text = [
+    "Two quick steps and you're in",
+    "",
+    `1. Add us to your contacts. Save ${from} so your briefs reach your main inbox, not spam.`,
+    "   Gmail: drag this email to the Primary tab. Outlook: right click our name, then Add to Safe Senders. Apple Mail: tap our name, then Add to VIPs.",
+    "",
+    `2. Confirm your email. One tap tells us you're a real person: ${input.verifyUrl}`,
+    "",
+    "If you didn't sign up for Metric Finance, ignore this email and nothing happens.",
+  ].join("\n");
 
-  await sendEmail({ to: input.to, subject: "Confirm your Metric Finance briefing", html, text });
+  return { subject: "Confirm your email to start your Metric Finance briefs", html, text };
+}
+
+export async function sendVerificationEmail(input: { to: string; verifyUrl: string }) {
+  const email = buildVerificationEmail({ verifyUrl: input.verifyUrl });
+  await sendEmail({ to: input.to, ...email });
 }
 
 export async function sendEmail(input: { to: string; subject: string; html: string; text: string; headers?: Record<string, string> }) {

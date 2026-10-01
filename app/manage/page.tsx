@@ -16,11 +16,11 @@ export const metadata: Metadata = {
 };
 
 type ManagePageProps = {
-  searchParams: Promise<{ token?: string; exp?: string; sig?: string }>;
+  searchParams: Promise<{ token?: string; exp?: string; sig?: string; welcome?: string }>;
 };
 
 export default async function ManagePage({ searchParams }: ManagePageProps) {
-  const { token, exp, sig } = await searchParams;
+  const { token, exp, sig, welcome } = await searchParams;
   const subscriber = token && isValidManageLink(token, exp, sig) ? await findSubscriberByToken(token) : null;
 
   if (!subscriber) {
@@ -57,6 +57,7 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
         exp={exp!}
         sig={sig!}
         email={subscriber.email}
+        justConfirmed={welcome === "1"}
         initialPicks={stocksFromSymbols(subscriber.tickers)}
         briefings={briefings.map((briefing) => ({
           id: briefing.id,

@@ -24,6 +24,7 @@ Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle O
 - Database changes: `drizzle-kit generate` is broken (stale snapshots). Write SQL migrations by hand in `db/migrations/` and run them against Neon manually (they are NOT applied automatically on deploy).
 - "Manage watchlist" links are HMAC-signed and expire after 30 days (`lib/manage-link.ts`, needs `MANAGE_LINK_SECRET`). Never put the raw `unsubscribeToken` in a URL without a signature, and never return it from `/api/subscribe`.
 - `/api/subscribe` must return the same response for new and existing emails (no account enumeration).
+- Signup sends ONE email (`sendVerificationEmail` in `lib/newsletter/ses.ts`): add us to your contacts, then confirm. Confirming lands on `/manage?welcome=1`. There is no separate welcome email.
 - Email confirmation uses a POST from a button page (`/api/verify`) so email security scanners can't trigger it. Keep it that way.
 - The daily send runs from a Vercel cron (`vercel.json`, two weekday entries at 21:00 and 22:00 UTC; the route only runs when it is 5 PM in New York, so daylight saving is handled) and calls `/api/cron/send-daily`, which requires `CRON_SECRET`.
 - Preview deployments share the production database. Don't test signup flows with real addresses on previews.

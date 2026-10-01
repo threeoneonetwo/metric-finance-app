@@ -11,6 +11,8 @@ export function brandedEmail(input: {
   buttonUrl: string;
   footnote: string;
   footerLinks?: { manageUrl: string; unsubscribeUrl: string };
+  // Already escaped html placed between the paragraphs and the button.
+  extraHtml?: string;
 }) {
   const paragraphs = input.paragraphs
     .map(
@@ -30,6 +32,7 @@ export function brandedEmail(input: {
     <tr><td style="background:#0c1120;border:1px solid #1a2540;border-radius:16px;padding:36px 32px;">
       <h1 style="margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:26px;line-height:32px;font-weight:bold;letter-spacing:-0.6px;color:#ffffff;">${escapeHtml(input.heading)}</h1>
       ${paragraphs}
+      ${input.extraHtml ?? ""}
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 26px;"><tr>
         <td bgcolor="#8fa8fa" style="background:#8fa8fa;border-radius:12px;"><a href="${input.buttonUrl}" style="display:inline-block;border-radius:12px;padding:15px 28px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:20px;font-weight:bold;color:#0b1220;text-decoration:none;">${escapeHtml(input.buttonLabel)}</a></td>
       </tr></table>

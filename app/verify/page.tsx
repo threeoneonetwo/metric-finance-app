@@ -37,7 +37,7 @@ export default async function VerifyPage({ searchParams }: VerifyPageProps) {
         </form>
       }
     >
-      Confirm your email to start getting your daily Metric Finance brief. Your first one follows soon after.
+      Tap below to show you&apos;re a real person and confirm your email. You&apos;ll land on your dashboard, with your first brief on its way.
     </StatusPage>
   );
 }

@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import { manageLinkParams, manageUrl } from "@/lib/manage-link";
+import { manageLinkParams } from "@/lib/manage-link";
 import { markSubscribersSent, verifySubscriberByToken } from "@/db/subscribers";
 import { gatherBriefFacts } from "@/lib/newsletter/brief-data";
 import { hasFmpConfig } from "@/lib/newsletter/market-data";
 import { hasSesConfig } from "@/lib/newsletter/ses";
 import { sendDigestToSubscriber } from "@/lib/newsletter/send-digest";
 import { hasBriefWriterConfig } from "@/lib/newsletter/write-brief";
-import { sendWelcomeEmail } from "@/lib/newsletter/send-welcome-email";
 
 export const maxDuration = 30;
 
@@ -34,7 +33,7 @@ export async function POST(request: Request) {
   await sendFirstBriefing(subscriber);
 
   return NextResponse.redirect(
-    new URL(`/welcome?email=${encodeURIComponent(subscriber.email)}&${manageLinkParams(subscriber.unsubscribeToken)}`, request.url),
+    new URL(`/manage?${manageLinkParams(subscriber.unsubscribeToken)}&welcome=1`, request.url),
     303,
   );
 }
@@ -47,18 +46,6 @@ async function sendFirstBriefing(subscriber: { id: string; email: string; ticker
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://metricfinance.app";
-
-  // Always send welcome email
-  try {
-    await sendWelcomeEmail({
-      to: subscriber.email,
-      tickers: subscriber.tickers,
-      briefUrl: `${baseUrl}/brief`,
-      manageUrl: manageUrl(baseUrl, subscriber.unsubscribeToken),
-    });
-  } catch (error) {
-    console.error("verify: failed to send welcome email", error);
-  }
 
   // Send first briefing if fully configured
   if (!hasFmpConfig() || !hasBriefWriterConfig()) {

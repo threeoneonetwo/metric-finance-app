@@ -557,3 +557,9 @@
 }
 @media (min-width: 761px) and (max-width: 1023px) { .ctaPanel h2 { font-size: 40px; } }
 @media (prefers-reduced-motion: reduce) { .ctaGlow, .ctaPrimary::after { animation: none; } }
+
+/* Shown on the dashboard right after someone confirms their email */
+.welcomeBanner { display: flex; align-items: flex-start; gap: 14px; margin: 0 0 28px; padding: 18px 20px; border: 1px solid rgba(111, 224, 168, .3); border-radius: 16px; background: rgba(111, 224, 168, .07); }
+.welcomeCheck { display: grid; flex: none; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #6fe0a8; color: #05070d; }
+.welcomeBanner strong { display: block; color: #fff; font-size: 16px; line-height: 1.35; }
+.welcomeBanner p { margin: 4px 0 0; color: #9fb0c8; font-size: 14px; line-height: 1.55; }

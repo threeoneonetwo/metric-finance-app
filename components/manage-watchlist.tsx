@@ -16,9 +16,10 @@ type ManageWatchlistProps = {
   email: string;
   initialPicks: Stock[];
   briefings: BriefingSummary[];
+  justConfirmed?: boolean;
 };
 
-export function ManageWatchlist({ token, exp, sig, email, initialPicks, briefings }: ManageWatchlistProps) {
+export function ManageWatchlist({ token, exp, sig, email, initialPicks, briefings, justConfirmed }: ManageWatchlistProps) {
   const [picks, setPicks] = useState<Stock[]>(initialPicks);
   // Baseline of what's actually stored, so "Saved" survives until the next edit.
   const [savedPicks, setSavedPicks] = useState<Stock[]>(initialPicks);
@@ -65,6 +66,15 @@ export function ManageWatchlist({ token, exp, sig, email, initialPicks, briefing
 
       <section className={styles.manageSection}>
         <div className={styles.manageInner}>
+          {justConfirmed && (
+            <div className={styles.welcomeBanner} role="status">
+              <span className={styles.welcomeCheck}><Check size={16} /></span>
+              <div>
+                <strong>You&apos;re confirmed. Welcome to Metric Finance.</strong>
+                <p>Your brief is posted here every trading day at 5&nbsp;PM&nbsp;ET, and we email you a link when it&apos;s up.</p>
+              </div>
+            </div>
+          )}
           <h1 className={styles.manageHeading}>Your account</h1>
           <p className={styles.manageSub}>
             We email <strong>{email}</strong> when your brief is posted.
