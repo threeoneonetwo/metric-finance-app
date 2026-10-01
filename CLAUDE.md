@@ -27,6 +27,7 @@ Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle O
 - Signup sends ONE email (`sendVerificationEmail` in `lib/newsletter/ses.ts`): add us to your contacts, then confirm. Confirming lands on `/manage?welcome=1`. There is no separate welcome email.
 - Email confirmation uses a POST from a button page (`/api/verify`) so email security scanners can't trigger it. Keep it that way.
 - The daily send runs from a Vercel cron (`vercel.json`, two weekday entries at 21:00 and 22:00 UTC; the route only runs when it is 5 PM in New York, so daylight saving is handled) and calls `/api/cron/send-daily`, which requires `CRON_SECRET`.
+- Returning members: opening a valid emailed link sets a signed `mf_session` cookie (90 days, `lib/session.ts`). `proxy.ts` redirects `/` to `/manage` when that cookie is valid; `/manage` and `/brief/[id]` accept either the signed link or the cookie. Sign out is `/api/session/clear`. First access always needs the emailed link, so the add-to-contacts onboarding email still matters.
 - Preview deployments share the production database. Don't test signup flows with real addresses on previews.
 - Sender address is `briefing@metricfinance.app` (from `SES_FROM_EMAIL`); never hard-code a different one in copy.
 

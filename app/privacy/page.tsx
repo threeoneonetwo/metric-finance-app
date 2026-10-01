@@ -49,8 +49,10 @@ export default function PrivacyPage() {
 
       <h3>Browser storage</h3>
       <p>
-        We don&apos;t store account tokens in your browser. Links to manage your watchlist are sent by email and expire
-        after 30 days. Our analytics providers may also set cookies or similar identifiers.
+        Links to your dashboard and briefs are sent by email and expire after 30 days. When you open one, we set a secure
+        cookie on that device that keeps you signed in for up to 90 days, so visiting metricfinance.app takes you straight
+        to your dashboard. You can sign out from your dashboard at any time, which removes the cookie. Our analytics
+        providers may also set cookies or similar identifiers.
       </p>
 
       <h2>2. How we use it</h2>

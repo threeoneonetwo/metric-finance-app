@@ -120,6 +120,9 @@ export function ManageWatchlist({ token, exp, sig, email, initialPicks, briefing
           <a className={styles.manageUnsubscribe} href={`/api/unsubscribe?token=${token}`}>
             Unsubscribe from the briefing
           </a>
+          <a className={styles.manageUnsubscribe} href="/api/session/clear" style={{ marginLeft: 20 }}>
+            Sign out of this device
+          </a>
         </div>
       </section>
       <SiteFooter />

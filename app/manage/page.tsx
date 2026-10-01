@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { listBriefingsForSubscriber } from "@/db/briefings";
-import { findSubscriberByToken } from "@/db/subscribers";
-import { isValidManageLink } from "@/lib/manage-link";
+import { resolveSubscriber } from "@/lib/session-server";
 import { ManageWatchlist } from "@/components/manage-watchlist";
 import { RequestManageLink } from "@/components/request-manage-link";
 import { SiteFooter } from "@/components/site-footer";
@@ -21,7 +21,8 @@ type ManagePageProps = {
 
 export default async function ManagePage({ searchParams }: ManagePageProps) {
   const { token, exp, sig, welcome } = await searchParams;
-  const subscriber = token && isValidManageLink(token, exp, sig) ? await findSubscriberByToken(token) : null;
+  const { subscriber, creds, staleSession } = await resolveSubscriber({ token, exp, sig });
+  if (staleSession) redirect("/api/session/clear?to=/manage");
 
   if (!subscriber) {
     return (
@@ -54,8 +55,8 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
     <main>
       <ManageWatchlist
         token={subscriber.unsubscribeToken}
-        exp={exp!}
-        sig={sig!}
+        exp={creds!.exp}
+        sig={creds!.sig}
         email={subscriber.email}
         justConfirmed={welcome === "1"}
         initialPicks={stocksFromSymbols(subscriber.tickers)}

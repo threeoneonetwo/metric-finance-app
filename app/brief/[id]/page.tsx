@@ -8,8 +8,7 @@ import { SiteHeader } from "@/components/site-header";
 import landing from "@/components/newsletter-landing.module.css";
 import styles from "@/components/brief-view.module.css";
 import { getBriefingForSubscriber } from "@/db/briefings";
-import { findSubscriberByToken } from "@/db/subscribers";
-import { isValidManageLink } from "@/lib/manage-link";
+import { resolveSubscriber } from "@/lib/session-server";
 
 export const metadata: Metadata = {
   title: "Your brief | Metric Finance",
@@ -28,7 +27,7 @@ export default async function BriefViewPage({ params, searchParams }: BriefViewP
   const { token, exp, sig } = await searchParams;
   if (!UUID.test(id)) notFound();
 
-  const subscriber = token && isValidManageLink(token, exp, sig) ? await findSubscriberByToken(token) : null;
+  const { subscriber, creds } = await resolveSubscriber({ token, exp, sig });
   const briefing = subscriber ? await getBriefingForSubscriber(id, subscriber.id) : null;
 
   if (!subscriber || !briefing) {
@@ -58,7 +57,7 @@ export default async function BriefViewPage({ params, searchParams }: BriefViewP
     month: "short",
     day: "numeric",
   }).format(briefing.sentAt);
-  const dashboard = `/manage?token=${token}&exp=${exp}&sig=${sig}`;
+  const dashboard = `/manage?${new URLSearchParams(creds!)}`;
 
   return (
     <main>
