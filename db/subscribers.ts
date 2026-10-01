@@ -32,6 +32,7 @@ export async function upsertSubscriber(input: SubscriberInput) {
     return updated ?? null;
   }
 
+  // Two submissions of the same new email at the same moment must still end up as one row.
   const [created] = await db
     .insert(subscribers)
     .values({
@@ -41,9 +42,13 @@ export async function upsertSubscriber(input: SubscriberInput) {
       verificationToken,
       unsubscribeToken: randomBytes(24).toString("hex"),
     })
+    .onConflictDoNothing({ target: subscribers.email })
     .returning();
 
-  return created ?? null;
+  if (created) return created;
+
+  const [winner] = await db.select().from(subscribers).where(eq(subscribers.email, email)).limit(1);
+  return winner ?? null;
 }
 
 export async function verifySubscriberByToken(token: string) {
