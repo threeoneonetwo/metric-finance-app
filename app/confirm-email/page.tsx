@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { ArrowLeft, Check } from 'lucide-react';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
+import { SENDER_EMAIL } from '@/lib/sender';
 import styles from './confirm-email.module.css';
 
-const FROM_ADDRESS = 'briefing@metricfinance.app';
+const FROM_ADDRESS = SENDER_EMAIL;
 
 const STEPS = [
   { key: 'inbox', title: 'Open your inbox', body: 'Go to the inbox for the email address below. That is where we sent your setup email.', next: 'Next →' },
@@ -29,7 +30,7 @@ export default function ConfirmEmailPage() {
   const [active, setActive] = useState(0);
   const [tab, setTab] = useState(0);
   const [cooldown, setCooldown] = useState(0);
-  const [resend, setResend] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [resend, setResend] = useState<'idle' | 'sending' | 'sent' | 'error' | 'exists'>('idle');
 
   useEffect(() => {
     try {
@@ -57,7 +58,7 @@ export default function ConfirmEmailPage() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(pending),
       });
-      setResend(response.ok ? 'sent' : 'error');
+      setResend(response.ok ? 'sent' : response.status === 409 ? 'exists' : 'error');
       if (response.ok) setCooldown(COOLDOWN_SECONDS);
     } catch {
       setResend('error');
@@ -67,6 +68,7 @@ export default function ConfirmEmailPage() {
   const resendLabel =
     resend === 'sending' ? 'Sending…'
     : cooldown > 0 ? `Sent. Resend in ${cooldown}s`
+    : resend === 'exists' ? 'You\'re already confirmed. We sent your dashboard link'
     : resend === 'error' ? 'Try again in a few minutes'
     : 'Resend the link';
 
@@ -191,7 +193,7 @@ export default function ConfirmEmailPage() {
               <span className={styles.noEmail}>
                 No email yet?{' '}
                 {pending ? (
-                  <button type="button" className={styles.resend} onClick={resendLink} disabled={cooldown > 0 || resend === 'sending'}>
+                  <button type="button" className={styles.resend} onClick={resendLink} disabled={cooldown > 0 || resend === 'sending' || resend === 'exists'}>
                     {resendLabel}
                   </button>
                 ) : (

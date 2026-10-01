@@ -23,13 +23,13 @@ Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle O
 ## Things that are easy to get wrong
 - Database changes: `drizzle-kit generate` is broken (stale snapshots). Write SQL migrations by hand in `db/migrations/` and run them against Neon manually (they are NOT applied automatically on deploy).
 - "Manage watchlist" links are HMAC-signed and expire after 30 days (`lib/manage-link.ts`, needs `MANAGE_LINK_SECRET`). Never put the raw `unsubscribeToken` in a URL without a signature, and never return it from `/api/subscribe`.
-- `/api/subscribe` must return the same response for new and existing emails (no account enumeration).
+- One signup per email. `/api/subscribe` answers 409 `already_subscribed` for a confirmed address (the owner chose this over hiding it, so it does reveal that an address is subscribed; keep the per email and per IP rate limits) and also emails that person their dashboard link. Unconfirmed addresses just get a fresh confirmation email.
 - Signup sends ONE email (`sendVerificationEmail` in `lib/newsletter/ses.ts`): add us to your contacts, then confirm. Confirming lands on `/manage?welcome=1`. There is no separate welcome email.
 - Email confirmation uses a POST from a button page (`/api/verify`) so email security scanners can't trigger it. Keep it that way.
 - The daily send runs from a Vercel cron (`vercel.json`, two weekday entries at 21:00 and 22:00 UTC; the route only runs when it is 5 PM in New York, so daylight saving is handled) and calls `/api/cron/send-daily`, which requires `CRON_SECRET`.
 - Returning members: opening a valid emailed link sets a signed `mf_session` cookie (90 days, `lib/session.ts`). `proxy.ts` redirects `/` to `/manage` when that cookie is valid; `/manage` and `/brief/[id]` accept either the signed link or the cookie. Sign out is `/api/session/clear`. First access always needs the emailed link, so the add-to-contacts onboarding email still matters.
 - Preview deployments share the production database. Don't test signup flows with real addresses on previews.
-- Sender address is `briefing@metricfinance.app` (from `SES_FROM_EMAIL`); never hard-code a different one in copy.
+- All email is sent as "Vansh Pandita <vp@metricfinance.app>" (`lib/sender.ts`, one constant, no env var). Use `SENDER_EMAIL` in copy instead of typing the address. The old `SES_FROM_EMAIL` env var is no longer read. Mail sent to vp@ has nowhere to land until inbound routing exists; replies use Reply-To.
 
 ## SEO
 Homepage title and description target "stocks explained like you're 5" (see `app/page.tsx`). Canonical host is `metricfinance.app` (www redirects to it). Sitemap: `app/sitemap.ts`. AI-crawler summary: `public/llms.txt`. Search Console and Bing Webmaster Tools are used for indexing.

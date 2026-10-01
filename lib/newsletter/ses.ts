@@ -1,9 +1,10 @@
 import { brandedEmail } from "./email-template";
 import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2";
+import { SENDER_EMAIL, SENDER_NAME } from "@/lib/sender";
 
 export function hasSesConfig() {
   return Boolean(
-    process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && process.env.SES_FROM_EMAIL,
+    process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY,
   );
 }
 
@@ -21,7 +22,7 @@ const STEP_TITLE = "font-family:Arial,Helvetica,sans-serif;font-size:17px;line-h
 const STEP_BODY = "margin:4px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#9aa6c0;";
 
 function fromAddress() {
-  return process.env.SES_FROM_EMAIL ?? "briefing@metricfinance.app";
+  return SENDER_EMAIL;
 }
 
 // Step 1 is the same in every onboarding email: save our address so briefs reach the main inbox.
@@ -102,14 +103,10 @@ export async function sendVerificationEmail(input: { to: string; verifyUrl: stri
 }
 
 export async function sendEmail(input: { to: string; subject: string; html: string; text: string; headers?: Record<string, string> }) {
-  const fromEmail = process.env.SES_FROM_EMAIL;
-  if (!fromEmail) {
-    throw new Error("SES_FROM_EMAIL is not configured");
-  }
 
   await getClient().send(
     new SendEmailCommand({
-      FromEmailAddress: fromEmail,
+      FromEmailAddress: `${SENDER_NAME} <${SENDER_EMAIL}>`,
       ReplyToAddresses: [process.env.REPLY_TO_EMAIL ?? "vanshpandita11@gmail.com"],
       Destination: { ToAddresses: [input.to] },
       Content: {

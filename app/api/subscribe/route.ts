@@ -55,6 +55,7 @@ export async function POST(request: Request) {
           verifyUrl: `${baseUrl}/api/verify?token=${subscriber.verificationToken}`,
         });
       } else if (subscriber.active) {
+        // They already have an account: send their dashboard link, then tell the visitor below.
         await sendReturningEmail({ to: subscriber.email, dashboardUrl: manageUrl(baseUrl, subscriber.unsubscribeToken) });
       }
     } catch (error) {
@@ -62,7 +63,14 @@ export async function POST(request: Request) {
     }
   }
 
-  // Identical response for new and existing emails: no token leak, no account enumeration.
+  // One signup per email: say so plainly. (This deliberately reveals that the address is subscribed.)
+  if (subscriber.active) {
+    return NextResponse.json(
+      { error: "You've already signed up with this email.", code: "already_subscribed" },
+      { status: 409 },
+    );
+  }
+
   return NextResponse.json({ ok: true, needsVerification: true });
 }
 

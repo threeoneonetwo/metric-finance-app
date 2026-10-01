@@ -153,6 +153,11 @@ export function NewsletterLanding() {
         body: JSON.stringify({ email: email.trim(), tickers: picks.map((stock) => stock.symbol) }),
       });
 
+      if (response.status === 409) {
+        setError("You've already signed up with this email. We just sent a link to your dashboard to that address.");
+        return;
+      }
+
       if (!response.ok) {
         setError("Something went wrong. Please try again in a moment.");
         return;
