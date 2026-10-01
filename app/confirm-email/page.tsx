@@ -1,17 +1,35 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Mail } from 'lucide-react';
+import { ArrowLeft, Check } from 'lucide-react';
 import { SiteHeader } from '@/components/site-header';
 import { SiteFooter } from '@/components/site-footer';
 import styles from './confirm-email.module.css';
 
+const FROM_ADDRESS = 'briefing@metricfinance.app';
+
+const STEPS = [
+  { key: 'inbox', title: 'Open your inbox', body: 'Go to the inbox for the email address below. That is where we sent your setup email.', next: 'Next →' },
+  { key: 'find', title: 'Find our email', body: `Look for a new message from Metric Finance sent by ${FROM_ADDRESS}. It should be at the top of your inbox.`, next: 'Found it →' },
+  { key: 'contacts', title: 'Add us to your contacts', body: `Save ${FROM_ADDRESS} as a contact so your daily briefs always land in your main inbox instead of your spam folder.`, next: 'Done →' },
+  { key: 'confirm', title: 'Confirm your email', body: 'Press the confirm button in the email to activate your subscription. You will then land on your dashboard, and your first brief will be on its way.', next: '' },
+] as const;
+
+const TIPS = [
+  { label: 'Gmail', tip: 'Drag the email to the Primary tab.' },
+  { label: 'Outlook', tip: 'Right click our name, then Add to Safe Senders.' },
+  { label: 'Apple Mail', tip: 'Tap our name, then Add to VIPs.' },
+] as const;
+
+const COOLDOWN_SECONDS = 30;
+
 export default function ConfirmEmailPage() {
   const [pending, setPending] = useState<{ email: string; tickers: string[] } | null>(null);
+  const [active, setActive] = useState(0);
+  const [tab, setTab] = useState(0);
+  const [cooldown, setCooldown] = useState(0);
   const [resend, setResend] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
-  const leftSectionRef = useRef<HTMLDivElement>(null);
-  const rightSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -22,27 +40,16 @@ export default function ConfirmEmailPage() {
     } catch {
       // Storage unavailable; the page falls back to generic copy.
     }
-
-    // Scroll reveal animations
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add(styles.revealed);
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
-    );
-
-    if (leftSectionRef.current) observer.observe(leftSectionRef.current);
-    if (rightSectionRef.current) observer.observe(rightSectionRef.current);
-
-    return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setTimeout(() => setCooldown((seconds) => seconds - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [cooldown]);
+
   async function resendLink() {
-    if (!pending) return;
+    if (!pending || cooldown > 0 || resend === 'sending') return;
     setResend('sending');
     try {
       const response = await fetch('/api/subscribe', {
@@ -51,10 +58,17 @@ export default function ConfirmEmailPage() {
         body: JSON.stringify(pending),
       });
       setResend(response.ok ? 'sent' : 'error');
+      if (response.ok) setCooldown(COOLDOWN_SECONDS);
     } catch {
       setResend('error');
     }
   }
+
+  const resendLabel =
+    resend === 'sending' ? 'Sending…'
+    : cooldown > 0 ? `Sent. Resend in ${cooldown}s`
+    : resend === 'error' ? 'Try again in a few minutes'
+    : 'Resend the link';
 
   return (
     <div className={styles.page}>
@@ -62,111 +76,131 @@ export default function ConfirmEmailPage() {
 
       <main className={styles.main}>
         <div className={styles.container}>
-          {/* Left Section */}
-          <div ref={leftSectionRef} className={`${styles.leftSection} ${styles.fadeInLeft}`}>
-            <div className={styles.badge}>CHECK YOUR EMAIL</div>
-
-            <h1 className={styles.heading}>Check your inbox</h1>
-
-            <div className={styles.emailBlock}>
-              <p className={styles.emailLabel}>We sent two quick steps to</p>
-              <div className={styles.emailRow}>
-                <span className={styles.emailAddress}>{pending?.email ?? 'your email address'}</span>
-                <Link href="/" className={styles.changeLink}>
-                  Change
-                </Link>
-              </div>
+          <div className={styles.progress}>
+            <div className={styles.bars}>
+              {STEPS.map((step, index) => (
+                <span
+                  key={step.key}
+                  className={`${styles.bar} ${index < active ? styles.barDone : index === active ? styles.barNow : ''}`}
+                />
+              ))}
             </div>
-
-            <div className={styles.actionButtons}>
-              <a
-                href="https://mail.google.com/mail/u/0/#inbox"
-                className={`${styles.btn} ${styles.btnPrimary}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Open Gmail
-              </a>
-              <a
-                href="https://outlook.live.com/mail/0/inbox"
-                className={`${styles.btn} ${styles.btnSecondary}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Open Outlook
-              </a>
-            </div>
-
-            <div className={styles.noEmailBlock}>
-              <span>No email yet?</span>
-              {pending ? (
-                <button
-                  type="button"
-                  onClick={resendLink}
-                  disabled={resend === 'sending' || resend === 'sent'}
-                  className={styles.resendLink}
-                  style={{ background: 'none', border: 0, padding: 0, font: 'inherit' }}
-                >
-                  {resend === 'sending' ? 'Sending…' : resend === 'sent' ? 'Sent again. Check your inbox' : resend === 'error' ? 'Try again in a few minutes' : 'Resend the link'}
-                </button>
-              ) : (
-                <Link href="/#signup" className={styles.resendLink}>
-                  Sign up again
-                </Link>
-              )}
-            </div>
-
-            <Link href="/" className={styles.backLink}>
-              <ArrowLeft size={16} />
-              Back to Metric Finance
-            </Link>
+            <span className={styles.progressLabel}>STEP {Math.min(active + 1, STEPS.length)} OF {STEPS.length}</span>
           </div>
 
-          {/* Right Section */}
-          <div ref={rightSectionRef} className={`${styles.rightSection} ${styles.fadeInRight}`}>
-            <h3 className={styles.previewLabel}>WHAT YOU&apos;LL FIND INSIDE</h3>
+          <h1 className={styles.heading}>Check your inbox</h1>
+          <p className={styles.lead}>We just sent you an email that sets up your daily brief. Follow the four steps below to finish signing up.</p>
 
-            <div className={styles.emailPreview}>
-              <div className={styles.previewHeader}>
-                <div className={styles.previewFrom}>
-                  <Mail size={16} />
-                  <div>
-                    <div className={styles.previewSender}>Metric Finance</div>
-                    <div className={styles.previewEmail}>briefing@metricfinance.app</div>
+          <ol className={styles.steps}>
+            {STEPS.map((step, index) => {
+              const done = index < active;
+              const current = index === active;
+              return (
+                <li key={step.key} className={styles.step} style={{ animationDelay: `${index * 80}ms` }}>
+                  <div className={styles.rail}>
+                    <span className={`${styles.dot} ${done ? styles.dotDone : current ? styles.dotNow : ''}`}>
+                      {done ? <Check size={18} strokeWidth={3} /> : index + 1}
+                    </span>
+                    {index < STEPS.length - 1 && <span className={`${styles.line} ${done ? styles.lineDone : ''}`} />}
                   </div>
-                </div>
-                <div className={styles.previewTime}>Just now</div>
-              </div>
 
-              <div className={styles.previewBody}>
-                <h4 className={styles.previewTitle}>Two quick steps and you&apos;re in</h4>
+                  <div className={`${styles.stepBody} ${index > active ? styles.stepDim : ''}`}>
+                    <div className={styles.stepNum}>STEP {String(index + 1).padStart(2, '0')}</div>
+                    <h2 className={styles.stepTitle}>{step.title}</h2>
+                    <p className={styles.stepText}>{step.body}</p>
 
-                <div className={styles.previewStep}>
-                  <span className={styles.previewStepNum}>1</span>
-                  <div>
-                    <strong>Add us to your contacts</strong>
-                    <p>Save briefing@metricfinance.app so your briefs reach your main inbox, not spam.</p>
-                    <ul className={styles.previewTips}>
-                      <li>Gmail: drag the email to the Primary tab</li>
-                      <li>Outlook: right click our name, then Add to Safe Senders</li>
-                      <li>Apple Mail: tap our name, then Add to VIPs</li>
-                    </ul>
+                    {step.key === 'inbox' && (
+                      <div className={styles.emailBox}>
+                        <span className={styles.emailAddress}>{pending?.email ?? 'your email address'}</span>
+                        <Link href="/#signup" className={styles.change}>Change</Link>
+                      </div>
+                    )}
+
+                    {step.key === 'find' && (
+                      <>
+                        <div className={styles.card}>
+                          <div className={styles.cardHead}>
+                            <span className={styles.mf}>MF</span>
+                            <div className={styles.cardFrom}>
+                              <strong>Metric Finance</strong>
+                              <span>Confirm your email to start your Metric Finance briefs</span>
+                            </div>
+                            <span className={styles.cardTime}>Just now</span>
+                          </div>
+                          <div className={styles.cardBody}>
+                            <div className={styles.cardLabel}>INSIDE THE EMAIL</div>
+                            <ul className={styles.cardList}>
+                              <li>Two quick steps to set you up</li>
+                              <li>A button to confirm your email</li>
+                              <li>Your first brief, on its way as soon as you confirm</li>
+                            </ul>
+                          </div>
+                        </div>
+                        <p className={styles.hint}>If you cannot find it, check your Spam or Promotions folder.</p>
+                      </>
+                    )}
+
+                    {step.key === 'contacts' && (
+                      <div className={styles.card}>
+                        <div className={styles.tabs} role="tablist">
+                          {TIPS.map((item, tipIndex) => (
+                            <button
+                              key={item.label}
+                              type="button"
+                              role="tab"
+                              aria-selected={tab === tipIndex}
+                              className={`${styles.tab} ${tab === tipIndex ? styles.tabOn : ''}`}
+                              onClick={() => setTab(tipIndex)}
+                            >
+                              {item.label}
+                            </button>
+                          ))}
+                        </div>
+                        <div className={styles.tip}>{TIPS[tab].tip}</div>
+                      </div>
+                    )}
+
+                    {step.key === 'confirm' && (
+                      <div className={styles.pressHint}>
+                        In the email, press <span>Confirm my email</span>
+                      </div>
+                    )}
+
+                    {current && step.next && (
+                      <button type="button" className={styles.next} onClick={() => setActive(index + 1)}>
+                        {step.next}
+                      </button>
+                    )}
                   </div>
-                </div>
+                </li>
+              );
+            })}
+          </ol>
 
-                <div className={styles.previewStep}>
-                  <span className={styles.previewStepNum}>2</span>
-                  <div>
-                    <strong>Confirm your email</strong>
-                    <p>One tap tells us you&apos;re a real person. You&apos;ll land on your dashboard with your first brief on its way.</p>
-                  </div>
-                </div>
-
-                <span className={styles.previewButton} aria-hidden="true">Confirm my email</span>
-              </div>
+          <section className={styles.ready}>
+            <div>
+              <div className={styles.readyLabel}>READY?</div>
+              <div className={styles.readyTitle}>Open your inbox and confirm</div>
             </div>
-
-          </div>
+            <div className={styles.openRow}>
+              <a href="https://mail.google.com/" target="_blank" rel="noopener noreferrer" className={styles.openPrimary}>Open Gmail</a>
+              <a href="https://outlook.live.com/" target="_blank" rel="noopener noreferrer" className={styles.openGhost}>Open Outlook</a>
+              <a href="https://www.icloud.com/mail" target="_blank" rel="noopener noreferrer" className={styles.openGhost}>Open iCloud Mail</a>
+            </div>
+            <div className={styles.readyFoot}>
+              <span className={styles.noEmail}>
+                No email yet?{' '}
+                {pending ? (
+                  <button type="button" className={styles.resend} onClick={resendLink} disabled={cooldown > 0 || resend === 'sending'}>
+                    {resendLabel}
+                  </button>
+                ) : (
+                  <Link href="/#signup" className={styles.resend}>Sign up again</Link>
+                )}
+              </span>
+              <Link href="/" className={styles.back}><ArrowLeft size={16} /> Back to Metric Finance</Link>
+            </div>
+          </section>
         </div>
       </main>
 
