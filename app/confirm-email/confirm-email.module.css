@@ -579,3 +579,16 @@
 }
 
 @media (max-width: 768px) { .heading { white-space: nowrap; font-size: min(36px, calc((100vw - 40px) / 10)); } }
+
+/* Information only: what the email contains */
+.previewStep { display: flex; gap: 14px; align-items: flex-start; margin: 0 0 20px; }
+.previewStepNum { display: grid; flex: none; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #8fa8fa; color: #0b1220; font-size: 14px; font-weight: 700; }
+.previewStep strong { display: block; color: #f2f5fa; font-size: 15px; line-height: 26px; }
+.previewStep p { margin: 2px 0 0; color: #9aa6c0; font-size: 13.5px; line-height: 1.55; }
+.previewTips { margin: 8px 0 0; padding: 0; list-style: none; color: #8798b4; font-size: 12.5px; line-height: 1.7; }
+.previewTips li::before { content: "\2022"; margin-right: 8px; color: #56668a; }
+.previewButton { cursor: default; user-select: none; }
+.previewNote { margin: 0; color: #8798b4; font-size: 13px; line-height: 1.6; }
+@media (max-width: 768px) {
+  .rightSection, .emailPreview { order: 0; }
+}

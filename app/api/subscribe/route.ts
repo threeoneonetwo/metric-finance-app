@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import { isRateLimited } from "@/db/rate-limit";
 import { upsertSubscriber } from "@/db/subscribers";
 import { manageUrl } from "@/lib/manage-link";
-import { brandedEmail } from "@/lib/newsletter/email-template";
-import { hasSesConfig, sendEmail, sendVerificationEmail } from "@/lib/newsletter/ses";
+import { hasSesConfig, sendReturningEmail, sendVerificationEmail } from "@/lib/newsletter/ses";
 
 const EMAIL_PATTERN = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/;
 const TICKER_PATTERN = /^[A-Z0-9.]{1,10}$/;
@@ -56,20 +55,7 @@ export async function POST(request: Request) {
           verifyUrl: `${baseUrl}/api/verify?token=${subscriber.verificationToken}`,
         });
       } else if (subscriber.active) {
-        const link = manageUrl(baseUrl, subscriber.unsubscribeToken);
-        await sendEmail({
-          to: subscriber.email,
-          subject: "Manage your Metric Finance watchlist",
-          html: brandedEmail({
-            preheader: "Your private link to change your stocks or unsubscribe.",
-            heading: "Your account link",
-            paragraphs: ["Use this private link to change your stocks or unsubscribe. It works for 30 days."],
-            buttonLabel: "Manage my watchlist",
-            buttonUrl: link,
-            footnote: "If you didn't ask for this, ignore this email. Only you can use the link.",
-          }),
-          text: `You're already subscribed to Metric Finance. Manage your watchlist: ${link}\n\nIf you didn't request this, you can ignore this email.`,
-        });
+        await sendReturningEmail({ to: subscriber.email, dashboardUrl: manageUrl(baseUrl, subscriber.unsubscribeToken) });
       }
     } catch (error) {
       console.error("subscribe: failed to send email", error);

@@ -12,7 +12,6 @@ export default function ConfirmEmailPage() {
   const [resend, setResend] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const leftSectionRef = useRef<HTMLDivElement>(null);
   const rightSectionRef = useRef<HTMLDivElement>(null);
-  const stepItemsRef = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
     try {
@@ -38,9 +37,6 @@ export default function ConfirmEmailPage() {
 
     if (leftSectionRef.current) observer.observe(leftSectionRef.current);
     if (rightSectionRef.current) observer.observe(rightSectionRef.current);
-    stepItemsRef.current.forEach((el) => {
-      if (el) observer.observe(el);
-    });
 
     return () => observer.disconnect();
   }, []);
@@ -68,7 +64,7 @@ export default function ConfirmEmailPage() {
         <div className={styles.container}>
           {/* Left Section */}
           <div ref={leftSectionRef} className={`${styles.leftSection} ${styles.fadeInLeft}`}>
-            <div className={styles.badge}>TWO QUICK STEPS</div>
+            <div className={styles.badge}>CHECK YOUR EMAIL</div>
 
             <h1 className={styles.heading}>Check your inbox</h1>
 
@@ -120,35 +116,6 @@ export default function ConfirmEmailPage() {
               )}
             </div>
 
-            <div className={styles.stepsSection}>
-              <h3 className={styles.stepsTitle}>WHAT HAPPENS NEXT</h3>
-              <div className={styles.stepsList}>
-                {[
-                  { num: '1', title: 'Add us to your contacts', desc: 'Save briefing@metricfinance.app so your briefs reach your main inbox, not spam', tag: 'YOU ARE HERE' },
-                  { num: '2', title: 'Confirm your email', desc: 'Tap the button in our email. It tells us you\'re a real person', tag: undefined },
-                  { num: '3', title: 'Land on your dashboard', desc: 'Your first brief is on its way, then a new one every trading day at 5 PM ET', tag: undefined },
-                ].map((step, idx) => (
-                  <div
-                    key={idx}
-                    ref={(el) => {
-                      if (el) stepItemsRef.current[idx] = el;
-                    }}
-                    className={`${styles.stepItem} ${styles.slideInUp}`}
-                    style={{ transitionDelay: `${idx * 100}ms` }}
-                  >
-                    <div className={styles.stepNumber}>{step.num}</div>
-                    <div className={styles.stepContent}>
-                      <div className={styles.stepTitle}>
-                        {step.title}
-                        {step.tag && <span className={styles.stepTag}>{step.tag}</span>}
-                      </div>
-                      <p className={styles.stepDesc}>{step.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             <Link href="/" className={styles.backLink}>
               <ArrowLeft size={16} />
               Back to Metric Finance
@@ -157,7 +124,7 @@ export default function ConfirmEmailPage() {
 
           {/* Right Section */}
           <div ref={rightSectionRef} className={`${styles.rightSection} ${styles.fadeInRight}`}>
-            <h3 className={styles.previewLabel}>LOOK FOR THIS EMAIL</h3>
+            <h3 className={styles.previewLabel}>WHAT YOU&apos;LL FIND INSIDE</h3>
 
             <div className={styles.emailPreview}>
               <div className={styles.previewHeader}>
@@ -173,27 +140,32 @@ export default function ConfirmEmailPage() {
 
               <div className={styles.previewBody}>
                 <h4 className={styles.previewTitle}>Two quick steps and you&apos;re in</h4>
-                <p className={styles.previewText}>1. Add us to your contacts.<br />2. Confirm your email.</p>
-                <button className={styles.previewButton}>Confirm my email</button>
-                <p className={styles.previewFooter}>If you didn&apos;t request this, you can ignore this email.</p>
+
+                <div className={styles.previewStep}>
+                  <span className={styles.previewStepNum}>1</span>
+                  <div>
+                    <strong>Add us to your contacts</strong>
+                    <p>Save briefing@metricfinance.app so your briefs reach your main inbox, not spam.</p>
+                    <ul className={styles.previewTips}>
+                      <li>Gmail: drag the email to the Primary tab</li>
+                      <li>Outlook: right click our name, then Add to Safe Senders</li>
+                      <li>Apple Mail: tap our name, then Add to VIPs</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className={styles.previewStep}>
+                  <span className={styles.previewStepNum}>2</span>
+                  <div>
+                    <strong>Confirm your email</strong>
+                    <p>One tap tells us you&apos;re a real person. You&apos;ll land on your dashboard with your first brief on its way.</p>
+                  </div>
+                </div>
+
+                <span className={styles.previewButton} aria-hidden="true">Confirm my email</span>
               </div>
             </div>
 
-            <div className={`${styles.troubleshoot} ${styles.slideInUp}`}>
-              <h4 className={styles.troubleshootTitle}>Didn&apos;t receive the email?</h4>
-              <div className={styles.troubleshootList}>
-                {[
-                  'Check your spam or junk folder',
-                  'Make sure you entered the right email address',
-                  'Try signing up again — we\'ll resend the link. Use the same email and stocks.',
-                ].map((item, idx) => (
-                  <div key={idx} className={styles.troubleshootItem}>
-                    <span className={styles.troubleshootNum}>0{idx + 1}</span>
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </main>
