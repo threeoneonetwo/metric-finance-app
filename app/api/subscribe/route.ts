@@ -56,7 +56,11 @@ export async function POST(request: Request) {
         });
       } else if (subscriber.active) {
         // They already have an account: send their dashboard link, then tell the visitor below.
-        await sendReturningEmail({ to: subscriber.email, dashboardUrl: manageUrl(baseUrl, subscriber.unsubscribeToken) });
+        await sendReturningEmail({
+          to: subscriber.email,
+          dashboardUrl: manageUrl(baseUrl, subscriber.unsubscribeToken),
+          unsubscribeUrl: `${baseUrl}/api/unsubscribe?token=${subscriber.unsubscribeToken}`,
+        });
       }
     } catch (error) {
       console.error("subscribe: failed to send email", error);

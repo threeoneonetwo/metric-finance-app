@@ -1,4 +1,4 @@
-import { brandedEmail } from "./email-template";
+import { brandedEmail, contactTipsTable, emailSteps, FOOTER_TEXT, type EmailStep } from "./email-template";
 import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2";
 import { SENDER_EMAIL, SENDER_NAME } from "@/lib/sender";
 
@@ -17,50 +17,51 @@ function getClient() {
   return client;
 }
 
-const STEP_NUMBER = "display:inline-block;width:26px;height:26px;border-radius:13px;background:#8fa8fa;color:#0b1220;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:26px;font-weight:bold;text-align:center;";
-const STEP_TITLE = "font-family:Arial,Helvetica,sans-serif;font-size:17px;line-height:26px;font-weight:bold;color:#f2f5fa;";
-const STEP_BODY = "margin:4px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#9aa6c0;";
-
 function fromAddress() {
   return SENDER_EMAIL;
 }
 
 // Step 1 is the same in every onboarding email: save our address so briefs reach the main inbox.
-function addToContactsStep(from: string) {
-  return `<tr><td width="40" valign="top" style="padding:0 0 18px;"><span style="${STEP_NUMBER}">1</span></td><td valign="top" style="padding:0 0 18px;">
-<div style="${STEP_TITLE}">Add us to your contacts</div>
-<p style="${STEP_BODY}">Save <strong style="color:#f2f5fa;">${from}</strong> so your briefs reach your main inbox, not spam.</p>
-<p style="${STEP_BODY}">Gmail: drag this email to the Primary tab.<br>Outlook: right click our name, then Add to Safe Senders.<br>Apple Mail: tap our name, then Add to VIPs.</p>
-</td></tr>`;
+function addToContactsStep(): EmailStep {
+  const from = fromAddress();
+  return {
+    title: "Add us to your contacts",
+    bodyHtml: `Save <a href="mailto:${from}" style="color:#8fa8fa;font-weight:700;text-decoration:none;">${from}</a> so your briefs reach your main inbox, not spam.`,
+    extraHtml: contactTipsTable(),
+  };
 }
 
+const CONTACT_TIPS_TEXT =
+  "   Gmail: drag this email to the Primary tab. Outlook: right click our name, then Add to Safe Senders. Apple Mail: tap our name, then Add to VIPs.";
+
 // For someone who signs up again with an address that is already subscribed.
-export function buildReturningEmail(input: { dashboardUrl: string }) {
+export function buildReturningEmail(input: { dashboardUrl: string; unsubscribeUrl?: string }) {
   const from = fromAddress();
-  const steps = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:6px 0 18px;">
-${addToContactsStep(from)}
-<tr><td width="40" valign="top" style="padding:0;"><span style="${STEP_NUMBER}">2</span></td><td valign="top" style="padding:0;">
-<div style="${STEP_TITLE}">Open your dashboard</div>
-<p style="${STEP_BODY}">Read your briefs and change your stocks any time. This private link works for 30 days.</p>
-</td></tr></table>`;
   const html = brandedEmail({
-    preheader: "Add us to your contacts so your briefs reach your main inbox.",
+    preheader: "Two quick things to keep your daily brief coming.",
+    eyebrow: "YOU'RE ALL SET",
     heading: "Welcome back, you're on the list",
-    paragraphs: ["Two quick things to keep your daily brief coming."],
-    extraHtml: steps,
+    lead: "Two quick things to keep your daily brief coming.",
+    stepsHtml: emailSteps([
+      addToContactsStep(),
+      { title: "Open your dashboard", bodyHtml: "Read your briefs and change your stocks any time. This private link works for 30 days." },
+    ]),
     buttonLabel: "Open my dashboard",
     buttonUrl: input.dashboardUrl,
     footnote: "If you didn't ask for this, ignore this email. Only you can use the link.",
+    footerLinks: input.unsubscribeUrl ? { manageUrl: input.dashboardUrl, unsubscribeUrl: input.unsubscribeUrl } : undefined,
   });
   const text = [
     "Welcome back, you're on the list",
     "",
     `1. Add us to your contacts. Save ${from} so your briefs reach your main inbox, not spam.`,
-    "   Gmail: drag this email to the Primary tab. Outlook: right click our name, then Add to Safe Senders. Apple Mail: tap our name, then Add to VIPs.",
+    CONTACT_TIPS_TEXT,
     "",
     `2. Open your dashboard (private link, works for 30 days): ${input.dashboardUrl}`,
     "",
     "If you didn't ask for this, ignore this email.",
+    "",
+    FOOTER_TEXT,
   ].join("\n");
   return { subject: "Your Metric Finance dashboard link", html, text };
 }
@@ -68,17 +69,15 @@ ${addToContactsStep(from)}
 // One email does both jobs: asks the reader to save our address, then to confirm they are a real person.
 export function buildVerificationEmail(input: { verifyUrl: string }) {
   const from = fromAddress();
-  const steps = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:6px 0 18px;">
-${addToContactsStep(from)}
-<tr><td width="40" valign="top" style="padding:0;"><span style="${STEP_NUMBER}">2</span></td><td valign="top" style="padding:0;">
-<div style="${STEP_TITLE}">Confirm your email</div>
-<p style="${STEP_BODY}">One tap tells us you're a real person. You'll land on your dashboard with your first brief on its way.</p>
-</td></tr></table>`;
   const html = brandedEmail({
     preheader: "Add us to your contacts, then confirm. It takes 20 seconds.",
+    eyebrow: "ALMOST THERE",
     heading: "Two quick steps and you're in",
-    paragraphs: ["Do these two things to start getting your daily brief."],
-    extraHtml: steps,
+    lead: "Do these two things to start getting your daily brief.",
+    stepsHtml: emailSteps([
+      addToContactsStep(),
+      { title: "Confirm your email", bodyHtml: "One tap tells us you're a real person. You'll land on your dashboard with your first brief on its way." },
+    ]),
     buttonLabel: "Confirm my email",
     buttonUrl: input.verifyUrl,
     footnote: "If you didn't sign up for Metric Finance, ignore this email and nothing happens.",
@@ -87,11 +86,13 @@ ${addToContactsStep(from)}
     "Two quick steps and you're in",
     "",
     `1. Add us to your contacts. Save ${from} so your briefs reach your main inbox, not spam.`,
-    "   Gmail: drag this email to the Primary tab. Outlook: right click our name, then Add to Safe Senders. Apple Mail: tap our name, then Add to VIPs.",
+    CONTACT_TIPS_TEXT,
     "",
     `2. Confirm your email. One tap tells us you're a real person: ${input.verifyUrl}`,
     "",
     "If you didn't sign up for Metric Finance, ignore this email and nothing happens.",
+    "",
+    FOOTER_TEXT,
   ].join("\n");
 
   return { subject: "Confirm your email to start your Metric Finance briefs", html, text };
@@ -123,7 +124,7 @@ export async function sendEmail(input: { to: string; subject: string; html: stri
   );
 }
 
-export async function sendReturningEmail(input: { to: string; dashboardUrl: string }) {
-  const email = buildReturningEmail({ dashboardUrl: input.dashboardUrl });
+export async function sendReturningEmail(input: { to: string; dashboardUrl: string; unsubscribeUrl?: string }) {
+  const email = buildReturningEmail({ dashboardUrl: input.dashboardUrl, unsubscribeUrl: input.unsubscribeUrl });
   await sendEmail({ to: input.to, ...email });
 }

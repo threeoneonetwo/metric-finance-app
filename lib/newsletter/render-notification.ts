@@ -1,4 +1,4 @@
-import { brandedEmail } from "./email-template";
+import { brandedEmail, FOOTER_TEXT } from "./email-template";
 
 // The daily email is only a nudge: the brief itself lives on the website.
 export function renderBriefNotification(input: {
@@ -20,11 +20,9 @@ export function renderBriefNotification(input: {
   const subject = `Your brief is up: ${input.headline}`;
   const html = brandedEmail({
     preheader: `Your ${date} brief on ${tickersText} is posted.`,
+    eyebrow: "TODAY'S BRIEF",
     heading: "Your daily brief is up",
-    paragraphs: [
-      `Your ${date} brief on ${tickersText} has been posted on Metric Finance.`,
-      "It is ready to read now, explained like you're 5.",
-    ],
+    lead: `Your ${date} brief on ${tickersText} has been posted on Metric Finance. It is ready to read now, explained like you're 5.`,
     buttonLabel: "Read today's brief",
     buttonUrl: input.briefUrl,
     footnote: "You can also find every brief on your Metric Finance dashboard.",
@@ -38,6 +36,8 @@ export function renderBriefNotification(input: {
     "",
     `Your dashboard: ${input.dashboardUrl}`,
     `Unsubscribe: ${input.unsubscribeUrl}`,
+    "",
+    FOOTER_TEXT,
   ].join("\n");
 
   return { subject, html, text };

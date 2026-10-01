@@ -38,8 +38,9 @@ export async function POST(request: Request) {
           subject: "Your Metric Finance account link",
           html: brandedEmail({
             preheader: "Your private link to change your stocks or unsubscribe.",
+            eyebrow: "YOUR ACCOUNT",
             heading: "Your account link",
-            paragraphs: ["Use this private link to change your stocks or unsubscribe. It works for 30 days."],
+            lead: "Use this private link to change your stocks or unsubscribe. It works for 30 days.",
             buttonLabel: "Manage my watchlist",
             buttonUrl: link,
             footnote: "If you didn't ask for this, ignore this email. Only you can use the link.",
