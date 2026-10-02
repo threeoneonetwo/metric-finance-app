@@ -18,7 +18,7 @@ export const metadata: Metadata = {
       "Stocks explained like you're 5, free. Pick up to 5 US stocks and get a daily brief at 5 PM ET on why each one moved, in plain English for beginners.",
     url: "https://metricfinance.app",
     siteName: "Metric Finance",
-    images: [{ url: "https://metricfinance.app/og-image.png", width: 1200, height: 630 }],
+    images: [{ url: "https://metricfinance.app/og-image-v2.jpg", width: 1200, height: 630, alt: "Metric Finance: stocks explained like you're 5", type: "image/jpeg" }],
     type: "website",
   },
   twitter: {
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     title: "Stocks Explained Like You're 5 for free | Metric Finance",
     description:
       "Stocks explained like you're 5, free. Pick up to 5 US stocks and get a daily brief at 5 PM ET on why each one moved, in plain English for beginners.",
-    images: ["https://metricfinance.app/og-image.png"],
+    images: ["https://metricfinance.app/og-image-v2.jpg"],
   },
   icons: {
     icon: [
