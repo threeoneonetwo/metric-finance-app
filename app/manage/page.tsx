@@ -17,11 +17,11 @@ export const metadata: Metadata = {
 };
 
 type ManagePageProps = {
-  searchParams: Promise<{ token?: string; exp?: string; sig?: string; welcome?: string }>;
+  searchParams: Promise<{ token?: string; exp?: string; sig?: string; welcome?: string; signin?: string }>;
 };
 
 export default async function ManagePage({ searchParams }: ManagePageProps) {
-  const { token, exp, sig, welcome } = await searchParams;
+  const { token, exp, sig, welcome, signin } = await searchParams;
   const { subscriber, creds, staleSession } = await resolveSubscriber({ token, exp, sig });
   if (staleSession) redirect("/api/session/clear?to=/manage");
 
@@ -33,12 +33,14 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
           <section className={styles.manageSection}>
             <div className={styles.manageInner}>
               <h1 className={styles.manageHeading}>
-                {token ? "That link has expired" : "Manage your watchlist or unsubscribe"}
+                {token ? "That link has expired" : signin ? "Sign in to Metric Finance" : "Manage your watchlist or unsubscribe"}
               </h1>
               <p className={styles.manageSub}>
                 {token
                   ? "For your security, account links expire after 30 days. Enter your email and we'll send you a fresh one."
-                  : "Enter the email you signed up with and we'll send you a private link to change your stocks or unsubscribe."}
+                  : signin
+                    ? "Enter the email you signed up with and we'll email you a private link that signs you in. It works for 30 days."
+                    : "Enter the email you signed up with and we'll send you a private link to change your stocks or unsubscribe."}
               </p>
               <RequestManageLink />
               <Link className={styles.manageBack} href="/">Back to Metric Finance</Link>

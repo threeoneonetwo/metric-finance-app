@@ -182,7 +182,7 @@ export function NewsletterLanding() {
 
   return (
     <div className={styles.page}>
-      <SiteHeader />
+      <SiteHeader signIn />
 
       <section id="top" className={styles.hero}>
 

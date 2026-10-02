@@ -6,9 +6,11 @@ import { MetricWordmark } from "./metric-wordmark";
 type SiteHeaderProps = {
   fixed?: boolean;
   faqHref?: string;
+  // Shown on the landing page only, for people who were signed out.
+  signIn?: boolean;
 };
 
-export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps) {
+export function SiteHeader({ fixed = false, faqHref = "/#faq", signIn = false }: SiteHeaderProps) {
   return (
     <header
       className={`mobile-safe-top-nav ${fixed ? "fixed top-0" : "relative"} z-50 flex w-full items-center px-5 sm:px-8 lg:px-10`}
@@ -18,20 +20,39 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps
         borderBottom: "1px solid #24304d",
       }}
     >
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4">
-      <Link href="/" className="flex shrink-0 items-center gap-2.5" style={{ fontFamily: "Arial, sans-serif" }}>
-        <Image src="/mf-icon.png" alt="" width={38} height={38} priority className="h-8 w-8 rounded-[9px] sm:h-[38px] sm:w-[38px]" />
-        <MetricWordmark className="text-[26px] font-bold leading-none tracking-[-0.04em] text-white sm:text-3xl" />
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-2 lg:gap-4">
+      <Link href="/" aria-label="Metric Finance home" className="flex shrink-0 items-center gap-2.5" style={{ fontFamily: "Arial, sans-serif" }}>
+        <Image src="/mf-icon.png" alt="" width={48} height={48} priority className="h-10 w-10 rounded-[11px] lg:h-[38px] lg:w-[38px] lg:rounded-[9px]" />
+        {/* The full name shows on desktop; on phones and tablets the icon alone is the logo. */}
+        <MetricWordmark className="hidden text-3xl font-bold leading-none tracking-[-0.04em] text-white lg:inline" />
       </Link>
-      <nav className="hidden min-w-0 items-center gap-6 sm:flex" style={{ fontFamily: "Arial, sans-serif" }} aria-label="Main navigation">
+      <div className="flex items-center gap-2 lg:gap-3">
+      <nav className="hidden min-w-0 items-center gap-6 lg:flex" style={{ fontFamily: "Arial, sans-serif" }} aria-label="Main navigation">
         <Link href={faqHref} className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white">
           FAQ
         </Link>
         <Link href="/privacy" className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white">
           Privacy
         </Link>
+        {signIn && (
+          <Link
+            href="/manage?signin=1"
+            className="whitespace-nowrap rounded-xl border border-[#2b3a66] px-4 py-2 text-sm font-bold text-[#b3c9ff] transition hover:border-[#8fa8fa] hover:bg-[#8fa8fa]/10 hover:text-white"
+          >
+            Sign in
+          </Link>
+        )}
       </nav>
-      <details className="group relative sm:hidden">
+      {signIn && (
+        <Link
+          href="/manage?signin=1"
+          className="flex h-9 items-center whitespace-nowrap rounded-lg border border-[#2b3a66] px-2.5 text-[13px] font-bold text-[#b3c9ff] transition hover:border-[#8fa8fa] hover:text-white lg:hidden"
+          style={{ fontFamily: "Arial, sans-serif" }}
+        >
+          Sign in
+        </Link>
+      )}
+      <details className="group relative lg:hidden">
         <summary
           aria-label="Open navigation menu"
           className="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-lg border border-[#24304d] bg-[#182238] text-[#f4f5f7] transition hover:bg-[#24304d] [&::-webkit-details-marker]:hidden"
@@ -54,6 +75,7 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq" }: SiteHeaderProps
         </Link>
         </nav>
       </details>
+      </div>
       </div>
     </header>
   );
