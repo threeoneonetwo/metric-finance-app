@@ -68,6 +68,7 @@ export async function sendDigestToSubscriber(input: {
     subject: notification.subject,
     html: notification.html,
     text: notification.text,
+    type: "brief",
     headers: {
       "List-Unsubscribe": `<${unsubscribeUrl}>`,
       "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",

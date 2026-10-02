@@ -133,3 +133,17 @@ export async function markSubscribersSent(ids: string[]) {
     ids.map((id) => db.update(subscribers).set({ lastSentAt: new Date() }).where(eq(subscribers.id, id))),
   );
 }
+
+// A hard bounce or a spam complaint means this address should not be mailed again.
+export async function deactivateSubscriberByEmail(email: string) {
+  const db = getDb();
+  if (!db) return null;
+
+  const [updated] = await db
+    .update(subscribers)
+    .set({ active: false, updatedAt: new Date() })
+    .where(eq(subscribers.email, email.trim().toLowerCase()))
+    .returning();
+
+  return updated ?? null;
+}

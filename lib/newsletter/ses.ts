@@ -100,16 +100,28 @@ export function buildVerificationEmail(input: { verifyUrl: string }) {
 
 export async function sendVerificationEmail(input: { to: string; verifyUrl: string }) {
   const email = buildVerificationEmail({ verifyUrl: input.verifyUrl });
-  await sendEmail({ to: input.to, ...email });
+  await sendEmail({ to: input.to, ...email, type: "confirm" });
 }
 
-export async function sendEmail(input: { to: string; subject: string; html: string; text: string; headers?: Record<string, string> }) {
+// Delivery, bounce and complaint events for everything we send are published from this SES configuration set.
+const EMAIL_CONFIG_SET = "metric-finance-email-events";
 
-  await getClient().send(
+export async function sendEmail(input: {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+  headers?: Record<string, string>;
+  // Which kind of email this is, so the dashboard can split delivery by type.
+  type?: string;
+}) {
+  const command = (configurationSetName?: string) =>
     new SendEmailCommand({
       FromEmailAddress: `${SENDER_NAME} <${SENDER_EMAIL}>`,
       ReplyToAddresses: [process.env.REPLY_TO_EMAIL ?? "vanshpandita11@gmail.com"],
       Destination: { ToAddresses: [input.to] },
+      ConfigurationSetName: configurationSetName,
+      EmailTags: input.type ? [{ Name: "mail_type", Value: input.type }] : undefined,
       Content: {
         Simple: {
           Headers: input.headers ? Object.entries(input.headers).map(([Name, Value]) => ({ Name, Value })) : undefined,
@@ -120,11 +132,21 @@ export async function sendEmail(input: { to: string; subject: string; html: stri
           },
         },
       },
-    }),
-  );
+    });
+
+  try {
+    await getClient().send(command(EMAIL_CONFIG_SET));
+  } catch (error) {
+    // Until the configuration set exists in AWS, send normally rather than lose the email.
+    if (error instanceof Error && /configuration set/i.test(error.message)) {
+      await getClient().send(command());
+      return;
+    }
+    throw error;
+  }
 }
 
 export async function sendReturningEmail(input: { to: string; dashboardUrl: string; unsubscribeUrl?: string }) {
   const email = buildReturningEmail({ dashboardUrl: input.dashboardUrl, unsubscribeUrl: input.unsubscribeUrl });
-  await sendEmail({ to: input.to, ...email });
+  await sendEmail({ to: input.to, ...email, type: "returning" });
 }
