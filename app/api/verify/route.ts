@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isInternalEmail, trackServer } from "@/lib/analytics-server";
 import { manageLinkParams } from "@/lib/manage-link";
 import { markSubscribersSent, verifySubscriberByToken } from "@/db/subscribers";
 import { gatherBriefFacts } from "@/lib/newsletter/brief-data";
@@ -28,6 +29,20 @@ export async function POST(request: Request) {
   const subscriber = await verifySubscriberByToken(token);
   if (!subscriber) {
     return NextResponse.redirect(new URL("/verify?error=invalid", request.url), 303);
+  }
+
+  const internal = isInternalEmail(subscriber.email);
+  await trackServer({
+    event: "email_confirmed",
+    distinctId: subscriber.id,
+    properties: {
+      internal,
+      tickers_count: subscriber.tickers.length,
+      minutes_to_confirm: Math.round((Date.now() - subscriber.createdAt.getTime()) / 60000),
+    },
+  });
+  for (const ticker of subscriber.tickers) {
+    await trackServer({ event: "ticker_followed", distinctId: subscriber.id, properties: { internal, ticker } });
   }
 
   await sendFirstBriefing(subscriber);

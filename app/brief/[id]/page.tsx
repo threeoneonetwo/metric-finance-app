@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/site-header";
 import landing from "@/components/newsletter-landing.module.css";
 import styles from "@/components/brief-view.module.css";
 import { getBriefingForSubscriber } from "@/db/briefings";
+import { hoursSince, isInternalEmail, trackServer } from "@/lib/analytics-server";
 import { resolveSubscriber } from "@/lib/session-server";
 
 export const metadata: Metadata = {
@@ -50,6 +51,16 @@ export default async function BriefViewPage({ params, searchParams }: BriefViewP
       </main>
     );
   }
+
+  await trackServer({
+    event: "brief_opened",
+    distinctId: subscriber.id,
+    properties: {
+      internal: isInternalEmail(subscriber.email),
+      briefing_id: briefing.id,
+      hours_since_sent: hoursSince(briefing.sentAt),
+    },
+  });
 
   const date = new Intl.DateTimeFormat("en-US", {
     timeZone: "America/New_York",

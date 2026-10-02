@@ -89,7 +89,9 @@ export default function PrivacyPage() {
         <li><strong>Vercel Analytics</strong> for page views and performance.</li>
         <li>
           <strong>PostHog</strong> for product events such as stock searches, and session replays that may record how
-          visitors click, scroll, and move through pages.
+          visitors click, scroll, and move through pages. For subscribers it also records account events, such as
+          confirming your email, opening a brief, or changing your watchlist, tied to a random subscriber ID and
+          never to your email address.
         </li>
       </ul>
       <p>

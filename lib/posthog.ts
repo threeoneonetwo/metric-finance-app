@@ -12,7 +12,8 @@ export type PostHogEventName =
   | "analysis_run"
   | "product_active"
   | "user_active"
-  | "user_signout";
+  | "user_signout"
+  | "signup_started";
 
 type PostHogEventProperties = Record<string, string | number | boolean | null | undefined>;
 
@@ -27,4 +28,10 @@ export function trackPostHogEvent(eventName: PostHogEventName, properties: PostH
   }
 
   posthog.capture(eventName, properties);
+}
+
+// The browser's anonymous PostHog id, so a signup can be tied back to the visit that led to it.
+export function getPostHogVisitorId(): string | undefined {
+  if (typeof window === "undefined" || !process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN || !posthog.__loaded) return undefined;
+  return posthog.get_distinct_id();
 }

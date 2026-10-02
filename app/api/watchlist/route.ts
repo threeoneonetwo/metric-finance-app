@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { updateTickersByToken } from "@/db/subscribers";
+import { isInternalEmail, trackServer } from "@/lib/analytics-server";
 import { isValidManageLink } from "@/lib/manage-link";
 
 const TICKER_PATTERN = /^[A-Z0-9.]{1,10}$/;
@@ -30,6 +31,12 @@ export async function POST(request: Request) {
   if (!subscriber) {
     return NextResponse.json({ error: "We couldn't find that subscription" }, { status: 404 });
   }
+
+  await trackServer({
+    event: "watchlist_changed",
+    distinctId: subscriber.id,
+    properties: { internal: isInternalEmail(subscriber.email), tickers_count: tickers.length },
+  });
 
   return NextResponse.json({ ok: true });
 }

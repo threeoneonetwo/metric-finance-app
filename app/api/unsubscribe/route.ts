@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { unsubscribeByToken } from "@/db/subscribers";
+import { isInternalEmail, trackServer } from "@/lib/analytics-server";
 
 const TOKEN_PATTERN = /^[a-f0-9]{48}$/;
 
@@ -21,6 +22,16 @@ export async function POST(request: Request) {
   const form = await request.formData().catch(() => null);
   const token = String(form?.get("token") ?? new URL(request.url).searchParams.get("token") ?? "");
   const subscriber = TOKEN_PATTERN.test(token) ? await unsubscribeByToken(token) : null;
+  if (subscriber) {
+    await trackServer({
+      event: "unsubscribed",
+      distinctId: subscriber.id,
+      properties: {
+        internal: isInternalEmail(subscriber.email),
+        days_subscribed: Math.round((Date.now() - (subscriber.verifiedAt ?? subscriber.createdAt).getTime()) / 86400000),
+      },
+    });
+  }
 
   // Mail apps with a built in unsubscribe button send this exact field and expect a plain 200.
   if (form?.get("List-Unsubscribe") === "One-Click") {

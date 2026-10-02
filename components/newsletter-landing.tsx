@@ -9,6 +9,7 @@ import { SiteHeader } from "./site-header";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
 import { FAQS } from "@/lib/faqs";
+import { getPostHogVisitorId, trackPostHogEvent } from "@/lib/posthog";
 import { type Stock } from "@/lib/stocks";
 
 const FEATURES = [
@@ -150,7 +151,7 @@ export function NewsletterLanding() {
       const response = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), tickers: picks.map((stock) => stock.symbol) }),
+        body: JSON.stringify({ email: email.trim(), tickers: picks.map((stock) => stock.symbol), visitorId: getPostHogVisitorId() }),
       });
 
       if (response.status === 409) {
@@ -203,7 +204,10 @@ export function NewsletterLanding() {
               <form onSubmit={submit} noValidate>
                 <StockPicker
                   picks={picks}
-                  onPicksChange={(next) => { setPicks(next); setError(""); setSubmitted(false); }}
+                  onPicksChange={(next) => {
+                    if (picks.length === 0 && next.length > 0) trackPostHogEvent("signup_started", { tickers_count: next.length });
+                    setPicks(next); setError(""); setSubmitted(false);
+                  }}
                   label="Step 1 · Choose up to five stocks you want us to follow"
                   mobileLabel="Step 1 · Choose up to five stocks"
                 />

@@ -3,6 +3,7 @@ import { listActiveSubscribers, markSubscribersSent } from "@/db/subscribers";
 import { isSameBriefDay } from "@/lib/newsletter/brief-day";
 import { gatherBriefFacts } from "@/lib/newsletter/brief-data";
 import { hasFmpConfig } from "@/lib/newsletter/market-data";
+import { trackServerNow } from "@/lib/analytics-server";
 import { hasSesConfig, sendEmail } from "@/lib/newsletter/ses";
 import { sendDigestToSubscriber, type BriefCache } from "@/lib/newsletter/send-digest";
 import { hasBriefWriterConfig } from "@/lib/newsletter/write-brief";
@@ -67,6 +68,19 @@ export async function GET(request: Request) {
   }
 
   await markSubscribersSent(sentIds);
+
+  await trackServerNow({
+    event: "daily_send_run",
+    distinctId: "system",
+    properties: {
+      $process_person_profile: false,
+      internal: false,
+      subscribers: subscribers.length,
+      sent: sentIds.length,
+      failed: subscribers.length - sentIds.length,
+      no_brief: noBrief,
+    },
+  });
 
   return NextResponse.json({ ok: true, sent: sentIds.length, subscribers: allActive.length });
 }

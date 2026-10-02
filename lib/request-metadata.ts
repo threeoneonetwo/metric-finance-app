@@ -25,7 +25,7 @@ export function getVisitorMetadata(headers: HeadersLike): VisitorMetadata {
   };
 }
 
-function getClientIp(headers: HeadersLike) {
+export function getClientIp(headers: HeadersLike) {
   const forwardedFor = headers.get("x-forwarded-for");
   if (forwardedFor) return forwardedFor.split(",")[0]?.trim();
   return firstHeader(headers, ["x-real-ip", "cf-connecting-ip", "x-vercel-forwarded-for"]);

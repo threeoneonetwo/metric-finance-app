@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { listBriefingsForSubscriber } from "@/db/briefings";
+import { isInternalEmail, trackServer } from "@/lib/analytics-server";
 import { resolveSubscriber } from "@/lib/session-server";
 import { ManageWatchlist } from "@/components/manage-watchlist";
 import { RequestManageLink } from "@/components/request-manage-link";
@@ -50,6 +51,11 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
   }
 
   const briefings = await listBriefingsForSubscriber(subscriber.id);
+  await trackServer({
+    event: "dashboard_viewed",
+    distinctId: subscriber.id,
+    properties: { internal: isInternalEmail(subscriber.email), just_confirmed: welcome === "1", briefs_count: briefings.length },
+  });
 
   return (
     <main>

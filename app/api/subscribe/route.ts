@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isRateLimited } from "@/db/rate-limit";
 import { upsertSubscriber } from "@/db/subscribers";
+import { isInternalEmail, trackServer } from "@/lib/analytics-server";
 import { manageUrl } from "@/lib/manage-link";
 import { hasSesConfig, sendReturningEmail, sendVerificationEmail } from "@/lib/newsletter/ses";
 
@@ -67,6 +68,26 @@ export async function POST(request: Request) {
     }
   }
 
+  // The visitor's anonymous PostHog id links this signup to the visit that led to it.
+  const visitorId = body.visitorId && body.visitorId.length <= 100 ? body.visitorId : undefined;
+  const internal = isInternalEmail(subscriber.email);
+  if (subscriber.active) {
+    await trackServer({
+      event: "signup_already_subscribed",
+      distinctId: visitorId ?? subscriber.id,
+      properties: { internal, tickers_count: tickers.length },
+    });
+  } else {
+    await trackServer({
+      event: "signup_submitted",
+      distinctId: visitorId ?? subscriber.id,
+      properties: { internal, tickers_count: tickers.length },
+    });
+    if (visitorId) {
+      await trackServer({ event: "$identify", distinctId: subscriber.id, anonymousId: visitorId, properties: { internal } });
+    }
+  }
+
   // One signup per email: say so plainly. (This deliberately reveals that the address is subscribed.)
   if (subscriber.active) {
     return NextResponse.json(
@@ -78,14 +99,15 @@ export async function POST(request: Request) {
   return NextResponse.json({ ok: true, needsVerification: true });
 }
 
-function isSubscribeBody(value: unknown): value is { email: string; tickers: string[]; name?: string } {
+function isSubscribeBody(value: unknown): value is { email: string; tickers: string[]; name?: string; visitorId?: string } {
   if (!value || typeof value !== "object") return false;
   const body = value as Record<string, unknown>;
   return (
     typeof body.email === "string" &&
     Array.isArray(body.tickers) &&
     body.tickers.every((ticker) => typeof ticker === "string") &&
-    (body.name === undefined || typeof body.name === "string")
+    (body.name === undefined || typeof body.name === "string") &&
+    (body.visitorId === undefined || typeof body.visitorId === "string")
   );
 }
 

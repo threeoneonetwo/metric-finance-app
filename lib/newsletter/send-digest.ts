@@ -1,5 +1,6 @@
 import { briefUrl, manageUrl } from "@/lib/manage-link";
 import { recordBriefing } from "@/db/briefings";
+import { isInternalEmail, trackServerNow } from "@/lib/analytics-server";
 import type { BriefFacts } from "./brief-data";
 import type { Brief } from "./brief-schema";
 import { renderBriefEmail } from "./render-brief";
@@ -71,6 +72,12 @@ export async function sendDigestToSubscriber(input: {
       "List-Unsubscribe": `<${unsubscribeUrl}>`,
       "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
     },
+  });
+
+  await trackServerNow({
+    event: "brief_sent",
+    distinctId: input.subscriber.id,
+    properties: { internal: isInternalEmail(input.subscriber.email), tickers_count: tickers.length },
   });
 
   return { sent: true as const };
