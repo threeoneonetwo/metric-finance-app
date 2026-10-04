@@ -24,14 +24,14 @@ export function LearnShell({ crumbs, jsonLd, children }: { crumbs: Crumb[]; json
       <div className={styles.page}>
         <SiteHeader />
         <div className={styles.main}>
-          <p className={styles.crumbs}>
+          {crumbs.length > 1 && <p className={styles.crumbs}>
             {crumbs.map((crumb, index) => (
               <span key={crumb.href}>
                 {index > 0 ? " / " : ""}
                 {index < crumbs.length - 1 ? <Link href={crumb.href}>{crumb.name}</Link> : crumb.name}
               </span>
             ))}
-          </p>
+          </p>}
           {children}
         </div>
         <SiteFooter />

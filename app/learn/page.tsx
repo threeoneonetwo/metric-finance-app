@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BookOpen, LineChart, Newspaper, Spline } from "lucide-react";
+import { ArrowUpRight, BookOpen, LineChart, Newspaper, Spline } from "lucide-react";
 import Link from "next/link";
 import { LearnShell, SignupCta } from "@/components/learn-shell";
 import { StockLogo } from "@/components/stock-logo";
@@ -25,18 +25,39 @@ export default async function LearnPage() {
   const pairs = comparePairs().slice(0, 6);
   return (
     <LearnShell crumbs={[{ name: "Learn", href: "/learn" }]}>
-      <span className={styles.eyebrow}>Learn</span>
-      <h1 className={styles.h1}>Learn stocks and investing in <span className={styles.accent}>plain English</span></h1>
-      <p className={styles.lead}>
-        Free guides that explain how stocks work, what the jargon means and what is going on with the companies you care about. No finance degree needed.
-      </p>
-      <StockLookupBox />
+      <div className={styles.hero}>
+        <span className={styles.eyebrow}>Free · Plain English · No jargon</span>
+        <h1 className={styles.h1}>Learn stocks and investing in <span className={styles.accent}>plain English</span></h1>
+        <p className={styles.lead}>
+          Free guides that explain how stocks work, what the jargon means and what is going on with the companies you care about. No finance degree needed.
+        </p>
+        <StockLookupBox />
+        <ul className={styles.heroHints}>
+          <li>Try</li>
+          {["AAPL", "NVDA", "TSLA", "MSFT"].map((symbol) => (
+            <li key={symbol}><Link href={`/learn/stocks/${symbol.toLowerCase()}`}>{symbol}</Link></li>
+          ))}
+        </ul>
+      </div>
 
       <ul className={styles.tiles}>
-        <li><Link href="/learn/stocks"><span className={styles.tileIcon}><LineChart size={22} /></span><strong>Stock guides</strong><span>Any Nasdaq or NYSE stock, explained simply</span></Link></li>
-        <li><Link href="/learn/market-today"><span className={styles.tileIcon}><Newspaper size={22} /></span><strong>Market today</strong><span>A recap after every trading day</span></Link></li>
-        <li><Link href="/learn/guides"><span className={styles.tileIcon}><BookOpen size={22} /></span><strong>Beginner guides</strong><span>One clear idea at a time</span></Link></li>
-        <li><Link href="/learn/terms"><span className={styles.tileIcon}><Spline size={22} /></span><strong>Glossary</strong><span>{TERMS.length} terms in plain words</span></Link></li>
+        {[
+          { href: "/learn/stocks", icon: <LineChart size={24} />, tone: styles.tileBlue, title: "Stock guides", text: "Any Nasdaq or NYSE stock, explained simply" },
+          { href: "/learn/market-today", icon: <Newspaper size={24} />, tone: styles.tileViolet, title: "Market today", text: "A recap after every trading day" },
+          { href: "/learn/guides", icon: <BookOpen size={24} />, tone: styles.tileTeal, title: "Beginner guides", text: "One clear idea at a time" },
+          { href: "/learn/terms", icon: <Spline size={24} />, tone: styles.tileAmber, title: "Glossary", text: `${TERMS.length} terms in plain words` },
+        ].map((tile) => (
+          <li key={tile.href}>
+            <Link href={tile.href}>
+              <span className={styles.tileTop}>
+                <span className={`${styles.tileIcon} ${tile.tone}`}>{tile.icon}</span>
+                <ArrowUpRight className={styles.tileArrow} size={20} />
+              </span>
+              <strong>{tile.title}</strong>
+              <span className={styles.tileText}>{tile.text}</span>
+            </Link>
+          </li>
+        ))}
       </ul>
 
       {latest && (

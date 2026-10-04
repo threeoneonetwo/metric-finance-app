@@ -1,7 +1,10 @@
 /* Learn section design: dark glass surfaces, a soft blue glow behind each page header, roomy type. */
 .page { position: relative; min-height: 100vh; background: #05070d; color: #fff; font-family: Arial, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: clip; }
-.page::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 620px; background: radial-gradient(60% 70% at 50% 0%, rgba(92, 130, 255, .22), transparent 70%), radial-gradient(35% 45% at 88% 8%, rgba(155, 110, 255, .12), transparent 70%); pointer-events: none; }
-.main { position: relative; max-width: 1040px; margin: 0 auto; padding: 56px 24px 96px; }
+.page::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 720px; background: radial-gradient(55% 65% at 50% 0%, rgba(92, 130, 255, .34), transparent 72%), radial-gradient(30% 40% at 90% 6%, rgba(155, 110, 255, .2), transparent 70%), radial-gradient(30% 40% at 8% 10%, rgba(60, 200, 190, .1), transparent 70%); pointer-events: none; }
+.page::after { content: ""; position: absolute; inset: 0 0 auto 0; height: 560px; background-image: radial-gradient(rgba(160, 185, 255, .16) 1px, transparent 1px); background-size: 28px 28px; -webkit-mask-image: linear-gradient(#000, transparent); mask-image: linear-gradient(#000, transparent); pointer-events: none; }
+.main { position: relative; width: min(1152px, calc(100% - 40px)); margin: 0 auto; padding: 56px 0 96px; }
+@media (min-width: 640px) { .main { width: min(1152px, calc(100% - 64px)); } }
+@media (min-width: 1024px) { .main { width: min(1152px, calc(100% - 80px)); } }
 .crumbs { margin: 0 0 22px; color: #62729b; font-size: 13px; }
 .crumbs a { color: #8fa8fa; text-decoration: none; }
 .crumbs a:hover { color: #fff; }
@@ -54,7 +57,7 @@
 .tiles a:hover { border-color: rgba(143, 168, 250, .6); transform: translateY(-4px); }
 .tileIcon { display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 16px; border-radius: 14px; background: rgba(143, 168, 250, .15); color: #a9bdff; }
 .tiles strong { display: block; font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
-.tiles span { display: block; margin-top: 6px; color: #91a1c6; font-size: 14px; line-height: 1.5; }
+.tiles .tileText { display: block; margin-top: 6px; color: #91a1c6; font-size: 14.5px; line-height: 1.55; }
 .featured { display: grid; gap: 10px; padding: 28px; }
 .featured h2 { margin: 6px 0 0; font-size: clamp(22px, 3.2vw, 30px); letter-spacing: -.03em; }
 .featured h2::before { display: none; }
@@ -140,7 +143,7 @@
 .note { margin: 28px 0 0; color: #56668a; font-size: 12.5px; line-height: 1.6; }
 
 @media (max-width: 760px) {
-  .main { padding: 36px 16px 72px; }
+  .main { padding: 36px 0 72px; }
   .card, .cta { padding: 20px; }
   .lead { font-size: 17px; }
   .searchBox { height: 56px; font-size: 16px; }
@@ -154,3 +157,26 @@
 .card .chips li { padding-left: 0; margin: 0; }
 .card .chips li::before { display: none; }
 .logo { border: 1px solid rgba(255, 255, 255, .18); }
+
+/* Centered hero on the Learn hub */
+.hero { display: flex; flex-direction: column; align-items: center; padding: 28px 0 8px; text-align: center; }
+.hero .h1 { margin-left: auto; margin-right: auto; font-size: clamp(34px, 6.4vw, 68px); }
+.hero .lead { margin-left: auto; margin-right: auto; }
+.hero .searchWrap { width: 100%; max-width: 680px; text-align: left; }
+.heroHints { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; color: #62729b; font-size: 13.5px; }
+.heroHints a { color: #9fb6ff; text-decoration: none; }
+.heroHints a:hover { color: #fff; }
+
+/* Colourful hub tiles */
+.tiles { margin-top: 44px; }
+.tiles a { display: flex; flex-direction: column; padding: 24px; border-color: rgba(255, 255, 255, .1); background: linear-gradient(160deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .015) 70%); }
+.tiles a:hover { box-shadow: 0 18px 50px rgba(0, 0, 0, .45), 0 0 0 1px rgba(143, 168, 250, .35) inset; }
+.tileTop { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.tileIcon { margin: 0; width: 50px; height: 50px; border-radius: 15px; color: #fff; box-shadow: 0 8px 22px var(--glow, rgba(111, 140, 255, .4)); }
+.tileArrow { color: #52618a; transition: color 160ms ease, transform 160ms ease; }
+.tiles a:hover .tileArrow { color: #fff; transform: translate(3px, -3px); }
+.tileBlue { background: linear-gradient(135deg, #7c9bff, #5a77f0); }
+.tileViolet { --glow: rgba(167, 123, 255, .4); background: linear-gradient(135deg, #b48cff, #8a5cf0); }
+.tileTeal { --glow: rgba(53, 208, 186, .35); background: linear-gradient(135deg, #3fd9c2, #1fa99a); }
+.tileAmber { --glow: rgba(255, 180, 84, .35); background: linear-gradient(135deg, #ffc46b, #f59a2c); }
+.tiles strong { font-size: 19px; }
