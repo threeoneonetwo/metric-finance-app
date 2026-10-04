@@ -58,3 +58,31 @@ export function SignupCta({ title, body }: { title: string; body: string }) {
     </div>
   );
 }
+
+export function AsideCta({ title, body }: { title: string; body: string }) {
+  return (
+    <div className={styles.asideCta}>
+      <h3>{title}</h3>
+      <p>{body}</p>
+      <Link className={styles.button} href="/#signup">Start my free brief</Link>
+    </div>
+  );
+}
+
+export const headingId = (heading: string) => heading.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+export function Toc({ headings }: { headings: string[] }) {
+  return (
+    <div className={styles.asideCard}>
+      <h3>On this page</h3>
+      <ul className={styles.toc}>
+        {headings.map((heading) => <li key={heading}><a href={`#${headingId(heading)}`}>{heading}</a></li>)}
+      </ul>
+    </div>
+  );
+}
+
+export function readingMinutes(texts: string[]) {
+  const words = texts.join(" ").split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 220));
+}

@@ -22,7 +22,7 @@ export default async function GuidesIndex() {
   return (
     <LearnShell crumbs={[{ name: "Learn", href: "/learn" }, { name: "Guides", href: "/learn/guides" }]}>
       <span className={styles.eyebrow}>Guides</span>
-      <h1 className={styles.h1}>Beginner stock market guides</h1>
+      <h1 className={styles.h1}>Beginner stock market <span className={styles.accent}>guides</span></h1>
       <p className={styles.lead}>New guides are added regularly. Each one explains a single idea in plain English.</p>
       <ul className={styles.cards}>
         {all.map((guide) => (

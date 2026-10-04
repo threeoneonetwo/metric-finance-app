@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLearnStock } from "@/db/learn";
 import { latestHeadlines } from "@/lib/learn/news";
-import { faqJsonLd, LearnShell, SignupCta, SITE } from "@/components/learn-shell";
+import { StockLogo } from "@/components/stock-logo";
+import { AsideCta, faqJsonLd, LearnShell, SignupCta, SITE } from "@/components/learn-shell";
 import { TERMS } from "@/lib/learn/terms";
 import { driversFor, findStock, indexableStocks, isIndexable, money, peersOf, sizeLabel, summaryFor, termsFor } from "@/lib/learn/stocks";
 import styles from "../../learn.module.css";
@@ -67,9 +68,14 @@ export default async function StockPage({ params }: Props) {
       jsonLd={[faqJsonLd(faqs)]}
     >
       <span className={styles.eyebrow}>{stock.exchange}: {stock.symbol}</span>
-      <h1 className={styles.h1}>{name} ({stock.symbol}) stock, explained like you&apos;re 5</h1>
-      <p className={styles.lead}>{summary}</p>
+      <div className={styles.stockHead}>
+        <StockLogo symbol={stock.symbol} large />
+        <h1 className={styles.h1}>{name} ({stock.symbol}) stock, <span className={styles.accent}>explained like you&apos;re 5</span></h1>
+      </div>
+      <p className={styles.lead} style={{ marginTop: 18 }}>{summary}</p>
 
+      <div className={styles.layout}>
+        <div>
       <dl className={styles.facts}>
         <div><dt>Ticker</dt><dd>{stock.symbol}</dd></div>
         <div><dt>Exchange</dt><dd>{exchange}</dd></div>
@@ -105,10 +111,12 @@ export default async function StockPage({ params }: Props) {
         </section>
       )}
 
-      <SignupCta
-        title={`Follow ${stock.symbol} in your daily brief`}
-        body={`Each trading day at 5 PM ET we post what happened to ${name} and why it matters, in plain English. Free.`}
-      />
+      <div className={styles.ctaInline}>
+        <SignupCta
+          title={`Follow ${stock.symbol} in your daily brief`}
+          body={`Each trading day at 5 PM ET we post what happened to ${name} and why it matters, in plain English. Free.`}
+        />
+      </div>
 
       <section className={styles.card}>
         <h2>Key terms to know before you follow {stock.symbol}</h2>
@@ -118,14 +126,27 @@ export default async function StockPage({ params }: Props) {
       </section>
 
       <section className={styles.faq}>
-        <h2 className={styles.groupTitle}>Questions about {name} stock</h2>
+        <h2 className={styles.groupTitle} style={{ marginTop: 34 }}>Questions about {name} stock</h2>
         {faqs.map((faq) => (
-          <div key={faq.q}>
-            <h3>{faq.q}</h3>
+          <details key={faq.q}>
+            <summary>{faq.q}</summary>
             <p>{faq.a}</p>
-          </div>
+          </details>
         ))}
       </section>
+        </div>
+        <aside className={styles.aside}>
+          <AsideCta title={`Follow ${stock.symbol} daily`} body={`A free brief on ${name} and your other stocks, every trading day at 5 PM ET.`} />
+          {peers.length > 0 && (
+            <div className={styles.asideCard}>
+              <h3>Similar stocks</h3>
+              <ul className={styles.toc}>
+                {peers.map((peer) => <li key={peer.slug}><Link href={`/learn/stocks/${peer.slug}`}>{peer.stock.symbol} · {peer.name}</Link></li>)}
+              </ul>
+            </div>
+          )}
+        </aside>
+      </div>
 
       {peers.length > 0 && (
         <section>

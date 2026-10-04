@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { BookOpen, LineChart, Newspaper, Spline } from "lucide-react";
 import Link from "next/link";
 import { LearnShell, SignupCta } from "@/components/learn-shell";
+import { StockLogo } from "@/components/stock-logo";
 import { StockLookupBox } from "@/components/stock-lookup-box";
 import { listLearnArticles } from "@/db/learn";
 import { GUIDES } from "@/lib/learn/guides";
@@ -24,21 +26,29 @@ export default async function LearnPage() {
   return (
     <LearnShell crumbs={[{ name: "Learn", href: "/learn" }]}>
       <span className={styles.eyebrow}>Learn</span>
-      <h1 className={styles.h1}>Learn stocks and investing in plain English</h1>
+      <h1 className={styles.h1}>Learn stocks and investing in <span className={styles.accent}>plain English</span></h1>
       <p className={styles.lead}>
         Free guides that explain how stocks work, what the jargon means and what is going on with the companies you care about. No finance degree needed.
       </p>
       <StockLookupBox />
 
+      <ul className={styles.tiles}>
+        <li><Link href="/learn/stocks"><span className={styles.tileIcon}><LineChart size={22} /></span><strong>Stock guides</strong><span>Any Nasdaq or NYSE stock, explained simply</span></Link></li>
+        <li><Link href="/learn/market-today"><span className={styles.tileIcon}><Newspaper size={22} /></span><strong>Market today</strong><span>A recap after every trading day</span></Link></li>
+        <li><Link href="/learn/guides"><span className={styles.tileIcon}><BookOpen size={22} /></span><strong>Beginner guides</strong><span>One clear idea at a time</span></Link></li>
+        <li><Link href="/learn/terms"><span className={styles.tileIcon}><Spline size={22} /></span><strong>Glossary</strong><span>{TERMS.length} terms in plain words</span></Link></li>
+      </ul>
+
       {latest && (
-        <Link className={styles.card} href={`/learn/market-today/${latest.publishedOn}`} style={{ display: "block", textDecoration: "none", color: "inherit", marginTop: 28 }}>
-          <span className={styles.eyebrow}>Latest market recap</span>
-          <h2 style={{ marginTop: 10 }}>{latest.title}</h2>
-          <p style={{ margin: 0, color: "#b7c2dd", fontSize: 16, lineHeight: 1.7 }}>{latest.intro}</p>
+        <Link className={`${styles.card} ${styles.linkCard} ${styles.featured}`} href={`/learn/market-today/${latest.publishedOn}`} style={{ marginTop: 28 }}>
+          <span className={styles.eyebrow} style={{ justifySelf: "start" }}>Latest market recap</span>
+          <h2>{latest.title}</h2>
+          <p>{latest.intro}</p>
+          <span className={styles.readMore}>Read the recap</span>
         </Link>
       )}
 
-      <h2 className={styles.groupTitle}>Beginner guides</h2>
+      <h2 className={styles.groupTitle}>Latest guides</h2>
       <ul className={styles.cards}>
         {[...newGuides.map((guide) => ({ slug: guide.slug, title: guide.title, description: guide.description })), ...GUIDES].slice(0, 8).map((guide) => (
           <li key={guide.slug}>
@@ -53,12 +63,17 @@ export default async function LearnPage() {
       <p className={styles.related}><Link href="/learn/guides">See all guides</Link> · <Link href="/learn/market-today">Daily market recaps</Link></p>
 
       <h2 className={styles.groupTitle}>Popular stocks explained</h2>
-      <ul className={styles.chips}>
+      <ul className={styles.grid}>
         {popular.map((entry) => (
-          <li key={entry.slug}><Link href={`/learn/stocks/${entry.slug}`}>{entry.name} ({entry.stock.symbol})</Link></li>
+          <li key={entry.slug}>
+            <Link href={`/learn/stocks/${entry.slug}`}>
+              <StockLogo symbol={entry.stock.symbol} />
+              <span className={styles.gridText}><strong>{entry.stock.symbol}</strong><span>{entry.name}</span></span>
+            </Link>
+          </li>
         ))}
-        <li><Link href="/learn/stocks">See all stock guides</Link></li>
       </ul>
+      <p className={styles.related}><Link href="/learn/stocks">See all stock guides</Link></p>
 
       <h2 className={styles.groupTitle}>Stock market glossary</h2>
       <ul className={styles.chips}>

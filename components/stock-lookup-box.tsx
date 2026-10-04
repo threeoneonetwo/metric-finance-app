@@ -28,7 +28,7 @@ export function StockLookupBox() {
   }, [query]);
 
   return (
-    <div>
+    <div className={styles.searchWrap}>
       <input
         className={styles.searchBox}
         value={query}

@@ -12,21 +12,30 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   const sorted = [...TERMS].sort((a, b) => a.term.localeCompare(b.term));
+  const letters = [...new Set(sorted.map((term) => term.term[0].toUpperCase()))];
   return (
     <LearnShell crumbs={[{ name: "Learn", href: "/learn" }, { name: "Glossary", href: "/learn/terms" }]}>
       <span className={styles.eyebrow}>Glossary</span>
-      <h1 className={styles.h1}>Stock market terms explained like you&apos;re 5</h1>
+      <h1 className={styles.h1}>Stock market terms <span className={styles.accent}>explained like you&apos;re 5</span></h1>
       <p className={styles.lead}>Short, simple definitions of the words you will see in financial news.</p>
-      <ul className={styles.cards}>
-        {sorted.map((term) => (
-          <li key={term.slug}>
-            <Link href={`/learn/terms/${term.slug}`}>
-              <strong>{term.term}</strong>
-              <span>{term.simple}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <nav className={styles.alphabet} aria-label="Jump to letter">
+        {letters.map((letter) => <a key={letter} href={`#letter-${letter}`}>{letter}</a>)}
+      </nav>
+      {letters.map((letter) => (
+        <section key={letter}>
+          <h2 className={styles.letter} id={`letter-${letter}`}>{letter}</h2>
+          <ul className={styles.cards}>
+            {sorted.filter((term) => term.term[0].toUpperCase() === letter).map((term) => (
+              <li key={term.slug}>
+                <Link href={`/learn/terms/${term.slug}`}>
+                  <strong>{term.term}</strong>
+                  <span>{term.simple}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
       <SignupCta title="See these words in action" body="Get a free daily brief on your own stocks, explained in plain English." />
     </LearnShell>
   );

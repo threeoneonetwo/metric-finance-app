@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { StockLogo } from "@/components/stock-logo";
 import { faqJsonLd, LearnShell, SignupCta, SITE } from "@/components/learn-shell";
 import { comparePairs, driversFor, findStock, money, sizeLabel, summaryFor, type StockEntry } from "@/lib/learn/stocks";
 import styles from "../../learn.module.css";
@@ -61,7 +62,8 @@ export default async function ComparePage({ params }: Props) {
       jsonLd={[faqJsonLd(faqs)]}
     >
       <span className={styles.eyebrow}>Compare</span>
-      <h1 className={styles.h1}>{a.name} vs {b.name}: how do the stocks compare?</h1>
+      <div className={styles.versus}><StockLogo symbol={a.stock.symbol} large /><em>vs</em><StockLogo symbol={b.stock.symbol} large /></div>
+      <h1 className={styles.h1}>{a.name} vs {b.name}: <span className={styles.accent}>how do the stocks compare?</span></h1>
       <p className={styles.lead}>
         {a.stock.symbol} and {b.stock.symbol} side by side, in plain English. This is an explanation of the two businesses, not a recommendation to buy either one.
       </p>
@@ -80,7 +82,7 @@ export default async function ComparePage({ params }: Props) {
       <SignupCta title={`Follow ${a.stock.symbol} and ${b.stock.symbol} every day`} body="Add both to your watchlist and read a free plain English brief every trading day at 5 PM ET." />
       <section className={styles.faq}>
         <h2 className={styles.groupTitle}>Common questions</h2>
-        {faqs.map((faq) => <div key={faq.q}><h3>{faq.q}</h3><p>{faq.a}</p></div>)}
+        {faqs.map((faq) => <details key={faq.q}><summary>{faq.q}</summary><p>{faq.a}</p></details>)}
       </section>
       <p className={styles.note}>Educational information, not financial advice. Figures are approximate and do not include live prices.</p>
     </LearnShell>

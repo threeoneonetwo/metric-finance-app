@@ -18,12 +18,13 @@ export default async function MarketTodayIndex() {
   return (
     <LearnShell crumbs={[{ name: "Learn", href: "/learn" }, { name: "Market today", href: "/learn/market-today" }]}>
       <span className={styles.eyebrow}>Market today</span>
-      <h1 className={styles.h1}>Stock market today, explained like you&apos;re 5</h1>
+      <h1 className={styles.h1}>Stock market today, <span className={styles.accent}>explained like you&apos;re 5</span></h1>
       <p className={styles.lead}>A short recap after every trading day: how the market did, what moved and what to learn from it.</p>
       {latest ? (
-        <Link className={styles.card} href={`/learn/market-today/${latest.publishedOn}`} style={{ display: "block", textDecoration: "none", color: "inherit" }}>
+        <Link className={`${styles.card} ${styles.linkCard} ${styles.featured}`} href={`/learn/market-today/${latest.publishedOn}`}>
           <h2>{latest.title}</h2>
-          <p style={{ margin: 0, color: "#b7c2dd", fontSize: 16, lineHeight: 1.7 }}>{latest.intro}</p>
+          <p>{latest.intro}</p>
+          <span className={styles.readMore}>Read the recap</span>
         </Link>
       ) : (
         <p className={styles.lead}>The first recap will appear after the next trading day closes.</p>

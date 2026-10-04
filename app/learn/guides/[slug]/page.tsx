@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StoredArticlePage } from "@/components/learn-article";
-import { LearnShell, SignupCta, SITE } from "@/components/learn-shell";
+import { AsideCta, headingId, LearnShell, readingMinutes, SignupCta, SITE, Toc } from "@/components/learn-shell";
 import { getLearnArticle } from "@/db/learn";
 import { findGuide, GUIDES } from "@/lib/learn/guides";
 import { findTerm } from "@/lib/learn/terms";
@@ -61,15 +61,26 @@ export default async function GuidePage({ params }: Props) {
       <span className={styles.eyebrow}>Guide</span>
       <h1 className={styles.h1}>{guide.title}</h1>
       <p className={styles.lead}>{guide.intro}</p>
-      <article className={styles.prose}>
-        {guide.sections.map((section) => (
-          <section key={section.heading}>
-            <h2>{section.heading}</h2>
-            {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-          </section>
-        ))}
-      </article>
-      <SignupCta title="Get your stocks explained every day" body="Pick up to five stocks and read a free brief every trading day at 5 PM ET." />
+      <p className={styles.meta}><span>{readingMinutes([guide.intro, ...guide.sections.flatMap((section) => section.paragraphs)])} min read</span></p>
+      <div className={styles.layout}>
+        <div>
+          <article className={styles.prose}>
+            {guide.sections.map((section) => (
+              <section key={section.heading}>
+                <h2 id={headingId(section.heading)}>{section.heading}</h2>
+                {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              </section>
+            ))}
+          </article>
+          <div className={styles.ctaInline}>
+            <SignupCta title="Get your stocks explained every day" body="Pick up to five stocks and read a free brief every trading day at 5 PM ET." />
+          </div>
+        </div>
+        <aside className={styles.aside}>
+          <Toc headings={guide.sections.map((section) => section.heading)} />
+          <AsideCta title="Your stocks, explained daily" body="Free brief on up to five stocks, every trading day at 5 PM ET." />
+        </aside>
+      </div>
       {terms.length > 0 && (
         <section>
           <h2 className={styles.groupTitle}>Terms in this guide</h2>

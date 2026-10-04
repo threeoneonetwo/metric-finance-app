@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LearnShell, SignupCta, SITE } from "@/components/learn-shell";
+import { AsideCta, headingId, LearnShell, readingMinutes, SignupCta, SITE, Toc } from "@/components/learn-shell";
 import type { LearnSection } from "@/db/schema";
 import { findTerm } from "@/lib/learn/terms";
 import styles from "@/app/learn/learn.module.css";
@@ -39,25 +39,43 @@ export function StoredArticlePage({ article, base }: { article: StoredArticle; b
       crumbs={[{ name: "Learn", href: "/learn" }, base, { name: article.title.split(":").pop()!.trim(), href: `${base.href}/${article.slug.replace(/^market-today-/, "")}` }]}
       jsonLd={[schema]}
     >
-      <span className={styles.eyebrow}>{article.kind === "market-today" ? "Market recap" : "Guide"} · {published}</span>
+      <span className={styles.eyebrow}>{article.kind === "market-today" ? "Market recap" : "Guide"}</span>
       <h1 className={styles.h1}>{article.title}</h1>
       <p className={styles.lead}>{article.intro}</p>
+      <p className={styles.meta}>
+        <span>{published}</span>
+        <span>{readingMinutes([article.intro, ...article.sections.flatMap((section) => section.paragraphs)])} min read</span>
+      </p>
       {movers.length > 0 && (
         <ul className={styles.chips}>
           {movers.map((move) => (
-            <li key={move.symbol}><Link href={`/learn/stocks/${move.symbol.toLowerCase().replace(/\./g, "-")}`}>{move.symbol} {sign(move.changePercent)}</Link></li>
+            <li key={move.symbol}>
+              <Link href={`/learn/stocks/${move.symbol.toLowerCase().replace(/\./g, "-")}`}>
+                {move.symbol} <span className={move.changePercent >= 0 ? styles.up : styles.down}>{sign(move.changePercent)}</span>
+              </Link>
+            </li>
           ))}
         </ul>
       )}
-      <article className={styles.prose}>
-        {article.sections.map((section) => (
-          <section key={section.heading}>
-            <h2>{section.heading}</h2>
-            {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-          </section>
-        ))}
-      </article>
-      <SignupCta title="Get your stocks explained every day" body="Pick up to five stocks and read a free brief every trading day at 5 PM ET." />
+      <div className={styles.layout}>
+        <div>
+          <article className={styles.prose}>
+            {article.sections.map((section) => (
+              <section key={section.heading}>
+                <h2 id={headingId(section.heading)}>{section.heading}</h2>
+                {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              </section>
+            ))}
+          </article>
+          <div className={styles.ctaInline}>
+            <SignupCta title="Get your stocks explained every day" body="Pick up to five stocks and read a free brief every trading day at 5 PM ET." />
+          </div>
+        </div>
+        <aside className={styles.aside}>
+          <Toc headings={article.sections.map((section) => section.heading)} />
+          <AsideCta title="Your stocks, explained daily" body="Free brief on up to five stocks, every trading day at 5 PM ET." />
+        </aside>
+      </div>
       {terms.length > 0 && (
         <section>
           <h2 className={styles.groupTitle}>Terms in this article</h2>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LearnShell, SignupCta } from "@/components/learn-shell";
+import { StockLogo } from "@/components/stock-logo";
 import { StockLookupBox } from "@/components/stock-lookup-box";
 import { indexableStocks } from "@/lib/learn/stocks";
 import styles from "../learn.module.css";
@@ -20,20 +21,20 @@ export default function StocksDirectoryPage() {
   return (
     <LearnShell crumbs={[{ name: "Learn", href: "/learn" }, { name: "Stock guides", href: "/learn/stocks" }]}>
       <span className={styles.eyebrow}>Stock guides</span>
-      <h1 className={styles.h1}>Stocks explained like you&apos;re 5</h1>
+      <h1 className={styles.h1}>Stocks explained <span className={styles.accent}>like you&apos;re 5</span></h1>
       <p className={styles.lead}>
         Look up any stock listed on the Nasdaq or New York Stock Exchange, or browse popular companies by sector below. Each guide covers what the company does, how it makes money and what moves its stock.
       </p>
       <StockLookupBox />
       {[...groups].map(([sector, items]) => (
         <section key={sector}>
-          <h2 className={styles.groupTitle}>{sector}</h2>
+          <h2 className={styles.groupTitle}>{sector} <small>{items.length} stocks</small></h2>
           <ul className={styles.grid}>
             {items.map((entry) => (
               <li key={entry.slug}>
                 <Link href={`/learn/stocks/${entry.slug}`}>
-                  <strong>{entry.stock.symbol}</strong>
-                  <span>{entry.name}</span>
+                  <StockLogo symbol={entry.stock.symbol} />
+                  <span className={styles.gridText}><strong>{entry.stock.symbol}</strong><span>{entry.name}</span></span>
                 </Link>
               </li>
             ))}

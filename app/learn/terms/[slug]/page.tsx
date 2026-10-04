@@ -36,19 +36,19 @@ export default async function TermPage({ params }: Props) {
       jsonLd={[faqJsonLd(faqs)]}
     >
       <span className={styles.eyebrow}>Glossary</span>
-      <h1 className={styles.h1}>What is {term.term}?</h1>
+      <h1 className={styles.h1}>What is <span className={styles.accent}>{term.term}</span>?</h1>
       <p className={styles.lead}>{term.simple}</p>
       <section className={styles.card}>
         <h2>The simple explanation</h2>
-        <p style={{ margin: 0, color: "#b7c2dd", fontSize: 16, lineHeight: 1.7 }}>{term.explain}</p>
+        <p style={{ margin: 0, color: "#c4cee6", fontSize: 17, lineHeight: 1.75 }}>{term.explain}</p>
       </section>
       <section className={styles.card}>
         <h2>An example</h2>
-        <p style={{ margin: 0, color: "#b7c2dd", fontSize: 16, lineHeight: 1.7 }}>{term.example}</p>
+        <p style={{ margin: 0, color: "#c4cee6", fontSize: 17, lineHeight: 1.75 }}>{term.example}</p>
       </section>
       <section className={styles.card}>
         <h2>Why it matters</h2>
-        <p style={{ margin: 0, color: "#b7c2dd", fontSize: 16, lineHeight: 1.7 }}>{term.why}</p>
+        <p style={{ margin: 0, color: "#c4cee6", fontSize: 17, lineHeight: 1.75 }}>{term.why}</p>
       </section>
       <SignupCta title="See it in your own stocks" body="Get a free daily brief that explains your stocks like you're 5, every trading day at 5 PM ET." />
       {related.length > 0 && (
