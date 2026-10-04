@@ -22,6 +22,8 @@ Metric Finance is for everyday investors, especially young professionals, who ow
 ## Links
 
 - [Sign up](https://metricfinance.app/): choose your stocks and enter your email.
+- [Learn: stock guides, glossary and beginner guides](https://metricfinance.app/learn): plain English explainers for popular US stocks, covering what each company does, how it makes money and what moves its price.
+- [Daily stock market recap](https://metricfinance.app/learn/market-today): a plain English recap after every trading day.
 - [Privacy policy](https://metricfinance.app/privacy)
 - [Terms](https://metricfinance.app/terms)
 - Contact: vanshpandita11@gmail.com

@@ -17,7 +17,7 @@ Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle O
 
 ## Rules from the owner
 - Never add Claude as a co-author in commit messages (no `Co-Authored-By` trailer), and don't add "Generated with Claude Code" to PR descriptions.
-- Don't use dashes (em dashes or hyphens as punctuation) in marketing copy or SEO titles.
+- Never use dashes (em dashes, en dashes or hyphens as punctuation) in any content: marketing copy, SEO titles, Learn pages, guides, glossary. Hyphens in compound words are avoided too (write "self driving", not "self-driving").
 - Don't commit `.env*` files. Secrets live in Vercel env vars.
 
 ## Things that are easy to get wrong
@@ -33,10 +33,17 @@ Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle O
 - Preview deployments share the production database. Don't test signup flows with real addresses on previews.
 - All email is sent as "Vansh Pandita <vp@metricfinance.app>" (`lib/sender.ts`, one constant, no env var). Use `SENDER_EMAIL` in copy instead of typing the address. The old `SES_FROM_EMAIL` env var is no longer read. Mail sent to vp@ has nowhere to land until inbound routing exists; replies use Reply-To.
 
+## Learn section (programmatic SEO)
+- Header and footer link to `/learn`, the blog. All programmatic SEO lives there: `/learn/stocks/[symbol]` (a guide for every Nasdaq and NYSE stock), `/learn/terms/[slug]` (glossary), `/learn/guides/[slug]` (long explainers), `/learn/compare/[a]-vs-[b]` (comparisons).
+- Content sources: `lib/learn/terms.ts`, `lib/learn/guides.ts`, `lib/stock-guides.ts` (hand written, 22 stocks), `lib/learn/stocks.ts` (templates by sector for every other stock). Add new terms and guides to those files; the sitemap picks them up.
+- Stock pages make NO live market data calls. Facts come from `data/us-stocks.json` (all ~7,000 stocks, built from the free SEC list by `scripts/build-us-stocks.mjs`) and `data/stock-profiles.json` (sector, industry, market cap; refresh with `scripts/build-stock-profiles.mjs`). Only stocks with a profile or a hand written guide are indexable; the rest are served with noindex.
+- The Learn section updates itself every trading day. After the 5 PM send, `/api/cron/send-daily` runs `refreshLearn()` (`lib/learn/refresh.ts`, in `after()`): it publishes the day's market recap (`/learn/market-today/[date]`), one new guide from the topic queue in `lib/learn/topics.ts` (add topics there), and rewrites about 12 stock pages with Claude using the provider's company profile (the stalest pages first). Content lives in the Neon tables `learn_articles` and `learn_stock_pages` (migration `0007_learn_content.sql`, already applied). Pages fall back to the built in content when a table row is missing. Every string is scrubbed of dashes in `lib/learn/claude.ts`. New URLs are sent to IndexNow (Bing and others); the sitemap rebuilds hourly. Manual run: `GET /api/cron/learn-refresh?only=recap,guide,stocks&limit=12` with `Authorization: Bearer $CRON_SECRET`. Set `LEARN_MODEL` to change the writing model (defaults to `CLAUDE_MODEL`).
+- Signup accepts any stock in `data/us-stocks.json`. The picker searches it through `/api/stocks/search`.
+- The FMP market data plan has a small daily call limit (the free tier is about 250). The daily brief uses about 3 calls per unique ticker, so many subscribers following many different stocks will hit it. Upgrade the FMP plan before growing.
+
 ## SEO
 Homepage title and description target "stocks explained like you're 5" (see `app/page.tsx`). Canonical host is `metricfinance.app` (www redirects to it). Sitemap: `app/sitemap.ts`. AI-crawler summary: `public/llms.txt`. Search Console and Bing Webmaster Tools are used for indexing.
 
 ## Known open items
-- Amazon SES may still be in sandbox mode (only verified addresses receive email). Needs production access from the AWS account that owns IAM user `metricfinance-ses-sender`.
 - Anthropic API credit needs topping up and auto-reload turned on; a failed daily brief emails the owner.
 - Testimonials on the homepage are labelled "From real users" and should be confirmed real.

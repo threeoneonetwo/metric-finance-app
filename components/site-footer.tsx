@@ -25,6 +25,8 @@ export function SiteFooter() {
           <div>
             <p className="text-[11px] font-bold uppercase tracking-widest text-[#67738f]">Product</p>
             <ul className="mt-3 space-y-2 text-sm">
+              <li><Link href="/learn" className="text-[#d7d9dc] transition-colors hover:text-white">Learn</Link></li>
+              <li><Link href="/learn/stocks" className="text-[#d7d9dc] transition-colors hover:text-white">Stock guides</Link></li>
               <li><Link href="/#faq" className="text-[#d7d9dc] transition-colors hover:text-white">FAQ</Link></li>
               <li><Link href="/manage" className="text-[#d7d9dc] transition-colors hover:text-white">Your account</Link></li>
             </ul>

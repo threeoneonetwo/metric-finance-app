@@ -1,5 +1,3 @@
-import { STOCKS } from "@/lib/stocks";
-
 // Shared so the page and its structured data always say the same thing.
 export const FAQS = [
   {
@@ -12,7 +10,7 @@ export const FAQS = [
   },
   {
     question: "Which stocks can I follow?",
-    answer: `You can choose from ${STOCKS.length} of the most followed US companies on the Nasdaq and New York Stock Exchange, and search the list by name or ticker.`,
+    answer: "Any stock listed on the Nasdaq, the New York Stock Exchange or NYSE American. Search by company name or ticker and add up to five to your watchlist.",
   },
   {
     question: "How often will I receive it?",

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { listActiveSubscribers, markSubscribersSent } from "@/db/subscribers";
 import { isSameBriefDay } from "@/lib/newsletter/brief-day";
 import { gatherBriefFacts } from "@/lib/newsletter/brief-data";
@@ -7,8 +7,9 @@ import { trackServerNow } from "@/lib/analytics-server";
 import { hasSesConfig, sendEmail } from "@/lib/newsletter/ses";
 import { sendDigestToSubscriber, type BriefCache } from "@/lib/newsletter/send-digest";
 import { hasBriefWriterConfig } from "@/lib/newsletter/write-brief";
+import { refreshLearn } from "@/lib/learn/refresh";
 
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
@@ -21,6 +22,16 @@ export async function GET(request: Request) {
   if (!isSendHourInNewYork(new Date())) {
     return NextResponse.json({ ok: true, skipped: "not 5 PM in New York" });
   }
+
+  // After the response is sent (so it never delays the brief), refresh the Learn section: today's market recap,
+  // a new guide and a batch of stock pages. It runs after the send so the brief gets the market data quota first.
+  after(async () => {
+    try {
+      console.log("learn refresh:", JSON.stringify(await refreshLearn()));
+    } catch (error) {
+      console.error("learn refresh failed", error);
+    }
+  });
 
   if (!hasFmpConfig() || !hasBriefWriterConfig() || !hasSesConfig()) {
     return NextResponse.json({ error: "Daily send is not fully configured" }, { status: 503 });

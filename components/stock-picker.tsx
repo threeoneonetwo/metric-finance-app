@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
 // Shares the landing page stylesheet so both surfaces stay visually identical.
 import styles from "./newsletter-landing.module.css";
@@ -20,15 +20,36 @@ export function StockPicker({ picks, onPicksChange, label, mobileLabel }: StockP
 
   const handleLogoError = (symbol: string) => setLogoErrors((current) => new Set(current).add(symbol));
 
+  const [remote, setRemote] = useState<Stock[]>([]);
+  const [searchedFor, setSearchedFor] = useState("");
+
+  // Popular stocks answer instantly; everything else comes from a live search of all US listed stocks.
+  useEffect(() => {
+    const normalized = query.trim();
+    if (!normalized) return;
+    const controller = new AbortController();
+    const timer = window.setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/stocks/search?q=${encodeURIComponent(normalized)}`, { signal: controller.signal });
+        const data = (await response.json()) as { results?: Stock[] };
+        setRemote(data.results ?? []);
+        setSearchedFor(normalized);
+      } catch {
+        // Aborted or offline: keep whatever popular matches are showing.
+      }
+    }, 200);
+    return () => { controller.abort(); window.clearTimeout(timer); };
+  }, [query]);
+
   const results = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return [];
-    return STOCKS.filter(
-      (stock) =>
-        !picks.some((pick) => pick.symbol === stock.symbol) &&
-        (stock.symbol.toLowerCase().includes(normalized) || stock.name.toLowerCase().includes(normalized)),
-    ).slice(0, 6);
-  }, [picks, query]);
+    const local = STOCKS.filter(
+      (stock) => stock.symbol.toLowerCase().includes(normalized) || stock.name.toLowerCase().includes(normalized),
+    );
+    const merged = [...local, ...remote.filter((stock) => !local.some((item) => item.symbol === stock.symbol))];
+    return merged.filter((stock) => !picks.some((pick) => pick.symbol === stock.symbol)).slice(0, 6);
+  }, [picks, query, remote]);
 
   const isFull = picks.length === MAX_PICKS;
   const openSlots = MAX_PICKS - picks.length;
@@ -80,7 +101,7 @@ export function StockPicker({ picks, onPicksChange, label, mobileLabel }: StockP
                 <span>{stock.name}</span>
                 <small>{stock.exchange}</small>
               </button>
-            )) : <p>No matching company found. Try a ticker instead.</p>}
+            )) : <p>{searchedFor !== query.trim() ? "Searching all US stocks..." : "No matching US stock found. Try its ticker instead."}</p>}
           </div>
         ) : null}
       </div>

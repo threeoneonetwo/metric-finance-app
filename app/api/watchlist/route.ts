@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { allResolvable } from "@/lib/stock-lookup";
 import { updateTickersByToken } from "@/db/subscribers";
 import { isInternalEmail, trackServer } from "@/lib/analytics-server";
 import { isValidManageLink } from "@/lib/manage-link";
@@ -21,6 +22,9 @@ export async function POST(request: Request) {
   const tickers = body.tickers.map((ticker) => ticker.trim().toUpperCase()).slice(0, 5);
   if (tickers.length === 0 || !tickers.every((ticker) => TICKER_PATTERN.test(ticker))) {
     return NextResponse.json({ error: "Invalid tickers" }, { status: 400 });
+  }
+  if (!allResolvable(tickers)) {
+    return NextResponse.json({ error: "One of those stocks is not a US listed stock we can follow." }, { status: 400 });
   }
 
   if (!isValidManageLink(body.token, body.exp, body.sig)) {

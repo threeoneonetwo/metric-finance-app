@@ -46,3 +46,41 @@ export const rateLimits = pgTable("rate_limits", {
   count: integer("count").notNull(),
   resetAt: timestamp("reset_at", { withTimezone: true }).notNull(),
 });
+
+export type LearnStockContent = {
+  simple: string;
+  makesMoney: string[];
+  movesStock: string[];
+  goodToKnow: string[];
+  faqs: { q: string; a: string }[];
+};
+
+export type LearnStockFacts = {
+  ceo: string | null;
+  employees: number | null;
+  headquarters: string | null;
+  listedSince: string | null;
+  dividendPerShare: number | null;
+  beta: number | null;
+};
+
+export const learnStockPages = pgTable("learn_stock_pages", {
+  symbol: text("symbol").primaryKey(),
+  content: jsonb("content").$type<LearnStockContent>().notNull(),
+  facts: jsonb("facts").$type<LearnStockFacts>().notNull(),
+  generatedAt: timestamp("generated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export type LearnSection = { heading: string; paragraphs: string[] };
+
+export const learnArticles = pgTable("learn_articles", {
+  slug: text("slug").primaryKey(),
+  kind: text("kind").notNull(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  intro: text("intro").notNull(),
+  sections: jsonb("sections").$type<LearnSection[]>().notNull(),
+  extra: jsonb("extra").$type<{ movers?: { symbol: string; changePercent: number }[]; terms?: string[] }>(),
+  publishedOn: text("published_on").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});

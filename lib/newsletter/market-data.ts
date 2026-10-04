@@ -37,7 +37,7 @@ export async function getTickerSnapshots(tickers: string[]): Promise<Map<string,
     unique.map(async (ticker) => {
       try {
         const response = await fetch(
-          `${FMP_BASE_URL}/quote?symbol=${encodeURIComponent(ticker)}&apikey=${apiKey}`,
+          `${FMP_BASE_URL}/quote?symbol=${encodeURIComponent(ticker.replace(".", "-"))}&apikey=${apiKey}`,
           { cache: "no-store", headers: { Accept: "application/json" }, signal: AbortSignal.timeout(8000) },
         );
         if (!response.ok) return null;

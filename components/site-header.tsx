@@ -28,6 +28,9 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq", signIn = false }:
       </Link>
       <div className="flex items-center gap-2 lg:gap-3">
       <nav className="hidden min-w-0 items-center gap-6 lg:flex" style={{ fontFamily: "Arial, sans-serif" }} aria-label="Main navigation">
+        <Link href="/learn" className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white">
+          Learn
+        </Link>
         <Link href={faqHref} className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white">
           FAQ
         </Link>
@@ -64,6 +67,9 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq", signIn = false }:
           aria-label="Mobile navigation"
           className="absolute right-0 top-11 w-52 overflow-hidden rounded-2xl border border-[#24304d] bg-[#0f1526] p-2 shadow-2xl shadow-black/60"
         >
+          <Link href="/learn" className="block rounded-xl px-4 py-3.5 text-base font-semibold text-white transition hover:bg-[#182238]">
+            Learn
+          </Link>
           <Link
             href={faqHref}
             className="block rounded-xl px-4 py-3.5 text-base font-semibold text-white transition hover:bg-[#182238]"

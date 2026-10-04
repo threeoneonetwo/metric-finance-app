@@ -1,7 +1,7 @@
 export type Stock = {
   symbol: string;
   name: string;
-  exchange: "NASDAQ" | "NYSE";
+  exchange: string;
 };
 
 export const MAX_PICKS = 5;

@@ -48,7 +48,7 @@ function todayInEastern() {
 
 async function getNextEarnings(ticker: string): Promise<NextEarnings | null> {
   const rows = await fmpJson<Array<{ date?: string; epsActual?: number | null; epsEstimated?: number | null; revenueEstimated?: number | null }>>(
-    `earnings?symbol=${encodeURIComponent(ticker)}&limit=4`,
+    `earnings?symbol=${encodeURIComponent(ticker.replace(".", "-"))}&limit=4`,
   );
   const today = todayInEastern();
   const upcoming = (rows ?? [])
@@ -63,7 +63,7 @@ async function getNextEarnings(ticker: string): Promise<NextEarnings | null> {
 }
 
 async function getProfile(ticker: string) {
-  const rows = await fmpJson<Array<{ sector?: string; industry?: string }>>(`profile?symbol=${encodeURIComponent(ticker)}`);
+  const rows = await fmpJson<Array<{ sector?: string; industry?: string }>>(`profile?symbol=${encodeURIComponent(ticker.replace(".", "-"))}`);
   return { sector: rows?.[0]?.sector ?? null, industry: rows?.[0]?.industry ?? null };
 }
 
