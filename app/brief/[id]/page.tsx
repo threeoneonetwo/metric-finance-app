@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BriefFrame } from "@/components/brief-frame";
+import { ShareCard } from "@/components/share-card";
 import { RequestManageLink } from "@/components/request-manage-link";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -83,6 +84,7 @@ export default async function BriefViewPage({ params, searchParams }: BriefViewP
           <div className={styles.frameWrap}>
             <BriefFrame html={briefing.html} title={`Metric Finance brief for ${date}`} />
           </div>
+          <ShareCard page="brief" />
           <div className={styles.actions}>
             <Link href={dashboard}>Your dashboard</Link>
           </div>

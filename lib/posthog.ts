@@ -13,7 +13,8 @@ export type PostHogEventName =
   | "product_active"
   | "user_active"
   | "user_signout"
-  | "signup_started";
+  | "signup_started"
+  | "share_clicked";
 
 type PostHogEventProperties = Record<string, string | number | boolean | null | undefined>;
 

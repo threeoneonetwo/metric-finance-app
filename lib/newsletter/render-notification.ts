@@ -25,7 +25,7 @@ export function renderBriefNotification(input: {
     lead: `Your ${date} brief on ${tickersText} has been posted on Metric Finance. It is ready to read now, explained like you're 5.`,
     buttonLabel: "Read today's brief",
     buttonUrl: input.briefUrl,
-    footnote: "You can also find every brief on your Metric Finance dashboard.",
+    footnote: "You can also find every brief on your Metric Finance dashboard. Know someone who would like this? Send them to metricfinance.app.",
     footerLinks: { manageUrl: input.dashboardUrl, unsubscribeUrl: input.unsubscribeUrl },
   });
   const text = [
