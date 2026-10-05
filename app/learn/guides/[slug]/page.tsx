@@ -57,6 +57,7 @@ export default async function GuidePage({ params }: Props) {
     <LearnShell
       crumbs={[{ name: "Learn", href: "/learn" }, { name: guide.title.split(":")[0], href: `/learn/guides/${guide.slug}` }]}
       jsonLd={[article]}
+      progress
     >
       <span className={styles.eyebrow}>Guide</span>
       <h1 className={styles.h1}>{guide.title}</h1>

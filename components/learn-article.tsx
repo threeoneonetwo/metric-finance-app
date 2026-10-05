@@ -38,6 +38,7 @@ export function StoredArticlePage({ article, base }: { article: StoredArticle; b
     <LearnShell
       crumbs={[{ name: "Learn", href: "/learn" }, base, { name: article.title.split(":").pop()!.trim(), href: `${base.href}/${article.slug.replace(/^market-today-/, "")}` }]}
       jsonLd={[schema]}
+      progress
     >
       <span className={styles.eyebrow}>{article.kind === "market-today" ? "Market recap" : "Guide"}</span>
       <h1 className={styles.h1}>{article.title}</h1>

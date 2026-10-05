@@ -183,3 +183,132 @@
 
 .sectorTitle { display: flex; align-items: baseline; gap: 10px; margin: 30px 0 12px; color: #9fb6ff; font-size: 15px; font-weight: 700; letter-spacing: .02em; }
 .sectorTitle small { color: #52618a; font-size: 13px; font-weight: 600; }
+
+/* ============ Motion, hover effects and extra responsiveness ============ */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes drift { 0% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(2%, 3%, 0) scale(1.06); } 100% { transform: translate3d(-2%, 1%, 0) scale(1); } }
+@keyframes shimmerText { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+@keyframes shine { from { transform: translateX(-120%) skewX(-20deg); } to { transform: translateX(220%) skewX(-20deg); } }
+@keyframes skeleton { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes popIn { from { opacity: 0; transform: translateY(10px) scale(.97); } to { opacity: 1; transform: none; } }
+
+/* Page load: header content slides up in sequence, and the background glow drifts slowly. */
+.page::before { animation: drift 16s ease-in-out infinite alternate; will-change: transform; }
+.crumbs, .eyebrow, .h1, .lead, .meta, .stockHead, .versus { animation: fadeUp .7s cubic-bezier(.16, 1, .3, 1) both; }
+.eyebrow { animation-delay: 40ms; }
+.h1, .stockHead { animation-delay: 120ms; }
+.lead { animation-delay: 200ms; }
+.meta, .versus { animation-delay: 260ms; }
+.hero .searchWrap { animation: fadeUp .7s cubic-bezier(.16, 1, .3, 1) 300ms both; }
+.heroHints { animation: fadeUp .7s cubic-bezier(.16, 1, .3, 1) 380ms both; }
+.stats, .tiles { animation: fadeUp .8s cubic-bezier(.16, 1, .3, 1) 440ms both; }
+.accent { background-size: 200% 100%; animation: shimmerText 6s linear infinite; }
+
+/* Sections fade in as they scroll into view (CSS only, so it never hides content from crawlers or older browsers). */
+@supports (animation-timeline: view()) {
+  .groupTitle, .card, .cta, .faq details, .prose section, .sectorBlock, .cards li, .asideCard, .compare, .alphabet + section, .related {
+    animation: fadeUp linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 28%;
+  }
+  .cards li:nth-child(3n + 2) { animation-range: entry 6% entry 34%; }
+  .cards li:nth-child(3n) { animation-range: entry 12% entry 40%; }
+}
+
+/* Cursor spotlight and hover lift on every card-like link */
+.tiles a, .cards a, .grid a, .searchResults a, .linkCard, .asideCard a, .toc a { position: relative; }
+.tiles a::after, .cards a::after, .grid a::after, .linkCard::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 220ms ease;
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(143, 168, 250, .2), transparent 72%);
+}
+.tiles a:hover::after, .cards a:hover::after, .grid a:hover::after, .linkCard:hover::after { opacity: 1; }
+.cards a:hover strong { color: #c7d5ff; }
+.cards a strong, .cards a span { transition: color 180ms ease; }
+.grid .logo { transition: transform 220ms cubic-bezier(.34, 1.56, .64, 1); }
+.grid a:hover .logo { transform: scale(1.12) rotate(-5deg); }
+.tileIcon { transition: transform 240ms cubic-bezier(.34, 1.56, .64, 1); }
+.tiles a:hover .tileIcon { transform: translateY(-3px) rotate(-6deg) scale(1.06); }
+.chips a { transition: transform 160ms ease, border-color 150ms ease, background-color 150ms ease, color 150ms ease; }
+.chips a:hover { transform: translateY(-2px); }
+.card, .asideCard { transition: border-color 200ms ease, box-shadow 200ms ease; }
+.card:hover, .asideCard:hover { border-color: rgba(143, 168, 250, .22); }
+.faq details { transition: border-color 150ms ease, background-color 150ms ease; }
+.faq summary:hover { color: #c7d5ff; }
+.faq details[open] > p { animation: fadeUp .35s ease both; }
+.readMore::after { content: " \2192"; display: inline-block; transition: transform 160ms ease; }
+.linkCard:hover .readMore::after { transform: translateX(5px); }
+.crumbs a { transition: color 140ms ease; }
+
+/* Primary button: sheen sweep and press feedback */
+.button { position: relative; overflow: hidden; }
+.button::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 45%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .55), transparent); transform: translateX(-120%) skewX(-20deg); pointer-events: none; }
+.button:hover::after { animation: shine .75s ease; }
+.button:active { transform: translateY(0) scale(.98); }
+
+/* Search focus and results */
+.searchBox:focus { transform: translateY(-1px); }
+.searchBox { transition: border-color 150ms ease, box-shadow 200ms ease, transform 200ms ease; }
+.searchResults { animation: popIn .22s ease both; transform-origin: top center; }
+
+/* Stats strip */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 40px 0 0; padding: 0; list-style: none; border: 1px solid rgba(255, 255, 255, .08); border-radius: 22px; background: rgba(255, 255, 255, .025); }
+.stats li { padding: 22px 12px; text-align: center; }
+.stats li + li { border-left: 1px solid rgba(255, 255, 255, .07); }
+.stats strong { display: block; background: linear-gradient(100deg, #fff, #a9bdff); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: clamp(24px, 4vw, 36px); font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.stats li > span { display: block; margin-top: 4px; color: #7f8fb6; font-size: 13.5px; }
+.stats + .tiles { margin-top: 16px; }
+
+/* Sector filter */
+.filters { display: flex; gap: 8px; margin: 0 0 6px; padding: 4px 2px 10px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.filters::-webkit-scrollbar { display: none; }
+.filters button { flex: none; padding: 9px 16px; border: 1px solid rgba(143, 168, 250, .25); border-radius: 999px; background: rgba(143, 168, 250, .05); color: #b3c4f5; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease, color 160ms ease; }
+.filters button:hover { transform: translateY(-2px); border-color: #8fa8fa; color: #fff; }
+.filters button.filterOn { border-color: transparent; background: linear-gradient(135deg, #8fb0ff, #7b6cf6); color: #05070d; box-shadow: 0 8px 22px rgba(111, 140, 255, .35); }
+.sectorBlock[hidden] { display: none; }
+.sectorBlock:not([hidden]) .grid li { animation: popIn .45s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(var(--i, 0) * 28ms); }
+
+/* Reading progress */
+.progress { position: fixed; inset: 0 0 auto 0; z-index: 60; height: 3px; background: rgba(255, 255, 255, .05); pointer-events: none; }
+.progressBar { height: 100%; transform: scaleX(0); transform-origin: left; background: linear-gradient(90deg, #8fb0ff, #b48cff); box-shadow: 0 0 12px rgba(143, 168, 250, .7); will-change: transform; }
+
+/* Loading skeleton */
+.skel { border-radius: 14px; background: linear-gradient(100deg, rgba(255, 255, 255, .04) 30%, rgba(255, 255, 255, .11) 50%, rgba(255, 255, 255, .04) 70%); background-size: 200% 100%; animation: skeleton 1.4s linear infinite; }
+.skelPill { width: 120px; height: 30px; border-radius: 999px; margin-bottom: 22px; }
+.skelTitle { width: 80%; height: 46px; margin-bottom: 14px; }
+.skelLine { width: 90%; height: 18px; margin: 20px 0 10px; }
+.skelGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 40px; }
+.skelCard { height: 150px; border-radius: 22px; }
+
+/* Responsive refinements */
+@media (max-width: 900px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .stats li:nth-child(3) { border-left: 0; } .stats li:nth-child(n + 3) { border-top: 1px solid rgba(255, 255, 255, .07); } }
+@media (max-width: 640px) {
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .tiles a { padding: 16px; }
+  .tileIcon { width: 42px; height: 42px; border-radius: 13px; }
+  .tileTop { margin-bottom: 14px; }
+  .tiles strong { font-size: 16px; }
+  .tiles .tileText { font-size: 13px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .grid a { padding: 12px; gap: 10px; }
+  .cards { grid-template-columns: minmax(0, 1fr); }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .featured { padding: 22px; }
+  .hero { padding-top: 12px; }
+  .heroHints { font-size: 13px; }
+  .stats li { padding: 16px 8px; }
+  .groupTitle { flex-wrap: wrap; row-gap: 2px; }
+  .cta { padding: 28px 18px; border-radius: 22px; }
+  .button { width: 100%; }
+  .alphabet a { width: 38px; height: 38px; }
+  .faq summary { padding: 16px; font-size: 16px; }
+  .compare { font-size: 13.5px; }
+}
+@media (max-width: 340px) { .grid a { flex-direction: column; align-items: flex-start; } .tiles { grid-template-columns: minmax(0, 1fr); } }
+@media (hover: none) { .tiles a:hover, .cards a:hover, .grid a:hover, .linkCard:hover { transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .page::before, .accent, .crumbs, .eyebrow, .h1, .lead, .meta, .stockHead, .versus, .hero .searchWrap, .heroHints, .stats, .tiles, .searchResults,
+  .sectorBlock:not([hidden]) .grid li, .faq details[open] > p { animation: none !important; }
+  .groupTitle, .card, .cta, .faq details, .prose section, .sectorBlock, .cards li, .asideCard, .compare, .related { animation: none !important; }
+  .grid .logo, .tileIcon, .chips a, .button::after { transition: none; animation: none; }
+}
+.stockHead .h1 { animation: none; }

@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { ArrowUpRight, BookOpen, LineChart, Newspaper, Spline } from "lucide-react";
 import Link from "next/link";
 import { LearnShell, SignupCta } from "@/components/learn-shell";
-import { StockLogo } from "@/components/stock-logo";
+import { CountUp } from "@/components/learn-motion";
+import { StockBrowser } from "@/components/stock-browser";
 import { StockLookupBox } from "@/components/stock-lookup-box";
 import { listLearnArticles } from "@/db/learn";
 import { GUIDES } from "@/lib/learn/guides";
-import { comparePairs, indexableStocks } from "@/lib/learn/stocks";
+import { US_STOCKS } from "@/lib/stock-lookup";
+import { comparePairs, indexableStocks, sectorOf } from "@/lib/learn/stocks";
 import { TERMS } from "@/lib/learn/terms";
 import styles from "./learn.module.css";
 
@@ -23,7 +25,7 @@ export default async function LearnPage() {
   const latest = recaps[0];
   const groups = new Map<string, ReturnType<typeof indexableStocks>>();
   for (const entry of indexableStocks()) {
-    const sector = entry.profile?.sector ?? entry.guide?.group ?? "Other";
+    const sector = sectorOf(entry);
     groups.set(sector, [...(groups.get(sector) ?? []), entry]);
   }
   const pairs = comparePairs().slice(0, 6);
@@ -43,6 +45,13 @@ export default async function LearnPage() {
           ))}
         </ul>
       </div>
+
+      <ul className={styles.stats}>
+        <li><strong><CountUp value={US_STOCKS.length} /></strong><span>US stocks searchable</span></li>
+        <li><strong><CountUp value={TERMS.length} /></strong><span>terms explained</span></li>
+        <li><strong><CountUp value={GUIDES.length + newGuides.length} /></strong><span>beginner guides</span></li>
+        <li><strong>Daily</strong><span>market recaps</span></li>
+      </ul>
 
       <ul className={styles.tiles}>
         {[
@@ -89,21 +98,10 @@ export default async function LearnPage() {
 
       <section id="stocks" style={{ scrollMarginTop: 24 }}>
         <h2 className={styles.groupTitle}>Stock guides <small>Any Nasdaq or NYSE stock, explained like you&apos;re 5</small></h2>
-        {[...groups].map(([sector, items]) => (
-          <div key={sector}>
-            <h3 className={styles.sectorTitle}>{sector} <small>{items.length}</small></h3>
-            <ul className={styles.grid}>
-              {items.map((entry) => (
-                <li key={entry.slug}>
-                  <Link href={`/learn/stocks/${entry.slug}`}>
-                    <StockLogo symbol={entry.stock.symbol} />
-                    <span className={styles.gridText}><strong>{entry.stock.symbol}</strong><span>{entry.name}</span></span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        <StockBrowser
+          sectors={[...groups.keys()]}
+          stocks={[...groups].flatMap(([sector, items]) => items.map((entry) => ({ symbol: entry.stock.symbol, name: entry.name, slug: entry.slug, sector })))}
+        />
         <p className={styles.related}>Not listed? Use the search bar above to find any US stock.</p>
       </section>
 

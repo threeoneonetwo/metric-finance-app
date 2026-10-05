@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { ReadingProgress, SpotlightLayer } from "@/components/learn-motion";
 import styles from "@/app/learn/learn.module.css";
 
 export const SITE = "https://metricfinance.app";
@@ -8,7 +9,7 @@ export const SITE = "https://metricfinance.app";
 export type Crumb = { name: string; href: string };
 
 // Shared frame for every Learn page: header, breadcrumbs, structured data and footer.
-export function LearnShell({ crumbs, jsonLd, children }: { crumbs: Crumb[]; jsonLd?: object[]; children: React.ReactNode }) {
+export function LearnShell({ crumbs, jsonLd, progress = false, children }: { crumbs: Crumb[]; jsonLd?: object[]; progress?: boolean; children: React.ReactNode }) {
   const breadcrumbs = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -22,8 +23,9 @@ export function LearnShell({ crumbs, jsonLd, children }: { crumbs: Crumb[]; json
   return (
     <main>
       <div className={styles.page}>
+        {progress && <ReadingProgress />}
         <SiteHeader />
-        <div className={styles.main}>
+        <SpotlightLayer>
           {crumbs.length > 1 && <p className={styles.crumbs}>
             {crumbs.map((crumb, index) => (
               <span key={crumb.href}>
@@ -33,7 +35,7 @@ export function LearnShell({ crumbs, jsonLd, children }: { crumbs: Crumb[]; json
             ))}
           </p>}
           {children}
-        </div>
+        </SpotlightLayer>
         <SiteFooter />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbs, ...(jsonLd ?? [])]) }} />
       </div>

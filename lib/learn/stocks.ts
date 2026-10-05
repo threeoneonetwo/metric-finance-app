@@ -150,3 +150,18 @@ export function comparePairs(): [StockEntry, StockEntry][] {
   }
   return pairs;
 }
+
+const GROUP_TO_SECTOR: Record<string, string> = {
+  "Big tech": "Technology",
+  "Chips and AI": "Technology",
+  Consumer: "Consumer Defensive",
+  "Finance and payments": "Financial Services",
+  "Energy and holdings": "Energy",
+};
+
+/** The sector shown for a stock: the provider's sector when we have it, otherwise a close match for our hand written guides. */
+export function sectorOf(entry: StockEntry): string {
+  if (entry.profile?.sector) return entry.profile.sector;
+  if (entry.stock.symbol === "BRK.B") return "Financial Services";
+  return GROUP_TO_SECTOR[entry.guide?.group ?? ""] ?? "Other";
+}
