@@ -58,7 +58,7 @@ export default async function ComparePage({ params }: Props) {
 
   return (
     <LearnShell
-      crumbs={[{ name: "Learn", href: "/learn" }, { name: "Stock guides", href: "/learn/stocks" }, { name: `${a.stock.symbol} vs ${b.stock.symbol}`, href: `/learn/compare/${slug}` }]}
+      crumbs={[{ name: "Learn", href: "/learn" }, { name: `${a.stock.symbol} vs ${b.stock.symbol}`, href: `/learn/compare/${slug}` }]}
       jsonLd={[faqJsonLd(faqs)]}
     >
       <span className={styles.eyebrow}>Compare</span>

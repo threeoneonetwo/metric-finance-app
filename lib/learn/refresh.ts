@@ -124,7 +124,7 @@ export async function refreshLearn(options: { stockLimit?: number; only?: ("reca
     report.stocksNote = result.note;
   }
 
-  for (const path of ["/learn", "/learn/market-today", "/learn/stocks", "/sitemap.xml"]) revalidatePath(path);
+  for (const path of ["/learn", "/learn/market-today", "/sitemap.xml"]) revalidatePath(path);
   report.indexNow = await pingIndexNow(urls);
   return report;
 }

@@ -34,9 +34,6 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq", signIn = false }:
         <Link href={faqHref} className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white">
           FAQ
         </Link>
-        <Link href="/privacy" className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white">
-          Privacy
-        </Link>
         {signIn && (
           <Link
             href="/manage?signin=1"
@@ -76,9 +73,6 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq", signIn = false }:
           >
             FAQ
           </Link>
-          <Link href="/privacy" className="block rounded-xl px-4 py-3.5 text-base font-semibold text-white transition hover:bg-[#182238]">
-          Privacy
-        </Link>
         </nav>
       </details>
       </div>

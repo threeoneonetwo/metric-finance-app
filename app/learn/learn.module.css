@@ -180,3 +180,6 @@
 .tileTeal { --glow: rgba(53, 208, 186, .35); background: linear-gradient(135deg, #3fd9c2, #1fa99a); }
 .tileAmber { --glow: rgba(255, 180, 84, .35); background: linear-gradient(135deg, #ffc46b, #f59a2c); }
 .tiles strong { font-size: 19px; }
+
+.sectorTitle { display: flex; align-items: baseline; gap: 10px; margin: 30px 0 12px; color: #9fb6ff; font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+.sectorTitle small { color: #52618a; font-size: 13px; font-weight: 600; }

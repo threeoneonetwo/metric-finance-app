@@ -11,7 +11,7 @@ import { TERMS } from "@/lib/learn/terms";
 import styles from "./learn.module.css";
 
 export const metadata: Metadata = {
-  title: "Learn Stocks and Investing in Plain English | Metric Finance",
+  title: "Learn Stocks and Investing in Plain English: Stock Guides, Terms and Daily Recaps | Metric Finance",
   description: "Free beginner guides to stocks and investing. Understand any US stock, learn the key terms and see how companies compare, all explained like you're 5.",
   alternates: { canonical: "/learn" },
 };
@@ -21,7 +21,11 @@ export const revalidate = 1800;
 export default async function LearnPage() {
   const [recaps, newGuides] = await Promise.all([listLearnArticles("market-today", 1), listLearnArticles("guide", 6)]);
   const latest = recaps[0];
-  const popular = indexableStocks().slice(0, 12);
+  const groups = new Map<string, ReturnType<typeof indexableStocks>>();
+  for (const entry of indexableStocks()) {
+    const sector = entry.profile?.sector ?? entry.guide?.group ?? "Other";
+    groups.set(sector, [...(groups.get(sector) ?? []), entry]);
+  }
   const pairs = comparePairs().slice(0, 6);
   return (
     <LearnShell crumbs={[{ name: "Learn", href: "/learn" }]}>
@@ -42,7 +46,7 @@ export default async function LearnPage() {
 
       <ul className={styles.tiles}>
         {[
-          { href: "/learn/stocks", icon: <LineChart size={24} />, tone: styles.tileBlue, title: "Stock guides", text: "Any Nasdaq or NYSE stock, explained simply" },
+          { href: "#stocks", icon: <LineChart size={24} />, tone: styles.tileBlue, title: "Stock guides", text: "Any Nasdaq or NYSE stock, explained simply" },
           { href: "/learn/market-today", icon: <Newspaper size={24} />, tone: styles.tileViolet, title: "Market today", text: "A recap after every trading day" },
           { href: "/learn/guides", icon: <BookOpen size={24} />, tone: styles.tileTeal, title: "Beginner guides", text: "One clear idea at a time" },
           { href: "/learn/terms", icon: <Spline size={24} />, tone: styles.tileAmber, title: "Glossary", text: `${TERMS.length} terms in plain words` },
@@ -83,18 +87,25 @@ export default async function LearnPage() {
 
       <p className={styles.related}><Link href="/learn/guides">See all guides</Link> · <Link href="/learn/market-today">Daily market recaps</Link></p>
 
-      <h2 className={styles.groupTitle}>Popular stocks explained</h2>
-      <ul className={styles.grid}>
-        {popular.map((entry) => (
-          <li key={entry.slug}>
-            <Link href={`/learn/stocks/${entry.slug}`}>
-              <StockLogo symbol={entry.stock.symbol} />
-              <span className={styles.gridText}><strong>{entry.stock.symbol}</strong><span>{entry.name}</span></span>
-            </Link>
-          </li>
+      <section id="stocks" style={{ scrollMarginTop: 24 }}>
+        <h2 className={styles.groupTitle}>Stock guides <small>Any Nasdaq or NYSE stock, explained like you&apos;re 5</small></h2>
+        {[...groups].map(([sector, items]) => (
+          <div key={sector}>
+            <h3 className={styles.sectorTitle}>{sector} <small>{items.length}</small></h3>
+            <ul className={styles.grid}>
+              {items.map((entry) => (
+                <li key={entry.slug}>
+                  <Link href={`/learn/stocks/${entry.slug}`}>
+                    <StockLogo symbol={entry.stock.symbol} />
+                    <span className={styles.gridText}><strong>{entry.stock.symbol}</strong><span>{entry.name}</span></span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </ul>
-      <p className={styles.related}><Link href="/learn/stocks">See all stock guides</Link></p>
+        <p className={styles.related}>Not listed? Use the search bar above to find any US stock.</p>
+      </section>
 
       <h2 className={styles.groupTitle}>Stock market glossary</h2>
       <ul className={styles.chips}>

@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
       },
       { source: "/r/:ticker*", destination: "/", permanent: true },
       { source: "/watchlists", destination: "/", permanent: true },
+      // The stock guide index was merged into the Learn hub.
+      { source: "/learn/stocks", destination: "/learn#stocks", permanent: true },
     ];
   },
   async headers() {

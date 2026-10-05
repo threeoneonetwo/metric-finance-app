@@ -21,7 +21,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     { url: `${base}/learn`, lastModified, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${base}/learn/stocks`, lastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/learn/market-today`, lastModified, changeFrequency: "daily", priority: 0.9 },
     { url: `${base}/learn/guides`, lastModified, changeFrequency: "weekly", priority: 0.8 },
     ...recaps.map((recap) => ({ url: `${base}/learn/market-today/${recap.publishedOn}`, lastModified: recap.createdAt, changeFrequency: "never" as const, priority: 0.6 })),

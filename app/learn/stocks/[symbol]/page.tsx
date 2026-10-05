@@ -64,7 +64,7 @@ export default async function StockPage({ params }: Props) {
 
   return (
     <LearnShell
-      crumbs={[{ name: "Learn", href: "/learn" }, { name: "Stock guides", href: "/learn/stocks" }, { name: stock.symbol, href: `/learn/stocks/${entry.slug}` }]}
+      crumbs={[{ name: "Learn", href: "/learn" }, { name: stock.symbol, href: `/learn/stocks/${entry.slug}` }]}
       jsonLd={[faqJsonLd(faqs)]}
     >
       <span className={styles.eyebrow}>{stock.exchange}: {stock.symbol}</span>
