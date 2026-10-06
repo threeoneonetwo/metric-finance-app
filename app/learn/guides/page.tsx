@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CountUp } from "@/components/learn-motion";
 import { LearnShell, SignupCta } from "@/components/learn-shell";
 import { listLearnArticles } from "@/db/learn";
 import { GUIDES } from "@/lib/learn/guides";
@@ -21,9 +22,17 @@ export default async function GuidesIndex() {
   ];
   return (
     <LearnShell crumbs={[{ name: "Learn", href: "/learn" }, { name: "Guides", href: "/learn/guides" }]}>
-      <span className={styles.eyebrow}>Guides</span>
-      <h1 className={styles.h1}>Beginner stock market <span className={styles.accent}>guides</span></h1>
-      <p className={styles.lead}>New guides are added regularly. Each one explains a single idea in plain English.</p>
+      <div className={styles.hero}>
+        <span className={styles.eyebrow}>Guides</span>
+        <h1 className={styles.h1}>Beginner stock market <span className={styles.accent}>guides</span></h1>
+        <p className={styles.lead}>New guides are added regularly. Each one explains a single idea in plain English.</p>
+      </div>
+      <ul className={styles.stats} style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
+        <li><strong><CountUp value={all.length} /></strong><span>guides</span></li>
+        <li><strong>5 min</strong><span>average read</span></li>
+        <li><strong>Free</strong><span>always</span></li>
+      </ul>
+      <div style={{ height: 28 }} />
       <ul className={styles.cards}>
         {all.map((guide) => (
           <li key={guide.slug}>

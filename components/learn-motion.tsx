@@ -9,7 +9,7 @@ export function SpotlightLayer({ children }: { children: React.ReactNode }) {
     <div
       className={styles.main}
       onPointerMove={(event) => {
-        const target = (event.target as HTMLElement).closest<HTMLElement>("a, [data-spot]");
+        const target = (event.target as HTMLElement).closest<HTMLElement>("a, details, section, dl > div, aside > div, [data-spot]");
         if (!target) return;
         const box = target.getBoundingClientRect();
         target.style.setProperty("--mx", `${event.clientX - box.left}px`);

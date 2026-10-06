@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CountUp } from "@/components/learn-motion";
 import { LearnShell, SignupCta } from "@/components/learn-shell";
 import { TERMS } from "@/lib/learn/terms";
 import styles from "../learn.module.css";
@@ -15,9 +16,16 @@ export default function TermsPage() {
   const letters = [...new Set(sorted.map((term) => term.term[0].toUpperCase()))];
   return (
     <LearnShell crumbs={[{ name: "Learn", href: "/learn" }, { name: "Glossary", href: "/learn/terms" }]}>
-      <span className={styles.eyebrow}>Glossary</span>
-      <h1 className={styles.h1}>Stock market terms <span className={styles.accent}>explained like you&apos;re 5</span></h1>
-      <p className={styles.lead}>Short, simple definitions of the words you will see in financial news.</p>
+      <div className={styles.hero}>
+        <span className={styles.eyebrow}>Glossary</span>
+        <h1 className={styles.h1}>Stock market terms <span className={styles.accent}>explained like you&apos;re 5</span></h1>
+        <p className={styles.lead}>Short, simple definitions of the words you will see in financial news.</p>
+      </div>
+      <ul className={styles.stats} style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
+        <li><strong><CountUp value={sorted.length} /></strong><span>terms</span></li>
+        <li><strong>A to Z</strong><span>easy to browse</span></li>
+        <li><strong>Plain</strong><span>English only</span></li>
+      </ul>
       <nav className={styles.alphabet} aria-label="Jump to letter">
         {letters.map((letter) => <a key={letter} href={`#letter-${letter}`}>{letter}</a>)}
       </nav>

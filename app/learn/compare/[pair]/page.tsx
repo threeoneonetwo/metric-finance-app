@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StockLogo } from "@/components/stock-logo";
-import { faqJsonLd, LearnShell, SignupCta, SITE } from "@/components/learn-shell";
+import { AsideCta, faqJsonLd, LearnShell, SignupCta, SITE } from "@/components/learn-shell";
 import { comparePairs, driversFor, findStock, money, sizeLabel, summaryFor, type StockEntry } from "@/lib/learn/stocks";
 import styles from "../../learn.module.css";
 
@@ -60,6 +60,7 @@ export default async function ComparePage({ params }: Props) {
     <LearnShell
       crumbs={[{ name: "Learn", href: "/learn" }, { name: `${a.stock.symbol} vs ${b.stock.symbol}`, href: `/learn/compare/${slug}` }]}
       jsonLd={[faqJsonLd(faqs)]}
+      progress
     >
       <span className={styles.eyebrow}>Compare</span>
       <div className={styles.versus}><StockLogo symbol={a.stock.symbol} large /><em>vs</em><StockLogo symbol={b.stock.symbol} large /></div>
@@ -67,6 +68,8 @@ export default async function ComparePage({ params }: Props) {
       <p className={styles.lead}>
         {a.stock.symbol} and {b.stock.symbol} side by side, in plain English. This is an explanation of the two businesses, not a recommendation to buy either one.
       </p>
+      <div className={styles.layout}>
+        <div>
       <table className={styles.compare}>
         <thead><tr><th></th><th>{a.stock.symbol}</th><th>{b.stock.symbol}</th></tr></thead>
         <tbody>{rows.map(([name, x, y]) => <tr key={name}><td>{name}</td><td>{x}</td><td>{y}</td></tr>)}</tbody>
@@ -79,11 +82,25 @@ export default async function ComparePage({ params }: Props) {
           <p className={styles.related}><Link href={`/learn/stocks/${entry.slug}`}>Read the full {entry.stock.symbol} guide</Link></p>
         </section>
       ))}
-      <SignupCta title={`Follow ${a.stock.symbol} and ${b.stock.symbol} every day`} body="Add both to your watchlist and read a free plain English brief every trading day at 5 PM ET." />
+      <div className={styles.ctaInline}>
+        <SignupCta title={`Follow ${a.stock.symbol} and ${b.stock.symbol} every day`} body="Add both to your watchlist and read a free plain English brief every trading day at 5 PM ET." />
+      </div>
       <section className={styles.faq}>
         <h2 className={styles.groupTitle}>Common questions</h2>
         {faqs.map((faq) => <details key={faq.q}><summary>{faq.q}</summary><p>{faq.a}</p></details>)}
       </section>
+        </div>
+        <aside className={styles.aside}>
+          <AsideCta title={`Follow ${a.stock.symbol} and ${b.stock.symbol}`} body="Add both to your watchlist for a free brief every trading day at 5 PM ET." />
+          <div className={styles.asideCard}>
+            <h3>Full guides</h3>
+            <ul className={styles.toc}>
+              <li><Link href={`/learn/stocks/${a.slug}`}>{a.name} ({a.stock.symbol})</Link></li>
+              <li><Link href={`/learn/stocks/${b.slug}`}>{b.name} ({b.stock.symbol})</Link></li>
+            </ul>
+          </div>
+        </aside>
+      </div>
       <p className={styles.note}>Educational information, not financial advice. Figures are approximate and do not include live prices.</p>
     </LearnShell>
   );

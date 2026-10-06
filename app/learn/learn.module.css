@@ -312,3 +312,20 @@
   .grid .logo, .tileIcon, .chips a, .button::after { transition: none; animation: none; }
 }
 .stockHead .h1 { animation: none; }
+
+/* Same cursor glow and hover feel on every card, fact tile, side panel and FAQ row across all Learn pages */
+.card, .asideCard, .facts div, .faq details, .asideCta, .cta { position: relative; }
+.card::after, .asideCard::after, .facts div::after, .faq details::after, .asideCta::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 220ms ease;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(143, 168, 250, .14), transparent 72%);
+}
+.card:hover::after, .asideCard:hover::after, .facts div:hover::after, .faq details:hover::after, .asideCta:hover::after { opacity: 1; }
+.facts div { transition: transform 180ms cubic-bezier(.16, 1, .3, 1), border-color 180ms ease; }
+.facts div:hover { transform: translateY(-3px); border-color: rgba(143, 168, 250, .35); }
+.asideCard li a, .toc a { transition: color 140ms ease, border-color 140ms ease, padding-left 160ms ease; }
+.toc a:hover { padding-left: 18px; }
+.compare tbody tr { transition: background-color 150ms ease; }
+.compare tbody tr:hover { background: rgba(143, 168, 250, .06); }
+.hero + .stats { margin-top: 8px; }
+@supports (animation-timeline: view()) { .facts div { animation: fadeUp linear both; animation-timeline: view(); animation-range: entry 0% entry 30%; } }
+@media (prefers-reduced-motion: reduce) { .facts div { animation: none !important; } }

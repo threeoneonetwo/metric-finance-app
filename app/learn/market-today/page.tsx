@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CountUp } from "@/components/learn-motion";
 import { LearnShell, SignupCta } from "@/components/learn-shell";
 import { listLearnArticles } from "@/db/learn";
 import styles from "../learn.module.css";
@@ -17,9 +18,17 @@ export default async function MarketTodayIndex() {
   const [latest, ...older] = recaps;
   return (
     <LearnShell crumbs={[{ name: "Learn", href: "/learn" }, { name: "Market today", href: "/learn/market-today" }]}>
-      <span className={styles.eyebrow}>Market today</span>
-      <h1 className={styles.h1}>Stock market today, <span className={styles.accent}>explained like you&apos;re 5</span></h1>
-      <p className={styles.lead}>A short recap after every trading day: how the market did, what moved and what to learn from it.</p>
+      <div className={styles.hero}>
+        <span className={styles.eyebrow}>Market today</span>
+        <h1 className={styles.h1}>Stock market today, <span className={styles.accent}>explained like you&apos;re 5</span></h1>
+        <p className={styles.lead}>A short recap after every trading day: how the market did, what moved and what to learn from it.</p>
+      </div>
+      <ul className={styles.stats} style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
+        <li><strong><CountUp value={recaps.length} /></strong><span>recaps so far</span></li>
+        <li><strong>5 PM ET</strong><span>every trading day</span></li>
+        <li><strong>3 min</strong><span>to read</span></li>
+      </ul>
+      <div style={{ height: 28 }} />
       {latest ? (
         <Link className={`${styles.card} ${styles.linkCard} ${styles.featured}`} href={`/learn/market-today/${latest.publishedOn}`}>
           <h2>{latest.title}</h2>
