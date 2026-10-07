@@ -17,6 +17,7 @@ const FEATURES = [
   ["02", "Fundamentals", "Revenue, margins, cash, and debt translated out of accounting language."],
   ["03", "Peer comparison", "How each company is performing against the businesses it actually competes with."],
   ["04", "News", "The headlines that matter to your holdings, with the rest of the noise removed."],
+  ["05", "Ask follow up questions", "Still curious? Ask anything about your stocks right inside the brief and get a clear answer from the same data."],
 ] as const;
 
 const TESTIMONIALS = [
@@ -106,6 +107,15 @@ function FeatureGlyph({ kind }: { kind: number }) {
           <rect x="14" y="27" width="56" height="5" rx="2.5" opacity=".6" />
           <rect x="14" y="37" width="50" height="5" rx="2.5" opacity=".4" />
           <rect x="14" y="47" width="34" height="5" rx="2.5" opacity=".3" />
+        </g>
+      )}
+      {kind === 4 && (
+        <g>
+          <rect x="10" y="10" width="44" height="18" rx="7" fill="#7aa2ff" />
+          <rect x="30" y="33" width="44" height="18" rx="7" fill="#1f2b48" stroke="#b3c9ff" strokeWidth="1.6" />
+          <circle cx="42" cy="42" r="2" fill="#b3c9ff" />
+          <circle cx="52" cy="42" r="2" fill="#b3c9ff" />
+          <circle cx="62" cy="42" r="2" fill="#b3c9ff" />
         </g>
       )}
     </svg>
