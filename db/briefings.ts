@@ -1,8 +1,8 @@
 import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "./client";
-import { briefings } from "./schema";
+import { briefings, type StoredBriefFacts } from "./schema";
 
-export async function recordBriefing(input: { subscriberId: string; tickers: string[]; html: string; text: string }) {
+export async function recordBriefing(input: { subscriberId: string; tickers: string[]; html: string; text: string; facts?: StoredBriefFacts }) {
   const db = getDb();
   if (!db) return null;
 
@@ -13,6 +13,7 @@ export async function recordBriefing(input: { subscriberId: string; tickers: str
       tickers: input.tickers,
       html: input.html,
       text: input.text,
+      facts: input.facts ?? null,
     })
     .returning();
 

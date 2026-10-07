@@ -52,6 +52,12 @@ export async function sendDigestToSubscriber(input: {
     tickers,
     html: email.html,
     text: email.text,
+    // Only this reader's stocks, so their follow up questions are answered from exactly what their brief used.
+    facts: {
+      asOf: input.facts.asOf,
+      marketChangePercent: input.facts.marketChangePercent,
+      tickers: tickers.flatMap((ticker) => input.facts.tickers.get(ticker) ?? []),
+    },
   });
   if (!recorded) return { sent: false, reason: "not-saved" as const };
 

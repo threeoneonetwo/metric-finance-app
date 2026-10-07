@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms of Service" updated="September 21, 2026">
+    <LegalPage title="Terms of Service" updated="October 7, 2026">
       <div className={styles.legalNotice}>
         <p>
           <strong>Metric Finance is not financial advice.</strong> Everything we publish is for general information and
@@ -48,10 +48,15 @@ export default function TermsPage() {
 
       <h2>4. Accuracy of information</h2>
       <ul>
-        <li>Market data may be delayed, incomplete, or wrong. Prices and moves are not real-time quotes.</li>
+        <li>Market data may be delayed, incomplete, or wrong. Prices and moves are not real time quotes.</li>
         <li>
           Briefing text is written with the help of artificial intelligence and based on public data and news headlines.
           It can contain mistakes or miss important context. It may attribute a move to news that did not cause it.
+        </li>
+        <li>
+          Answers to follow up questions are generated the same way, from the data behind your briefing. They explain and
+          never recommend, they can be wrong, and they are not financial advice. We may decline questions about personal
+          investment decisions or about stocks outside your watchlist, and we limit how many questions can be asked each day.
         </li>
         <li>Past performance does not predict future results.</li>
         <li>Always check important facts with the original source or a professional before acting.</li>

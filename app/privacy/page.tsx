@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" updated="September 21, 2026">
+    <LegalPage title="Privacy Policy" updated="October 7, 2026">
       <p>
         Metric Finance (&quot;we&quot;, &quot;us&quot;) is a free daily stock briefing at metricfinance.app, built by Yashna
         Pandugala and Vansh Pandita. This policy explains what we collect when you use the site or subscribe to the
@@ -23,13 +23,19 @@ export default function PrivacyPage() {
         <li><strong>Email address</strong> so we can send your confirmation link and your daily briefing.</li>
         <li><strong>Your watchlist</strong>: the stock tickers (up to five) you choose to follow.</li>
         <li><strong>Your name</strong>, only if you choose to provide it.</li>
+        <li>
+          <strong>Questions you ask about a brief.</strong> If you use the follow up box on a brief, we receive the text
+          of your question so we can answer it. We do not save the text of your questions or of our answers. We only
+          record that a question was asked, its length, and whether it was answered, tied to your random subscriber ID.
+        </li>
       </ul>
 
       <h3>What we generate</h3>
       <ul>
-        <li>Private confirmation and account-link tokens tied to your subscription.</li>
+        <li>Private confirmation and account link tokens tied to your subscription.</li>
         <li>When you signed up, when you confirmed your email, and when we last sent you a briefing.</li>
         <li>A copy of each briefing we send you, so you can look back at it in your account.</li>
+        <li>The market data and public headlines each briefing was written from, stored with it so follow up answers use the same numbers.</li>
       </ul>
 
       <h3>What we collect automatically</h3>
@@ -59,6 +65,7 @@ export default function PrivacyPage() {
       <ul>
         <li>To send your confirmation email and your daily briefing on the stocks you chose.</li>
         <li>To let you view and change your watchlist and see past briefings.</li>
+        <li>To answer follow up questions you ask about your briefings, and to limit how many can be asked each day.</li>
         <li>To understand how the site is used and to improve it.</li>
         <li>To prevent abuse, fraud, and spam signups, and to keep the service secure.</li>
         <li>To comply with the law when required.</li>
@@ -76,9 +83,10 @@ export default function PrivacyPage() {
           stock tickers, not personal information.
         </li>
         <li>
-          <strong>Anthropic</strong> provides the AI model that helps write the plain-English briefing text. We send it
-          ticker symbols, prices, and public headlines. We do not send your email address, name, or any other
-          personal information.
+          <strong>Anthropic</strong> provides the AI model that helps write the briefing text and answers follow up
+          questions. We send it ticker symbols, prices, public headlines, the text of your briefing and, when you use the
+          follow up box, your question and the earlier questions and answers from that session. We do not send your
+          email address, name, or any other account details. Anthropic processes this data to provide its service to us.
         </li>
       </ul>
 

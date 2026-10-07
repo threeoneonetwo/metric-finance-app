@@ -33,6 +33,14 @@ Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle O
 - Preview deployments share the production database. Don't test signup flows with real addresses on previews.
 - All email is sent as "Vansh Pandita <vp@metricfinance.app>" (`lib/sender.ts`, one constant, no env var). Use `SENDER_EMAIL` in copy instead of typing the address. The old `SES_FROM_EMAIL` env var is no longer read. Mail sent to vp@ has nowhere to land until inbound routing exists; replies use Reply-To.
 
+## Follow up questions on briefs
+- Every `/brief/[id]` page has an "Ask about your brief" panel (`components/brief-ask.tsx`) that posts to `/api/brief/ask`. Auth is the same as the brief page (signed link or `mf_session` cookie) and the brief must belong to the reader.
+- Policy runs in layers, cheapest first: `lib/ask/guard.ts` instantly declines advice questions (buy, sell, hold, price targets, predictions) and any explicit ticker outside the brief's watchlist, without a model call. Then `lib/ask/answer.ts` makes one forced tool call that must classify the question (`answer`, `advice`, `outside_watchlist`, `unrelated`) before answering, grounded only in the brief text and the facts it was written from. The route applies the final policy and runs an output check for recommendation language. Answers are scrubbed of dashes.
+- Each brief stores the facts it was written from in `briefings.facts` (migration `0008_briefing_facts.sql`, already applied). Older briefs have `null` and are answered from the brief text only.
+- Limits: 12 model answered questions per reader per New York day plus 60 per IP per hour (`hitRateLimit` in `db/rate-limit.ts`). Policy replies do not count.
+- Privacy: the text of questions and answers is never stored or sent to analytics. PostHog gets `brief_question_asked` with status, length and latency only. Keep it that way; the privacy page promises it.
+- `ASK_MODEL` overrides the model (defaults to `CLAUDE_MODEL`). The guard has a test table worth rerunning after edits (see git history of `lib/ask/guard.ts`).
+
 ## Learn section (programmatic SEO)
 - Header and footer link to `/learn`, the blog. All programmatic SEO lives there: `/learn/stocks/[symbol]` (a guide for every Nasdaq and NYSE stock; the browse list lives on the `/learn` hub, and `/learn/stocks` 301 redirects to `/learn#stocks`), `/learn/terms/[slug]` (glossary), `/learn/guides/[slug]` (long explainers), `/learn/compare/[a]-vs-[b]` (comparisons).
 - Content sources: `lib/learn/terms.ts`, `lib/learn/guides.ts`, `lib/stock-guides.ts` (hand written, 22 stocks), `lib/learn/stocks.ts` (templates by sector for every other stock). Add new terms and guides to those files; the sitemap picks them up.

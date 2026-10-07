@@ -17,6 +17,10 @@ export const FAQS = [
     answer: "One concise brief is posted on the site every trading day at 5 PM ET, right after the market closes, and we email you a link when it is up. You can change your watchlist or unsubscribe at any time.",
   },
   {
+    question: "Can I ask questions about my brief?",
+    answer: "Yes. Every brief has a box where you can ask follow up questions about the stocks in it, such as why one of them moved or what a term means. Answers come from the same data as your brief, cover only your own stocks and never tell you to buy or sell.",
+  },
+  {
     question: "Can I search by company name?",
     answer: "Yes. Search by a company name such as Apple or by its ticker, such as AAPL.",
   },

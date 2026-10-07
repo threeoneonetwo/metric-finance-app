@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BriefFrame } from "@/components/brief-frame";
+import { BriefAsk } from "@/components/brief-ask";
 import { ShareCard } from "@/components/share-card";
 import { RequestManageLink } from "@/components/request-manage-link";
 import { SiteFooter } from "@/components/site-footer";
@@ -9,6 +10,7 @@ import { SiteHeader } from "@/components/site-header";
 import landing from "@/components/newsletter-landing.module.css";
 import styles from "@/components/brief-view.module.css";
 import { getBriefingForSubscriber } from "@/db/briefings";
+import type { StoredBriefFacts } from "@/db/schema";
 import { hoursSince, isInternalEmail, trackServer } from "@/lib/analytics-server";
 import { resolveSubscriber } from "@/lib/session-server";
 
@@ -70,6 +72,7 @@ export default async function BriefViewPage({ params, searchParams }: BriefViewP
     day: "numeric",
   }).format(briefing.sentAt);
   const dashboard = `/manage?${new URLSearchParams(creds!)}`;
+  const starters = starterQuestions(briefing.tickers, briefing.facts);
 
   return (
     <main>
@@ -84,6 +87,7 @@ export default async function BriefViewPage({ params, searchParams }: BriefViewP
           <div className={styles.frameWrap}>
             <BriefFrame html={briefing.html} title={`Metric Finance brief for ${date}`} />
           </div>
+          <BriefAsk briefingId={briefing.id} tickers={briefing.tickers} starters={starters} creds={creds!} />
           <ShareCard page="brief" />
           <div className={styles.actions}>
             <Link href={dashboard}>Your dashboard</Link>
@@ -94,4 +98,18 @@ export default async function BriefViewPage({ params, searchParams }: BriefViewP
       </div>
     </main>
   );
+}
+
+// Three easy first questions, built from the brief's own data so they are always in scope.
+function starterQuestions(tickers: string[], facts: StoredBriefFacts | null) {
+  const moves = (facts?.tickers ?? []).filter((item) => typeof item.changePercent === "number");
+  const biggest = [...moves].sort((a, b) => Math.abs(b.changePercent!) - Math.abs(a.changePercent!))[0];
+  const lead = biggest?.ticker ?? tickers[0];
+  const verb = biggest ? (biggest.changePercent! >= 0 ? "rise" : "fall") : "move";
+  const other = tickers.find((ticker) => ticker !== lead);
+  return [
+    `Why did ${lead} ${verb} today?`,
+    "Explain today's idea with an example",
+    other ? `What's coming up next for ${other}?` : `What does ${lead} actually sell?`,
+  ];
 }

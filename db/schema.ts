@@ -18,12 +18,26 @@ export const config = pgTable("config", {
   value: jsonb("value").notNull(),
 });
 
+// The facts a brief was written from (migration 0008). Stored so follow up questions use the exact same numbers.
+export type StoredTickerFacts = {
+  ticker: string;
+  companyName: string;
+  price: number | null;
+  changePercent: number | null;
+  sector: string | null;
+  industry: string | null;
+  headlines: { title: string; source: string | null }[];
+  nextEarnings: { date: string; epsEstimated: number | null; revenueEstimated: number | null } | null;
+};
+export type StoredBriefFacts = { asOf: string; marketChangePercent: number | null; tickers: StoredTickerFacts[] };
+
 export const briefings = pgTable("briefings", {
   id: uuid("id").primaryKey().defaultRandom(),
   subscriberId: uuid("subscriber_id").notNull(),
   tickers: jsonb("tickers").$type<string[]>().notNull().default([]),
   html: text("html").notNull(),
   text: text("text").notNull(),
+  facts: jsonb("facts").$type<StoredBriefFacts>(),
   sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(),
 });
 

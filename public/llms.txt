@@ -6,6 +6,7 @@ Metric Finance is for everyday investors, especially young professionals, who ow
 
 ## What each daily brief covers
 
+- Follow up questions: below each brief, readers can ask questions about their own stocks. Answers use only that brief's data and never give buy or sell advice.
 - Price action: what each of your stocks did today and the simplest explanation of why it moved.
 - Fundamentals: revenue, profit margins, cash and debt, translated out of accounting language.
 - Peer comparison: how the company is doing against the businesses it actually competes with.
