@@ -12,8 +12,12 @@ const INTERNAL_EMAILS = new Set(["vanshpandita11@gmail.com", "vp@metricfinance.a
 
 export function isInternalEmail(email: string) {
   const address = email.toLowerCase();
+  // Plus aliases of our own inboxes (vanshpandita11+anything@gmail.com) are ours too.
+  const [local = "", domain = ""] = address.split("@");
+  const base = `${local.split("+")[0]}@${domain}`;
   return (
     INTERNAL_EMAILS.has(address) ||
+    INTERNAL_EMAILS.has(base) ||
     address.endsWith("@simulator.amazonses.com") ||
     address.endsWith("@example.invalid") ||
     /\+test/.test(address.split("@")[0] ?? "")

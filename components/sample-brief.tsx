@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { SampleAsk } from "./sample-ask";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import styles from "./sample-brief.module.css";
@@ -35,7 +36,7 @@ export function SampleBrief() {
         <div className={styles.intro}>
           <span className={styles.kicker}>Sample brief</span>
           <h1>Your next favourite daily brief</h1>
-          <p>One bite sized brief, posted on the site every trading day at 5 PM ET, explaining everything about your stocks, what moved, and why, in words anyone can follow. We email you when it is up.</p>
+          <p>One bite sized brief, posted on the site every trading day at 5 PM ET, explaining everything about your stocks, what moved, and why, in words anyone can follow. Still curious? Ask follow up questions right inside the brief. We email you when it is up.</p>
         </div>
 
         <figure className={styles.mailFrame} aria-label="Example of a Metric Finance daily brief">
@@ -97,6 +98,10 @@ export function SampleBrief() {
                 <li><strong>Nvidia earnings.</strong> The number to look for is data center revenue growth. If it keeps climbing, the AI spending story holds up.</li>
                 <li><strong>Tesla&apos;s next delivery report.</strong> Look for deliveries beating what analysts expect.</li>
               </ul>
+            </div>
+
+            <div className={styles.mailSection}>
+              <SampleAsk />
             </div>
 
             <div className={styles.mailSignoff}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUp, CornerDownRight, Sparkles } from "lucide-react";
+import { ArrowUp, CornerDownRight, Crown, Sparkles, X } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { trackPostHogEvent } from "@/lib/posthog";
 import styles from "./brief-view.module.css";
@@ -18,8 +18,10 @@ export function BriefAsk({ briefingId, tickers, starters, creds }: { briefingId:
   const [busy, setBusy] = useState(false);
   const [remaining, setRemaining] = useState<number | null>(null);
   const [suggestions, setSuggestions] = useState(starters);
+  const [pro, setPro] = useState<null | "offer" | "soon">(null);
   const thread = useRef<HTMLDivElement>(null);
   const nextId = useRef(1);
+  const proSource = useRef<"ask_limit" | "ask_footer">("ask_limit");
 
   useEffect(() => {
     thread.current?.lastElementChild?.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -27,7 +29,11 @@ export function BriefAsk({ briefingId, tickers, starters, creds }: { briefingId:
 
   async function ask(raw: string) {
     const question = raw.trim();
-    if (question.length < 3 || busy || remaining === 0) return;
+    if (remaining === 0) {
+      openPro("ask_limit");
+      return;
+    }
+    if (question.length < 3 || busy) return;
     const id = nextId.current++;
     // Only real answers are sent back as context, so canned policy replies never shape the next answer.
     const history = exchanges
@@ -51,11 +57,31 @@ export function BriefAsk({ briefingId, tickers, starters, creds }: { briefingId:
       if (!response.ok || !data.status) throw new Error(data.error ?? "Something went wrong. Please try again.");
       setExchanges((items) => items.map((item) => (item.id === id ? { ...item, answer: data.answer, status: data.status } : item)));
       if (typeof data.remaining === "number") setRemaining(data.remaining);
+      if (data.status === "limited") openPro("ask_limit");
       if (data.followUps?.length) setSuggestions(data.followUps);
     } catch (error) {
       setExchanges((items) => items.map((item) => (item.id === id ? { ...item, error: error instanceof Error ? error.message : "Something went wrong." } : item)));
     } finally {
       setBusy(false);
+    }
+  }
+
+  function openPro(source: "ask_limit" | "ask_footer") {
+    setPro("offer");
+    proSource.current = source;
+    trackPostHogEvent("pro_paywall_shown", { source });
+  }
+
+  async function wantPro() {
+    setPro("soon");
+    try {
+      await fetch("/api/pro-interest", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ source: proSource.current, ...creds }),
+      });
+    } catch {
+      // The thank you still shows; interest is best effort.
     }
   }
 
@@ -112,8 +138,7 @@ export function BriefAsk({ briefingId, tickers, starters, creds }: { briefingId:
           rows={1}
           value={draft}
           maxLength={MAX}
-          disabled={out}
-          placeholder={out ? "You've used today's questions" : `Ask anything about ${tickers.slice(0, 2).join(" or ")}${tickers.length > 2 ? "…" : ""}`}
+          placeholder={out ? "You've used today's free questions" : `Ask anything about ${tickers.slice(0, 2).join(" or ")}${tickers.length > 2 ? "…" : ""}`}
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === "Enter" && !event.shiftKey) {
@@ -122,12 +147,40 @@ export function BriefAsk({ briefingId, tickers, starters, creds }: { briefingId:
             }
           }}
         />
-        <button type="submit" disabled={busy || out || draft.trim().length < 3} aria-label="Send question"><ArrowUp size={18} /></button>
+        <button type="submit" disabled={busy || (!out && draft.trim().length < 3)} aria-label="Send question"><ArrowUp size={18} /></button>
       </form>
       <p className={styles.askMeta}>
         <span>Answers explain, they never recommend. They can be wrong, and they are not financial advice.</span>
         {remaining !== null && <span>{remaining} {remaining === 1 ? "question" : "questions"} left today</span>}
       </p>
+      {out && (
+        <button type="button" className={styles.proLink} onClick={() => openPro("ask_footer")}>
+          <Crown size={15} /> Want more questions? Get Pro
+        </button>
+      )}
+
+      {pro && (
+        <div className={styles.proOverlay} role="presentation" onClick={() => setPro(null)} onKeyDown={(event) => event.key === "Escape" && setPro(null)}>
+          <div className={styles.proCard} role="dialog" aria-modal="true" aria-labelledby="pro-title" onClick={(event) => event.stopPropagation()}>
+            <button type="button" className={styles.proClose} aria-label="Close" onClick={() => setPro(null)} autoFocus><X size={18} /></button>
+            <span className={styles.proBadge} aria-hidden="true"><Crown size={22} /></span>
+            {pro === "offer" ? (
+              <>
+                <h3 id="pro-title">You&apos;ve used today&apos;s free questions</h3>
+                <p>Free members get 5 follow up questions a day. Pro gives you more questions every day, so you can dig into every move in your stocks.</p>
+                <button type="button" className={styles.proButton} onClick={() => void wantPro()}>Get Pro</button>
+                <button type="button" className={styles.proLater} onClick={() => setPro(null)}>Maybe later</button>
+              </>
+            ) : (
+              <>
+                <h3 id="pro-title">Pro is launching soon</h3>
+                <p>Thanks for your interest. You&apos;re on the list, and we&apos;ll let you know as soon as Pro is ready. Your free questions reset tomorrow.</p>
+                <button type="button" className={styles.proButton} onClick={() => setPro(null)}>Got it</button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

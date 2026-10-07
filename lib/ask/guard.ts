@@ -1,7 +1,7 @@
 import { US_STOCKS } from "@/lib/stock-lookup";
 
 /** Questions a reader can send to the model per New York day. Instant policy replies do not count. */
-export const DAILY_QUESTIONS = 12;
+export const DAILY_QUESTIONS = 5;
 
 // Cheap, deterministic checks that run before any model call. They catch the two things we must never answer
 // (personal investment advice and stocks outside the reader's watchlist) without spending tokens or trusting the model.
