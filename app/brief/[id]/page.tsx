@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { BriefFrame } from "@/components/brief-frame";
 import { BriefAsk } from "@/components/brief-ask";
 import { ShareCard } from "@/components/share-card";
+import { SpotGlow } from "@/components/spot-glow";
 import { RequestManageLink } from "@/components/request-manage-link";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -78,7 +79,7 @@ export default async function BriefViewPage({ params, searchParams }: BriefViewP
     <main>
       <div className={styles.page}>
         <SiteHeader />
-        <div className={styles.main}>
+        <SpotGlow className={styles.main}>
           <span className={styles.eyebrow}><i /> Your daily brief</span>
           <h1 className={styles.title}>{date}</h1>
           <ul className={styles.tickers} aria-label="Stocks in this brief">
@@ -93,7 +94,7 @@ export default async function BriefViewPage({ params, searchParams }: BriefViewP
             <Link href={dashboard}>Your dashboard</Link>
           </div>
           <p className={styles.note}>Not financial advice. Market data may be delayed.</p>
-        </div>
+        </SpotGlow>
         <SiteFooter />
       </div>
     </main>

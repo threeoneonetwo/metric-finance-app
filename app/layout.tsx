@@ -6,16 +6,16 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://metricfinance.app"),
   applicationName: "Metric Finance",
-  title: "Stocks Explained Like You're 5 for free | Metric Finance",
+  title: "Stocks Explained Like You're 5 For Free | Metric Finance",
   description:
-    "Understand the stock market without the jargon: pick up to five US stocks and get a free brief every trading day at 5 PM ET on why each one moved.",
+    "Stocks explained like you're 5, free for beginners. Pick up to five US stocks, get a daily brief at 5 PM ET on why each moved, then ask follow up questions.",
   formatDetection: {
     telephone: false,
   },
   openGraph: {
-    title: "Stocks Explained Like You're 5 for free | Metric Finance",
+    title: "Stocks Explained Like You're 5 For Free | Metric Finance",
     description:
-      "Understand the stock market without the jargon: pick up to five US stocks and get a free brief every trading day at 5 PM ET on why each one moved.",
+      "Stocks explained like you're 5, free for beginners. Pick up to five US stocks, get a daily brief at 5 PM ET on why each moved, then ask follow up questions.",
     url: "https://metricfinance.app",
     siteName: "Metric Finance",
     images: [{ url: "https://metricfinance.app/og-image-v2.jpg", width: 1200, height: 630, alt: "Metric Finance: stocks explained like you're 5", type: "image/jpeg" }],
@@ -23,9 +23,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Stocks Explained Like You're 5 for free | Metric Finance",
+    title: "Stocks Explained Like You're 5 For Free | Metric Finance",
     description:
-      "Understand the stock market without the jargon: pick up to five US stocks and get a free brief every trading day at 5 PM ET on why each one moved.",
+      "Stocks explained like you're 5, free for beginners. Pick up to five US stocks, get a daily brief at 5 PM ET on why each moved, then ask follow up questions.",
     images: ["https://metricfinance.app/og-image-v2.jpg"],
   },
   icons: {

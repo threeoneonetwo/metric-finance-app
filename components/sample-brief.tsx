@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { SampleAsk } from "./sample-ask";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
+import { SpotGlow } from "./spot-glow";
 import styles from "./sample-brief.module.css";
 
 const SHOWCASE_WATCHLIST = [
@@ -32,6 +33,7 @@ export function SampleBrief() {
   return (
     <div className={styles.page}>
       <SiteHeader />
+      <SpotGlow>
       <main className={styles.main}>
         <div className={styles.intro}>
           <span className={styles.kicker}>Sample brief</span>
@@ -125,6 +127,7 @@ export function SampleBrief() {
           <span>Free. Unsubscribe any time.</span>
         </div>
       </main>
+      </SpotGlow>
       <SiteFooter />
     </div>
   );

@@ -23,14 +23,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${stored.title} | Metric Finance`,
       description: stored.description,
       alternates: { canonical: `/learn/guides/${slug}` },
-      openGraph: { title: stored.title, description: stored.description, url: `${SITE}/learn/guides/${slug}`, type: "article" },
+      openGraph: { title: stored.title, description: stored.description, url: `${SITE}/learn/guides/${slug}`, type: "article", siteName: "Metric Finance" },
+      twitter: { card: "summary_large_image", title: stored.title, description: stored.description },
     };
   }
   return {
     title: `${guide.title} | Metric Finance`,
     description: guide.description,
     alternates: { canonical: `/learn/guides/${guide.slug}` },
-    openGraph: { title: guide.title, description: guide.description, url: `${SITE}/learn/guides/${guide.slug}`, type: "article" },
+    openGraph: { title: guide.title, description: guide.description, url: `${SITE}/learn/guides/${guide.slug}`, type: "article", siteName: "Metric Finance" },
+    twitter: { card: "summary_large_image", title: guide.title, description: guide.description },
   };
 }
 

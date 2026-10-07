@@ -4,9 +4,9 @@ import { NewsletterLanding } from "@/components/newsletter-landing";
 import { FAQS } from "@/lib/faqs";
 
 export const metadata: Metadata = {
-  title: "Stocks Explained Like You're 5 for free | Metric Finance",
+  title: "Stocks Explained Like You're 5 For Free | Metric Finance",
   description:
-    "Understand the stock market without the jargon: pick up to five US stocks and get a free brief every trading day at 5 PM ET on why each one moved.",
+    "Stocks explained like you're 5, free for beginners. Pick up to five US stocks, get a daily brief at 5 PM ET on why each moved, then ask follow up questions.",
   alternates: { canonical: "https://metricfinance.app/" },
 };
 
@@ -32,7 +32,7 @@ const STRUCTURED_DATA = {
       name: "Metric Finance",
       url: "https://metricfinance.app/",
       description:
-        "Understand the stock market without the jargon: pick up to five US stocks and get a free brief every trading day at 5 PM ET on why each one moved.",
+        "Stocks explained like you're 5, free for beginners. Pick up to five US stocks, get a daily brief at 5 PM ET on why each moved, then ask follow up questions.",
       inLanguage: "en-US",
       publisher: { "@id": "https://metricfinance.app/#organization" },
     },

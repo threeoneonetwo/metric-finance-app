@@ -29,7 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: { canonical: `/learn/stocks/${entry.slug}` },
     robots: isIndexable(entry) ? undefined : { index: false, follow: true },
-    openGraph: { title, description, url: `${SITE}/learn/stocks/${entry.slug}`, type: "article" },
+    openGraph: { title, description, url: `${SITE}/learn/stocks/${entry.slug}`, type: "article", siteName: "Metric Finance" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

@@ -14,11 +14,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const term = findTerm((await params).slug);
   if (!term) return {};
   const title = `What Is ${term.term}? Explained Like You're 5 | Metric Finance`;
+  const description = `${term.simple} ${term.explain.split(". ")[0]}.`.slice(0, 300);
   return {
     title,
-    description: `${term.simple} ${term.explain.split(". ")[0]}.`.slice(0, 300),
+    description,
     alternates: { canonical: `/learn/terms/${term.slug}` },
-    openGraph: { title, url: `${SITE}/learn/terms/${term.slug}`, type: "article" },
+    openGraph: { title, description, url: `${SITE}/learn/terms/${term.slug}`, type: "article", siteName: "Metric Finance" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

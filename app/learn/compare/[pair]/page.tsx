@@ -28,7 +28,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates: { canonical: `/learn/compare/${a.slug}-vs-${b.slug}` },
-    openGraph: { title, description, url: `${SITE}/learn/compare/${a.slug}-vs-${b.slug}`, type: "article" },
+    openGraph: { title, description, url: `${SITE}/learn/compare/${a.slug}-vs-${b.slug}`, type: "article", siteName: "Metric Finance" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
