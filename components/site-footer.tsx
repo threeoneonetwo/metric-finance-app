@@ -13,9 +13,10 @@ export function SiteFooter() {
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-10 sm:flex-row sm:justify-between">
         <div className="max-w-xs">
-          <p className="flex items-center gap-2.5 text-lg font-bold text-white">
+          {/* "/" sends signed in members to their dashboard (proxy.ts) and everyone else to the homepage. */}
+          <Link href="/" aria-label="Metric Finance home" className="inline-flex items-center gap-2.5 text-lg font-bold text-white transition-opacity hover:opacity-80">
             <MetricWordmark />
-          </p>
+          </Link>
           <p className="mt-3 text-sm leading-6 text-[#8993ab]">
             Stocks explained like you&apos;re 5.
           </p>
