@@ -1,4 +1,4 @@
-// Longer plain English explainers. Never advice. No dashes anywhere in this content.
+// Longer explainers in simple words. Never advice. No dashes anywhere in this content.
 export type Guide = {
   slug: string;
   title: string;
@@ -27,7 +27,7 @@ export const GUIDES: Guide[] = [
     slug: "how-to-read-a-stock-quote",
     title: "How to Read a Stock Quote: A Simple Guide for Beginners",
     description: "Learn what every number on a stock quote means, including price, change, volume, market cap, P/E ratio and the 52 week range.",
-    intro: "A stock quote looks like a wall of numbers, but each one answers a simple question. Here is what the main pieces mean in plain English.",
+    intro: "A stock quote looks like a wall of numbers, but each one answers a simple question. Here is what the main pieces mean in simple words.",
     sections: [
       { heading: "Ticker and price", paragraphs: ["The ticker is the stock's short nickname, such as AAPL. The price is what one share costs right now. During market hours it updates constantly, and after the close it shows the last trade of the day."] },
       { heading: "Change and percent change", paragraphs: ["This shows how much the price moved compared with yesterday's close. A green number with a plus sign means it rose. A red number with a minus sign means it fell. The percent change is easier to compare across stocks than the dollar change."] },
@@ -40,7 +40,7 @@ export const GUIDES: Guide[] = [
   {
     slug: "what-happens-when-the-stock-market-closes",
     title: "What Happens When the Stock Market Closes at 4 PM?",
-    description: "Find out what the closing bell means, why prices matter at the close, and what after hours trading is, in plain English.",
+    description: "Find out what the closing bell means, why prices matter at the close, and what after hours trading is, in simple words.",
     intro: "The regular US stock market is open from 9:30 AM to 4 PM Eastern time on weekdays. When the closing bell rings, trading does not completely stop, but the official day is over.",
     sections: [
       { heading: "The closing price", paragraphs: ["The last price of the regular session is called the closing price. It is the number used to say how much a stock rose or fell that day, and it is the starting point for tomorrow's change."] },
@@ -59,7 +59,7 @@ export const GUIDES: Guide[] = [
       { heading: "Start with companies you already know", paragraphs: ["Pick up to five companies whose products you use or understand. It is much easier to learn why a stock moves when you already know what the company does."] },
       { heading: "Watch what happens around news", paragraphs: ["Notice what happens to the price after an earnings report, a product launch or a big headline. Over a few weeks you will start to see patterns in what the market cares about."] },
       { heading: "Learn five key words", paragraphs: ["You do not need a finance degree. Start with market cap, P/E ratio, earnings per share, dividend and volatility. Those cover most of what you will read in the news."] },
-      { heading: "Use a daily explainer", paragraphs: ["A short daily brief on your chosen stocks, written in plain language, turns a few minutes a day into a real education. It also means you never have to decode a wall of jargon."] },
+      { heading: "Use a daily explainer", paragraphs: ["A short daily brief on your chosen stocks, written in simple words, turns a few minutes a day into a real education. It also means you never have to decode a wall of jargon."] },
       { heading: "Remember this is education", paragraphs: ["Learning how companies and markets work is not the same as getting investment advice. Any decision about money is yours, ideally with a qualified professional if you need one."] },
     ],
     terms: ["market-cap", "pe-ratio", "eps", "dividend", "volatility"],
@@ -73,7 +73,7 @@ export const GUIDES: Guide[] = [
       { heading: "When it happens", paragraphs: ["Earnings season usually kicks off a couple of weeks after each quarter ends, around January, April, July and October. Large banks tend to go first and big technology companies follow."] },
       { heading: "What gets reported", paragraphs: ["Companies share their sales, their profit and their earnings per share. They often also give guidance, which is a forecast for the coming quarter or year."] },
       { heading: "Why the stock can jump or drop", paragraphs: ["Analysts publish estimates before each report. A stock usually moves based on whether the real numbers beat or missed those estimates, and on what the company says about the future. A company can earn a record profit and still fall if investors hoped for more."] },
-      { heading: "How to follow along", paragraphs: ["Look up the date of the next report for the stocks you follow. Reading a short plain English summary the same evening helps you see what mattered without sifting through the full report."] },
+      { heading: "How to follow along", paragraphs: ["Look up the date of the next report for the stocks you follow. Reading a short, simple summary the same evening helps you see what mattered without sifting through the full report."] },
     ],
     terms: ["earnings-report", "eps", "guidance", "analyst-rating"],
   },
@@ -106,7 +106,7 @@ export const GUIDES: Guide[] = [
   {
     slug: "how-to-read-an-earnings-report",
     title: "How to Read an Earnings Report in 5 Minutes",
-    description: "A plain English walkthrough of the numbers in a company's quarterly earnings report and what to look for first.",
+    description: "A simple walkthrough of the numbers in a company's quarterly earnings report and what to look for first.",
     intro: "An earnings report can run dozens of pages, but you can get the story in five minutes if you know where to look.",
     sections: [
       { heading: "1. Revenue", paragraphs: ["Start with sales. Is revenue higher than a year ago? Did it beat what analysts expected? Growing sales mean the company is winning customers."] },

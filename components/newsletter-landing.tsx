@@ -256,7 +256,7 @@ export function NewsletterLanding() {
           <div className={styles.inboxHeading}>
             <span className={styles.inboxEyebrow}><i /> Every trading day at 5 PM ET</span>
             <h2>What&apos;s in<br className={styles.inboxBreak} /> your daily brief</h2>
-            <p>One short brief, posted right after the market closes, walks through your stocks and explains what changed in plain English.</p>
+            <p>One short brief, posted right after the market closes, walks through your stocks and explains what changed in simple words.</p>
           </div>
           <div className={styles.inboxList}>
             {FEATURES.map(([number, title, copy], index) => (
@@ -346,7 +346,7 @@ export function NewsletterLanding() {
           <div className={styles.ctaGlow} aria-hidden="true" />
           <span className={styles.inboxEyebrow}><i /> Ready when you are</span>
           <h2>Understand stocks like a pro</h2>
-          <p>Pick the stocks you care about and get the context you need in plain English every day.</p>
+          <p>Pick the stocks you care about and get the context you need in simple words every day.</p>
           <div className={styles.ctaActions}>
             <a href="#signup" className={styles.ctaPrimary}>Build my watchlist <ArrowRight size={16} /></a>
             <Link href="/brief" className={styles.ctaSecondary}>Read a sample brief</Link>

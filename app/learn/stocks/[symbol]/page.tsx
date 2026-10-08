@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = findStock((await params).symbol);
   if (!entry) return {};
   const title = `${entry.name} (${entry.stock.symbol}) Stock Explained Like You're 5 | Metric Finance`;
-  const description = `What ${entry.name} does, how it makes money and what moves ${entry.stock.symbol} stock, explained in plain English. Follow it in a free daily brief.`;
+  const description = `What ${entry.name} does, how it makes money and what moves ${entry.stock.symbol} stock, explained in simple words. Follow it in a free daily brief.`;
   return {
     title,
     description,
@@ -60,7 +60,7 @@ export default async function StockPage({ params }: Props) {
   ];
   const faqs = [
     ...(written ? [...baseFaqs.slice(0, 1), ...written.faqs, ...baseFaqs.slice(1)] : baseFaqs),
-    { q: `How can I follow ${stock.symbol} stock every day?`, a: `Add ${stock.symbol} to your watchlist on Metric Finance. We post a free brief every trading day at 5 PM ET that explains what happened to the stocks you follow, in plain English.` },
+    { q: `How can I follow ${stock.symbol} stock every day?`, a: `Add ${stock.symbol} to your watchlist on Metric Finance. We post a free brief every trading day at 5 PM ET that explains what happened to the stocks you follow, in simple words.` },
   ];
 
   return (
@@ -116,7 +116,7 @@ export default async function StockPage({ params }: Props) {
       <div className={styles.ctaInline}>
         <SignupCta
           title={`Follow ${stock.symbol} in your daily brief`}
-          body={`Each trading day at 5 PM ET we post what happened to ${name} and why it matters, in plain English. Free.`}
+          body={`Each trading day at 5 PM ET we post what happened to ${name} and why it matters, in simple words. Free.`}
         />
       </div>
 

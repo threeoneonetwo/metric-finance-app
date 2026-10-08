@@ -90,7 +90,7 @@ export async function writeRecap(data: RecapData) {
   const termList = TERMS.map((term) => `${term.slug}: ${term.term}`).join("; ");
   const result = await writeWithTool<{ description: string; intro: string; sections: LearnSection[]; terms: string[] }>({
     tool: "write_market_recap",
-    description: "Write today's plain English stock market recap.",
+    description: "Write today's stock market recap in simple words.",
     maxTokens: 2600,
     schema: {
       type: "object",

@@ -8,7 +8,7 @@ import styles from "../learn.module.css";
 export const revalidate = 1800;
 
 export const metadata: Metadata = {
-  title: "Stock Market Today: Daily Recap in Plain English | Metric Finance",
+  title: "Stock Market Today: Daily Recap in Simple Words | Metric Finance",
   description: "How did the stock market do today? A short daily recap of the S&P 500, Nasdaq and Dow, the biggest movers and why, explained like you're 5.",
   alternates: { canonical: "/learn/market-today" },
 };

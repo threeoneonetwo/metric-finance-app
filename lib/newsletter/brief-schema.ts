@@ -28,7 +28,7 @@ export const BRIEF_TOOL_SCHEMA = {
       description: "One row per watchlist stock, in the order given.",
       items: {
         type: "object",
-        properties: { ticker: { type: "string" }, signal: { type: "string", description: "One plain English signal, max 10 words. 'Nothing material today' is valid." } },
+        properties: { ticker: { type: "string" }, signal: { type: "string", description: "One signal in simple words, max 10 words. 'Nothing material today' is valid." } },
         required: ["ticker", "signal"],
       },
     },
@@ -39,7 +39,7 @@ export const BRIEF_TOOL_SCHEMA = {
         ticker: { type: "string" },
         title: { type: "string", description: "A short plain headline for the story." },
         whatHappened: { type: "string" },
-        whyItMatters: { type: "string", description: "Plain English, may use one simple everyday analogy." },
+        whyItMatters: { type: "string", description: "Simple words, may use one simple everyday analogy." },
         whatItChanges: { type: "string" },
         whatItDoesntProve: { type: "string" },
         nextCheckpoint: { type: "string", description: "Only reference an event or date that appears in the data." },

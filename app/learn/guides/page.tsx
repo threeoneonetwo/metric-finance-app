@@ -9,7 +9,7 @@ import styles from "../learn.module.css";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Beginner Stock Market Guides in Plain English | Metric Finance",
+  title: "Beginner Stock Market Guides in Simple Words | Metric Finance",
   description: "Free beginner guides to the stock market, from how stocks work and how to read a quote to earnings, interest rates and ETFs, explained like you're 5.",
   alternates: { canonical: "/learn/guides" },
 };
@@ -25,7 +25,7 @@ export default async function GuidesIndex() {
       <div className={styles.hero}>
         <span className={styles.eyebrow}>Guides</span>
         <h1 className={styles.h1}>Beginner stock market <span className={styles.accent}>guides</span></h1>
-        <p className={styles.lead}>New guides are added regularly. Each one explains a single idea in plain English.</p>
+        <p className={styles.lead}>New guides are added regularly. Each one explains a single idea in simple words.</p>
       </div>
       <ul className={styles.stats} style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
         <li><strong><CountUp value={all.length} /></strong><span>guides</span></li>

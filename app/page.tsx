@@ -4,9 +4,9 @@ import { NewsletterLanding } from "@/components/newsletter-landing";
 import { FAQS } from "@/lib/faqs";
 
 export const metadata: Metadata = {
-  title: "Stocks Explained Like You're 5 For Free | Metric Finance",
+  title: "Metric Finance | Stocks explained like you're 5",
   description:
-    "Stocks explained like you're 5, free for beginners. Pick up to five US stocks, get a daily brief at 5 PM ET on why each moved, then ask follow up questions.",
+    "A free daily brief for beginners that explains up to five US stocks like you're 5, shows why each moved at 5 PM ET and answers your follow up questions.",
   alternates: { canonical: "https://metricfinance.app/" },
 };
 
@@ -19,7 +19,7 @@ const STRUCTURED_DATA = {
       name: "Metric Finance",
       url: "https://metricfinance.app/",
       logo: "https://metricfinance.app/icon-512.png",
-      description: "Metric Finance explains US stocks like you're 5, in plain English for beginners.",
+      description: "Metric Finance explains US stocks like you're 5, in simple words for beginners.",
       email: "vanshpandita11@gmail.com",
       founder: [
         { "@type": "Person", name: "Yashna", sameAs: "https://www.linkedin.com/in/yashnapandugala/" },
@@ -32,7 +32,7 @@ const STRUCTURED_DATA = {
       name: "Metric Finance",
       url: "https://metricfinance.app/",
       description:
-        "Stocks explained like you're 5, free for beginners. Pick up to five US stocks, get a daily brief at 5 PM ET on why each moved, then ask follow up questions.",
+        "A free daily brief for beginners that explains up to five US stocks like you're 5, shows why each moved at 5 PM ET and answers your follow up questions.",
       inLanguage: "en-US",
       publisher: { "@id": "https://metricfinance.app/#organization" },
     },

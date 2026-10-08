@@ -2,7 +2,7 @@
 export const FAQS = [
   {
     question: "What does Metric's analysis cover?",
-    answer: "Each briefing covers price action, fundamentals, peer comparison, and recent news in plain English rather than analyst shorthand.",
+    answer: "Each briefing covers price action, fundamentals, peer comparison, and recent news in simple words rather than analyst shorthand.",
   },
   {
     question: "Does Metric give buy or sell recommendations?",

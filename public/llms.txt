@@ -1,6 +1,6 @@
 # Metric Finance
 
-> Metric Finance explains your stocks like you're 5, for free. Pick up to 5 US stocks and get one short brief posted every trading day at 5 PM ET, right after the market closes, explaining why each one moved, in plain English with zero jargon.
+> Metric Finance explains your stocks like you're 5, for free. Pick up to 5 US stocks and get one short brief posted every trading day at 5 PM ET, right after the market closes, explaining why each one moved, in simple words with zero jargon.
 
 Metric Finance is for everyday investors, especially young professionals, who own or follow US stocks but find financial news and analyst reports hard to read. It is not a trading platform and never gives buy or sell recommendations.
 
@@ -23,8 +23,8 @@ Metric Finance is for everyday investors, especially young professionals, who ow
 ## Links
 
 - [Sign up](https://metricfinance.app/): choose your stocks and enter your email.
-- [Learn: stock guides, glossary and beginner guides](https://metricfinance.app/learn): plain English explainers for popular US stocks, covering what each company does, how it makes money and what moves its price.
-- [Daily stock market recap](https://metricfinance.app/learn/market-today): a plain English recap after every trading day.
+- [Learn: stock guides, glossary and beginner guides](https://metricfinance.app/learn): simple explainers for popular US stocks, covering what each company does, how it makes money and what moves its price.
+- [Daily stock market recap](https://metricfinance.app/learn/market-today): a quick recap in simple words after every trading day.
 - [Privacy policy](https://metricfinance.app/privacy)
 - [Terms](https://metricfinance.app/terms)
 - Contact: vanshpandita11@gmail.com

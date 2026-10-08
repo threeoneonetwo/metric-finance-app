@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!found) return {};
   const [a, b] = found;
   const title = `${a.stock.symbol} vs ${b.stock.symbol}: ${a.name} and ${b.name} Compared | Metric Finance`;
-  const description = `${a.name} vs ${b.name} in plain English. See how the two companies and their stocks compare on size, sector and what drives each one.`;
+  const description = `${a.name} vs ${b.name} in simple words. See how the two companies and their stocks compare on size, sector and what drives each one.`;
   return {
     title,
     description,
@@ -67,7 +67,7 @@ export default async function ComparePage({ params }: Props) {
       <div className={styles.versus}><StockLogo symbol={a.stock.symbol} large /><em>vs</em><StockLogo symbol={b.stock.symbol} large /></div>
       <h1 className={styles.h1}>{a.name} vs {b.name}: <span className={styles.accent}>how do the stocks compare?</span></h1>
       <p className={styles.lead}>
-        {a.stock.symbol} and {b.stock.symbol} side by side, in plain English. This is an explanation of the two businesses, not a recommendation to buy either one.
+        {a.stock.symbol} and {b.stock.symbol} side by side, in simple words. This is an explanation of the two businesses, not a recommendation to buy either one.
       </p>
       <div className={styles.layout}>
         <div>
@@ -84,7 +84,7 @@ export default async function ComparePage({ params }: Props) {
         </section>
       ))}
       <div className={styles.ctaInline}>
-        <SignupCta title={`Follow ${a.stock.symbol} and ${b.stock.symbol} every day`} body="Add both to your watchlist and read a free plain English brief every trading day at 5 PM ET." />
+        <SignupCta title={`Follow ${a.stock.symbol} and ${b.stock.symbol} every day`} body="Add both to your watchlist and read a free brief in simple words every trading day at 5 PM ET." />
       </div>
       <section className={styles.faq}>
         <h2 className={styles.groupTitle}>Common questions</h2>

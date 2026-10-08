@@ -7,7 +7,7 @@ import styles from "../learn.module.css";
 
 export const metadata: Metadata = {
   title: "Stock Market Glossary: Investing Terms Explained Like You're 5 | Metric Finance",
-  description: "A plain English glossary of stock market and investing terms, from P/E ratio and market cap to dividends, ETFs and bull markets.",
+  description: "A simple dictionary of stock market and investing terms, from P/E ratio and market cap to dividends, ETFs and bull markets.",
   alternates: { canonical: "/learn/terms" },
 };
 
@@ -44,7 +44,7 @@ export default function TermsPage() {
           </ul>
         </section>
       ))}
-      <SignupCta title="See these words in action" body="Get a free daily brief on your own stocks, explained in plain English." />
+      <SignupCta title="See these words in action" body="Get a free daily brief on your own stocks, explained in simple words." />
     </LearnShell>
   );
 }

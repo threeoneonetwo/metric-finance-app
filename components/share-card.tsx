@@ -5,7 +5,7 @@ import { trackPostHogEvent } from "@/lib/posthog";
 import styles from "./brief-view.module.css";
 
 const SITE = "https://metricfinance.app";
-const MESSAGE = "I get a free daily brief that explains my stocks like I'm 5. Try it:";
+const MESSAGE = "I use Metric Finance for a free daily brief on why my stocks moved, explained simply. Worth a look:";
 
 type Channel = "native" | "copy" | "whatsapp" | "sms" | "x";
 

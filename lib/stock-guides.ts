@@ -1,6 +1,6 @@
 import { STOCKS, type Stock } from "./stocks";
 
-// Plain English, evergreen guides for the stocks we cover. They explain the business, never predict the price.
+// Simple, evergreen guides for the stocks we cover. They explain the business, never predict the price.
 export type StockGuide = {
   symbol: string;
   group: "Big tech" | "Chips and AI" | "Consumer" | "Finance and payments" | "Energy and holdings";

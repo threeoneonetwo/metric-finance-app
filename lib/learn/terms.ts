@@ -1,4 +1,4 @@
-// Plain English glossary. Written like you're 5, never advice. No dashes anywhere in this content.
+// Simple dictionary. Written like you're 5, never advice. No dashes anywhere in this content.
 export type Term = {
   slug: string;
   term: string;

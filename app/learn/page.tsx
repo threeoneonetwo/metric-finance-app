@@ -13,7 +13,7 @@ import { TERMS } from "@/lib/learn/terms";
 import styles from "./learn.module.css";
 
 export const metadata: Metadata = {
-  title: "Learn Stocks and Investing in Plain English: Stock Guides, Terms and Daily Recaps | Metric Finance",
+  title: "Learn Stocks and Investing in Simple Words: Stock Guides, Terms and Daily Recaps | Metric Finance",
   description: "Free beginner guides to stocks and investing. Understand any US stock, learn the key terms and see how companies compare, all explained like you're 5.",
   alternates: { canonical: "/learn" },
 };
@@ -32,8 +32,8 @@ export default async function LearnPage() {
   return (
     <LearnShell crumbs={[{ name: "Learn", href: "/learn" }]}>
       <div className={styles.hero}>
-        <span className={styles.eyebrow}>Free · Plain English · No jargon</span>
-        <h1 className={styles.h1}>Learn stocks and investing in <span className={styles.accent}>plain English</span></h1>
+        <span className={styles.eyebrow}>Free · Like you&apos;re 5 · No jargon</span>
+        <h1 className={styles.h1}>Learn stocks and investing in <span className={styles.accent}>simple words</span></h1>
         <p className={styles.lead}>
           Free guides that explain how stocks work, what the jargon means and what is going on with the companies you care about. No finance degree needed.
         </p>

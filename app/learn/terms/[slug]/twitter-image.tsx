@@ -9,5 +9,5 @@ export const alt = "Investing term explained like you're 5 on Metric Finance";
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const term = findTerm((await params).slug);
   if (!term) notFound();
-  return ogCard({ label: "Glossary", title: `What is ${term.term}?`, accent: "Explained like you're 5", footer: "Free stock market glossary in simple words" });
+  return ogCard({ label: "Dictionary", title: `What is ${term.term}?`, accent: "Explained like you're 5", footer: "Free stock market dictionary in simple words" });
 }
