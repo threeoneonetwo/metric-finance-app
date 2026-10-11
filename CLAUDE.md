@@ -55,3 +55,10 @@ Homepage title and description target "stocks explained like you're 5" (see `app
 ## Known open items
 - Anthropic API credit needs topping up and auto-reload turned on; a failed daily brief emails the owner.
 - Testimonials on the homepage are labelled "From real users" and should be confirmed real.
+
+## Product roadmap
+- `/roadmap` is members only (same auth as the brief: signed link or `mf_session` cookie; anyone else is redirected home) and noindex. Readers reach it from the "What should we build next?" card at the end of every brief and on the dashboard (`components/roadmap-link.tsx`).
+- Data: `roadmap_ideas` and `roadmap_votes` (migration `0009_roadmap.sql`, already applied). Each reader gets 3 votes (`MAX_VOTES` in `db/roadmap.ts`), enforced in SQL. Statuses: `review`, `planned`, `progress`, `shipped` show on the board; reader suggestions arrive as `pending` and stay hidden until the owner sets them to `review` (there is no admin page yet; update the row in Neon).
+- To ship an idea: set `status = 'shipped'` and `shipped_at`. Votes on shipped ideas stop counting toward the reader's 3.
+- PostHog: `roadmap_viewed`, `roadmap_voted`, `roadmap_unvoted`, `roadmap_suggested` (length only, never the text).
+- The page uses the landing page texture (`data-texture="landing"` turns off the dotted grid in `globals.css`).

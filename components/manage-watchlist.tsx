@@ -6,6 +6,7 @@ import { BriefingHistory, type BriefingSummary } from "./briefing-history";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import styles from "./newsletter-landing.module.css";
+import { RoadmapLink } from "./roadmap-link";
 import { StockPicker } from "./stock-picker";
 import type { Stock } from "@/lib/stocks";
 
@@ -116,6 +117,8 @@ export function ManageWatchlist({ token, exp, sig, email, initialPicks, briefing
               <p className={styles.note}>Changes take effect from your next briefing.</p>
             )}
           </div>
+
+          <RoadmapLink creds={{ token, exp, sig }} from="dashboard" />
 
           <a className={styles.manageUnsubscribe} href={`/api/unsubscribe?token=${token}`}>
             Unsubscribe from the briefing

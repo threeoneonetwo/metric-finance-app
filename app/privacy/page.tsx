@@ -28,6 +28,11 @@ export default function PrivacyPage() {
           of your question so we can answer it. We do not save the text of your questions or of our answers. We only
           record that a question was asked, its length, and whether it was answered, tied to your random subscriber ID.
         </li>
+        <li>
+          <strong>Roadmap votes and ideas.</strong> If you vote on the product roadmap, we save which ideas you voted for. If
+          you suggest an idea, we save its text so we can review it, linked to your account. Approved ideas are shown to
+          other readers without your name or email.
+        </li>
       </ul>
 
       <h3>What we generate</h3>

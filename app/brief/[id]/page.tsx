@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BriefFrame } from "@/components/brief-frame";
 import { BriefAsk } from "@/components/brief-ask";
+import { RoadmapLink } from "@/components/roadmap-link";
 import { ShareCard } from "@/components/share-card";
 import { SpotGlow } from "@/components/spot-glow";
 import { RequestManageLink } from "@/components/request-manage-link";
@@ -90,6 +91,7 @@ export default async function BriefViewPage({ params, searchParams }: BriefViewP
           </div>
           <BriefAsk briefingId={briefing.id} tickers={briefing.tickers} starters={starters} creds={creds!} />
           <ShareCard page="brief" />
+          <RoadmapLink creds={creds!} from="brief" />
           <div className={styles.actions}>
             <Link href={dashboard}>Your dashboard</Link>
           </div>

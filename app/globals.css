@@ -72,8 +72,32 @@ body {
   overscroll-behavior-y: none;
 }
 
+body {
+  position: relative;
+}
+
+/* Dotted grid texture across the top of every page, fading out as you scroll. Static, never intercepts clicks. */
 body::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 1;
+  height: 560px;
+  background-image: radial-gradient(rgba(160, 185, 255, 0.16) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-mask-image: linear-gradient(#000, transparent);
+  mask-image: linear-gradient(#000, transparent);
+  pointer-events: none;
+}
+
+/* Pages with the landing page texture skip the dotted grid. */
+body:has([data-texture="landing"])::before {
   display: none;
+}
+
+/* Clip instead of hide, so sticky elements on these pages still stick. */
+body > main:has(> [data-texture="landing"]) {
+  overflow-x: clip;
 }
 
 body > main {
