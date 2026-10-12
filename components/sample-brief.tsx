@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { RoadmapLinkDemo } from "./roadmap-link";
 import { SampleAsk } from "./sample-ask";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
@@ -104,6 +105,7 @@ export function SampleBrief() {
 
             <div className={styles.mailSection}>
               <SampleAsk />
+              <RoadmapLinkDemo />
             </div>
 
             <div className={styles.mailSignoff}>
