@@ -28,8 +28,14 @@ const BY_SLUG = new Map(ENTRIES.map((entry) => [entry.slug, entry]));
 
 export const findStock = (slug: string) => BY_SLUG.get(slug.toLowerCase()) ?? null;
 // Only stocks we have real facts for are offered to search engines. The rest still work for visitors.
-export const isIndexable = (entry: StockEntry) => Boolean(entry.guide || entry.profile?.industry);
-export const indexableStocks = () => ENTRIES.filter(isIndexable).sort((a, b) => (b.profile?.cap ?? 0) - (a.profile?.cap ?? 0));
+// Micro caps and blank check shells are left out of search results (their pages are thin and rarely searched); change
+// MIN_INDEXABLE_CAP to publish more.
+export const MIN_INDEXABLE_CAP = 300e6;
+export const isIndexable = (entry: StockEntry) =>
+  Boolean(entry.guide) ||
+  Boolean(entry.profile?.industry && (entry.profile.cap ?? 0) >= MIN_INDEXABLE_CAP && !/blank check/i.test(entry.profile.industry));
+let indexable: StockEntry[] | null = null;
+export const indexableStocks = () => (indexable ??= ENTRIES.filter(isIndexable).sort((a, b) => (b.profile?.cap ?? 0) - (a.profile?.cap ?? 0)));
 
 export function sizeLabel(cap?: number) {
   if (!cap) return null;
@@ -45,6 +51,44 @@ export function money(cap?: number) {
   if (cap >= 1e12) return `${(cap / 1e12).toFixed(2).replace(/\.?0+$/, "")} trillion dollars`;
   if (cap >= 1e9) return `${(cap / 1e9).toFixed(1).replace(/\.0$/, "")} billion dollars`;
   return `${(cap / 1e6).toFixed(0)} million dollars`;
+}
+
+export type SizeInfo = {
+  /** "large cap", "mid cap" and so on (mega caps count as large caps in titles). */
+  label: string;
+  titleLabel: string;
+  cap: string;
+  heading: string;
+  paragraphs: string[];
+  shortAnswer: string;
+};
+
+// Answers "is X a small, medium or large cap company?" for any stock with a market cap on file. It is pure
+// arithmetic on data/stock-profiles.json, so it covers every stock automatically and needs no AI or API credit.
+export function sizeInfoFor(entry: StockEntry): SizeInfo | null {
+  const value = entry.profile?.cap;
+  const label = sizeLabel(value);
+  const cap = money(value);
+  if (!value || !label || !cap) return null;
+  const name = entry.name;
+  const isLarge = label === "large cap" || label === "mega cap";
+  const titleLabel = isLarge ? "Large Cap" : label.replace(/\b\w/g, (letter) => letter.toUpperCase());
+  const article = label === "mega cap" ? "a mega cap, the very top tier of large caps," : `a ${label}`;
+  const yesNo = isLarge ? "Yes." : "No.";
+  const verdict = isLarge
+    ? `${name} is a large cap stock${label === "mega cap" ? `, and an extra big one: it is a mega cap, worth more than 200 billion dollars` : ""}.`
+    : `${name} is ${article} stock, not a large cap.`;
+  return {
+    label,
+    titleLabel,
+    cap,
+    heading: `Is ${name} a small, medium or large cap company?`,
+    paragraphs: [
+      `${yesNo} ${verdict} Its market cap, which is the total value of all its shares, is about ${cap}.`,
+      `Here is how you can tell. Multiply the share price by the number of shares to get the market cap, then compare it to the usual sizes. Micro cap is under 300 million dollars, small cap is 300 million to 2 billion, mid cap is 2 to 10 billion, large cap is 10 billion and up, and mega cap is over 200 billion. Market caps move every day with the share price, so treat the number as a recent snapshot.`,
+    ],
+    shortAnswer: `${name} is ${label === "mega cap" ? "a mega cap" : `a ${label}`} stock with a market cap of about ${cap}.`,
+  };
 }
 
 export function peersOf(entry: StockEntry, count = 4): StockEntry[] {

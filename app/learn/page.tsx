@@ -24,7 +24,8 @@ export default async function LearnPage() {
   const [recaps, newGuides] = await Promise.all([listLearnArticles("market-today", 1), listLearnArticles("guide", 6)]);
   const latest = recaps[0];
   const groups = new Map<string, ReturnType<typeof indexableStocks>>();
-  for (const entry of indexableStocks()) {
+  // The browse list shows the 300 biggest companies; search covers every stock.
+  for (const entry of indexableStocks().slice(0, 300)) {
     const sector = sectorOf(entry);
     groups.set(sector, [...(groups.get(sector) ?? []), entry]);
   }

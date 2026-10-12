@@ -6,7 +6,7 @@ import { latestHeadlines } from "@/lib/learn/news";
 import { StockLogo } from "@/components/stock-logo";
 import { AsideCta, faqJsonLd, LearnShell, SignupCta, SITE } from "@/components/learn-shell";
 import { TERMS } from "@/lib/learn/terms";
-import { driversFor, findStock, indexableStocks, isIndexable, money, peersOf, sizeLabel, summaryFor, termsFor } from "@/lib/learn/stocks";
+import { driversFor, findStock, indexableStocks, isIndexable, money, peersOf, sizeInfoFor, sizeLabel, summaryFor, termsFor } from "@/lib/learn/stocks";
 import styles from "../../learn.module.css";
 
 type Props = { params: Promise<{ symbol: string }> };
@@ -14,16 +14,23 @@ type Props = { params: Promise<{ symbol: string }> };
 // The daily Learn job rewrites stock pages; this lets the new text and fresh headlines appear within the hour.
 export const revalidate = 3600;
 
-// The best known stocks are built ahead of time. Every other US listed stock is built the first time it is visited.
+// The 300 biggest stocks are built ahead of time. Every other US listed stock is built the first time it is visited.
 export function generateStaticParams() {
-  return indexableStocks().map((entry) => ({ symbol: entry.slug }));
+  return indexableStocks().slice(0, 300).map((entry) => ({ symbol: entry.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = findStock((await params).symbol);
   if (!entry) return {};
-  const title = `${entry.name} (${entry.stock.symbol}) Stock Explained Like You're 5 | Metric Finance`;
-  const description = `What ${entry.name} does, how it makes money and what moves ${entry.stock.symbol} stock, explained in simple words. Follow it in a free daily brief.`;
+  // Titles and descriptions answer the question people actually search ("is X a large cap stock"), built from the stock's own data.
+  const size = sizeInfoFor(entry);
+  const title = size
+    ? `${entry.name} (${entry.stock.symbol}) Stock: Is It a ${size.titleLabel}? | Metric Finance`
+    : `${entry.name} (${entry.stock.symbol}) Stock Explained Like You're 5 | Metric Finance`;
+  const base = `What ${entry.name} does, how it makes money and what moves ${entry.stock.symbol} stock, explained in simple words. Follow it in a free daily brief.`;
+  const article = size?.label === "mega cap" ? "a mega cap" : `a ${size?.label}`;
+  const sized = size ? `${entry.name} is ${article} stock worth about ${size.cap}. Learn what it does, how it makes money and what moves ${entry.stock.symbol}, in simple words.` : base;
+  const description = sized.length <= 170 ? sized : base;
   return {
     title,
     description,
@@ -48,6 +55,7 @@ export default async function StockPage({ params }: Props) {
   const peers = peersOf(entry);
   const size = sizeLabel(profile?.cap);
   const cap = money(profile?.cap);
+  const sizeInfo = sizeInfoFor(entry);
   const exchange = stock.exchange === "NYSE" ? "New York Stock Exchange" : "Nasdaq";
   const terms = termsFor(entry).flatMap((slug) => TERMS.find((term) => term.slug === slug) ?? []);
   const summary = written?.simple ?? summaryFor(entry);
@@ -55,6 +63,7 @@ export default async function StockPage({ params }: Props) {
   const baseFaqs = [
     { q: `What does ${name} do?`, a: summary },
     { q: `What is the ticker symbol for ${name}?`, a: `${name} trades under the ticker ${stock.symbol} on the ${exchange}.` },
+    ...(sizeInfo ? [{ q: `What is ${name}'s market cap?`, a: sizeInfo.shortAnswer }] : []),
     { q: `How does ${name} make money?`, a: drivers.makes.join(" ") },
     { q: `What moves ${stock.symbol} stock?`, a: drivers.moves.join(" ") },
   ];
@@ -89,6 +98,13 @@ export default async function StockPage({ params }: Props) {
         {facts?.employees ? <div><dt>Employees</dt><dd>{facts.employees.toLocaleString("en-US")}</dd></div> : null}
         {facts?.listedSince ? <div><dt>Public since</dt><dd>{facts.listedSince}</dd></div> : null}
       </dl>
+
+      {sizeInfo && (
+        <section className={styles.card}>
+          <h2>{sizeInfo.heading}</h2>
+          {sizeInfo.paragraphs.map((paragraph) => <p key={paragraph} style={{ margin: "0 0 12px", color: "#c4cee6", fontSize: 16, lineHeight: 1.7 }}>{paragraph}</p>)}
+        </section>
+      )}
 
       <section className={styles.card}>
         <h2>How {name} makes money</h2>

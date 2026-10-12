@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/learn/terms`, lastModified, changeFrequency: "monthly", priority: 0.7 },
     ...GUIDES.map((guide) => ({ url: `${base}/learn/guides/${guide.slug}`, lastModified, changeFrequency: "monthly" as const, priority: 0.7 })),
     ...TERMS.map((term) => ({ url: `${base}/learn/terms/${term.slug}`, lastModified, changeFrequency: "monthly" as const, priority: 0.6 })),
-    ...indexableStocks().map((entry) => ({ url: `${base}/learn/stocks/${entry.slug}`, lastModified: stockUpdated.get(entry.stock.symbol) ?? lastModified, changeFrequency: "monthly" as const, priority: 0.7 })),
+    ...indexableStocks().map((entry, index) => ({ url: `${base}/learn/stocks/${entry.slug}`, lastModified: stockUpdated.get(entry.stock.symbol) ?? lastModified, changeFrequency: "monthly" as const, priority: index < 300 ? 0.7 : 0.4 })),
     ...comparePairs().map(([a, b]) => ({ url: `${base}/learn/compare/${a.slug}-vs-${b.slug}`, lastModified, changeFrequency: "monthly" as const, priority: 0.5 })),
     {
       url: `${base}/privacy`,
