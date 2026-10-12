@@ -9,6 +9,7 @@ import styles from "./newsletter-landing.module.css";
 import { RoadmapLink } from "./roadmap-link";
 import { StockPicker } from "./stock-picker";
 import type { Stock } from "@/lib/stocks";
+import { stocksInWords } from "@/lib/plan";
 
 type ManageWatchlistProps = {
   token: string;
@@ -16,11 +17,12 @@ type ManageWatchlistProps = {
   sig: string;
   email: string;
   initialPicks: Stock[];
+  maxPicks: number;
   briefings: BriefingSummary[];
   justConfirmed?: boolean;
 };
 
-export function ManageWatchlist({ token, exp, sig, email, initialPicks, briefings, justConfirmed }: ManageWatchlistProps) {
+export function ManageWatchlist({ token, exp, sig, email, initialPicks, maxPicks, briefings, justConfirmed }: ManageWatchlistProps) {
   const [picks, setPicks] = useState<Stock[]>(initialPicks);
   // Baseline of what's actually stored, so "Saved" survives until the next edit.
   const [savedPicks, setSavedPicks] = useState<Stock[]>(initialPicks);
@@ -92,7 +94,8 @@ export function ManageWatchlist({ token, exp, sig, email, initialPicks, briefing
             <StockPicker
               picks={picks}
               onPicksChange={(next) => { setPicks(next); setError(""); setStatus("idle"); }}
-              label="Your watchlist · up to five stocks"
+              label={`Your watchlist · up to ${stocksInWords(maxPicks)} stocks`}
+              maxPicks={maxPicks}
               mobileLabel="Your watchlist"
             />
 

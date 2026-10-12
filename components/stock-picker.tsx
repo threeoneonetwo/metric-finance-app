@@ -11,9 +11,11 @@ type StockPickerProps = {
   onPicksChange: (picks: Stock[]) => void;
   label: string;
   mobileLabel: string;
+  /** Watchlist size for this reader (see lib/plan.ts). */
+  maxPicks?: number;
 };
 
-export function StockPicker({ picks, onPicksChange, label, mobileLabel }: StockPickerProps) {
+export function StockPicker({ picks, onPicksChange, label, mobileLabel, maxPicks = MAX_PICKS }: StockPickerProps) {
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
   const [logoErrors, setLogoErrors] = useState<Set<string>>(new Set());
@@ -51,8 +53,10 @@ export function StockPicker({ picks, onPicksChange, label, mobileLabel }: StockP
     return merged.filter((stock) => !picks.some((pick) => pick.symbol === stock.symbol)).slice(0, 6);
   }, [picks, query, remote]);
 
-  const isFull = picks.length === MAX_PICKS;
-  const openSlots = MAX_PICKS - picks.length;
+  const isFull = picks.length >= maxPicks;
+  const openSlots = Math.max(0, maxPicks - picks.length);
+  // A long watchlist shows one open slot row instead of a column of empty rows.
+  const ghostRows = maxPicks > MAX_PICKS ? Math.min(openSlots, 1) : openSlots;
 
   function addStock(stock: Stock) {
     if (isFull || picks.some((pick) => pick.symbol === stock.symbol)) return;
@@ -72,7 +76,7 @@ export function StockPicker({ picks, onPicksChange, label, mobileLabel }: StockP
           <span className={styles.desktopStep}>{label}</span>
           <span className={styles.mobileStep}>{mobileLabel}</span>
         </span>
-        <span>{picks.length} / {MAX_PICKS}</span>
+        <span>{picks.length} / {maxPicks}</span>
       </div>
 
       <div className={styles.searchWrap}>
@@ -118,10 +122,10 @@ export function StockPicker({ picks, onPicksChange, label, mobileLabel }: StockP
               <button type="button" onClick={() => removeStock(stock.symbol)} aria-label={`Remove ${stock.symbol}`}><X size={17} /></button>
             </div>
           ))}
-          {Array.from({ length: openSlots }, (_, index) => (
+          {Array.from({ length: ghostRows }, (_, index) => (
             <div className={styles.ghost} key={`ghost-${index}`}>
               <span>{picks.length + index + 1}</span>
-              This slot is still open
+              {ghostRows < openSlots ? `${openSlots} slots still open` : "This slot is still open"}
             </div>
           ))}
           {!isFull ? (

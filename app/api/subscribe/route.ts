@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { limitsFor } from "@/lib/plan";
 import { allResolvable } from "@/lib/stock-lookup";
 import { isRateLimited } from "@/db/rate-limit";
 import { upsertSubscriber } from "@/db/subscribers";
@@ -30,7 +31,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
   }
 
-  const tickers = body.tickers.map((ticker) => ticker.trim().toUpperCase()).slice(0, 5);
+  const tickers = [...new Set(body.tickers.map((ticker) => ticker.trim().toUpperCase()))].slice(0, limitsFor(email).stocks);
   if (tickers.length === 0 || !tickers.every((ticker) => TICKER_PATTERN.test(ticker))) {
     return NextResponse.json({ error: "Invalid tickers" }, { status: 400 });
   }

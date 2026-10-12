@@ -7,11 +7,17 @@ type Creds = { token: string; exp: string; sig: string };
 export function RoadmapLink({ creds, from }: { creds: Creds; from: "brief" | "dashboard" }) {
   return (
     <Link className={styles.cta} href={`/roadmap?${new URLSearchParams({ ...creds, from })}`}>
-      <span className={styles.ctaText}>
-        <strong>What should we build next?</strong>
-        <span>Tell us what you&apos;d like us to build. You get three votes, and you can suggest your own ideas too.</span>
+      <span className={styles.ctaIcon} aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path d="M9 2v14M2 9h14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
       </span>
-      <span className={styles.ctaButton}>Vote now →</span>
+      <span className={styles.ctaText}>
+        <strong>Got an idea to make your brief better?</strong>
+        <span>Suggest it, or vote on what other readers want.</span>
+      </span>
+      <span className={styles.ctaAction}>
+        <span>Suggest</span>
+        <svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true"><path d="M1 7h17M12 1l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </span>
     </Link>
   );
 }

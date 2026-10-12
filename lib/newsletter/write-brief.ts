@@ -38,19 +38,20 @@ function describe(facts: BriefFacts, tickers: string[]) {
   };
 }
 
-async function callModel(payload: unknown, apiKey: string) {
+async function callModel(payload: unknown, apiKey: string, tickerCount: number) {
   const response = await fetch(ANTHROPIC_URL, {
     method: "POST",
     headers: { "content-type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({
       model: MODEL,
-      max_tokens: 2400,
+      // Room for every stock: IU readers can follow up to 15.
+      max_tokens: 2400 + 220 * Math.max(0, tickerCount - 5),
       system: SYSTEM_PROMPT,
       tools: [{ name: "write_brief", description: "Write today's brief for this reader.", input_schema: BRIEF_TOOL_SCHEMA }],
       tool_choice: { type: "tool", name: "write_brief" },
       messages: [{ role: "user", content: `Write today's brief for this reader's stocks, in this order.\n\n${JSON.stringify(payload, null, 2)}` }],
     }),
-    signal: AbortSignal.timeout(45000),
+    signal: AbortSignal.timeout(tickerCount > 5 ? 90000 : 45000),
   });
 
   if (!response.ok) {
@@ -75,7 +76,7 @@ export async function writeBrief(facts: BriefFacts, wantedTickers: string[]): Pr
   // One retry: a rare malformed answer should not cost a subscriber their brief.
   for (let attempt = 0; attempt < 2; attempt += 1) {
     try {
-      const raw = await callModel(payload, apiKey);
+      const raw = await callModel(payload, apiKey, tickers.length);
       if (!raw) return null;
       const checked = validateBrief(raw, tickers);
       if (checked.ok) return checked.brief;

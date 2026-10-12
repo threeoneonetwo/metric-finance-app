@@ -21,7 +21,7 @@ export default function PrivacyPage() {
       <h3>What you give us</h3>
       <ul>
         <li><strong>Email address</strong> so we can send your confirmation link and your daily briefing.</li>
-        <li><strong>Your watchlist</strong>: the stock tickers (up to five) you choose to follow.</li>
+        <li><strong>Your watchlist</strong>: the stock tickers you choose to follow (up to five, or up to fifteen with an Indiana University email).</li>
         <li><strong>Your name</strong>, only if you choose to provide it.</li>
         <li>
           <strong>Questions you ask about a brief.</strong> If you use the follow up box on a brief, we receive the text

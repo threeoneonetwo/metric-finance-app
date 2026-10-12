@@ -16,36 +16,49 @@ declare global {
   }
 }
 
+// The owner's own devices are never tracked. The flag lives in local storage and in a long lived cookie
+// (Safari can wipe script storage after 7 days; the proxy also sets the cookie server side, which Safari keeps).
+export const OWNER_COOKIE = "mf_owner";
+const OWNER_COOKIE_MAX_AGE = 60 * 60 * 24 * 730;
+
 export function isOwner() {
   if (typeof window === "undefined") return false;
 
   try {
-    return window.localStorage.getItem(OWNER_OPT_OUT_KEY) === "1";
+    if (window.localStorage.getItem(OWNER_OPT_OUT_KEY) === "1") return true;
   } catch {
-    return false;
+    // Storage can be blocked; the cookie still works.
   }
+  return document.cookie.split("; ").includes(`${OWNER_COOKIE}=1`);
 }
 
+/** Marks this browser as one of the owner's devices: no PostHog, no Google Analytics, from now on. */
+export function markOwner() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(OWNER_OPT_OUT_KEY, "1");
+  } catch {
+    // The cookie below is enough.
+  }
+  document.cookie = `${OWNER_COOKIE}=1; Max-Age=${OWNER_COOKIE_MAX_AGE}; Path=/; SameSite=Lax; Secure`;
+  if (GA_MEASUREMENT_ID) window[`ga-disable-${GA_MEASUREMENT_ID}`] = true;
+}
+
+/** `?owner=1` marks this browser as the owner's; `?owner=0` undoes it. */
 export function applyOwnerOptOutFromUrl() {
   if (typeof window === "undefined") return false;
 
   try {
-    const params = new URLSearchParams(window.location.search);
-
-    if (params.get("owner") !== "1") {
-      return isOwner();
+    const flag = new URLSearchParams(window.location.search).get("owner");
+    if (flag === "1") markOwner();
+    if (flag === "0") {
+      window.localStorage.removeItem(OWNER_OPT_OUT_KEY);
+      document.cookie = `${OWNER_COOKIE}=; Max-Age=0; Path=/`;
     }
-
-    window.localStorage.setItem(OWNER_OPT_OUT_KEY, "1");
-
-    if (GA_MEASUREMENT_ID) {
-      window[`ga-disable-${GA_MEASUREMENT_ID}`] = true;
-    }
-
-    return true;
   } catch {
-    return isOwner();
+    // Fall through to the stored flag.
   }
+  return isOwner();
 }
 
 export function pageview(url: string) {

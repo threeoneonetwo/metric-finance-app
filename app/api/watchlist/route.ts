@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { allResolvable } from "@/lib/stock-lookup";
-import { updateTickersByToken } from "@/db/subscribers";
+import { findSubscriberByToken, updateTickersByToken } from "@/db/subscribers";
+import { limitsFor } from "@/lib/plan";
 import { isInternalEmail, trackServer } from "@/lib/analytics-server";
 import { isValidManageLink } from "@/lib/manage-link";
 
@@ -19,16 +20,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  const tickers = body.tickers.map((ticker) => ticker.trim().toUpperCase()).slice(0, 5);
+  if (!isValidManageLink(body.token, body.exp, body.sig)) {
+    return NextResponse.json({ error: "This link has expired" }, { status: 403 });
+  }
+  // The allowance depends on the reader's email (IU addresses get more), so look them up first.
+  const current = await findSubscriberByToken(body.token);
+  if (!current) {
+    return NextResponse.json({ error: "We couldn't find that subscription" }, { status: 404 });
+  }
+
+  const tickers = [...new Set(body.tickers.map((ticker) => ticker.trim().toUpperCase()))].slice(0, limitsFor(current.email).stocks);
   if (tickers.length === 0 || !tickers.every((ticker) => TICKER_PATTERN.test(ticker))) {
     return NextResponse.json({ error: "Invalid tickers" }, { status: 400 });
   }
   if (!allResolvable(tickers)) {
     return NextResponse.json({ error: "One of those stocks is not a US listed stock we can follow." }, { status: 400 });
-  }
-
-  if (!isValidManageLink(body.token, body.exp, body.sig)) {
-    return NextResponse.json({ error: "This link has expired" }, { status: 403 });
   }
 
   const subscriber = await updateTickersByToken(body.token, tickers);

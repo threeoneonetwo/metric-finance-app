@@ -34,7 +34,7 @@ export default function TermsPage() {
 
       <h2>2. What the Service is</h2>
       <p>
-        Metric Finance is a free email briefing. You choose up to five US-listed stocks, confirm your email, and we send
+        Metric Finance is a free email briefing. You choose up to five US listed stocks (up to fifteen with an Indiana University email), confirm your email, and we send
         a daily summary of how those stocks moved and the news around them, written in simple words. You can also
         manage your watchlist and view past briefings from your account page.
       </p>

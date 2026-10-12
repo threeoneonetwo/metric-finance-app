@@ -12,15 +12,25 @@ function hasValidLink(request: NextRequest) {
   }
 }
 
+const OWNER_COOKIE_MAX_AGE = 60 * 60 * 24 * 730;
+
+// `?owner=1` marks this device as the owner's, so it is never tracked. Set server side so Safari keeps it.
+function withOwnerFlag(request: NextRequest, response: NextResponse) {
+  const flag = request.nextUrl.searchParams.get("owner");
+  if (flag === "1") response.cookies.set({ name: "mf_owner", value: "1", maxAge: OWNER_COOKIE_MAX_AGE, path: "/", sameSite: "lax", secure: true });
+  if (flag === "0") response.cookies.delete("mf_owner");
+  return response;
+}
+
 export function proxy(request: NextRequest) {
   const session = readSession(request.cookies.get(SESSION_COOKIE)?.value);
 
   // Someone who has signed up before lands on their dashboard instead of the signup page.
   if (request.nextUrl.pathname === "/") {
-    if (!session) return NextResponse.next();
+    if (!session) return withOwnerFlag(request, NextResponse.next());
     const response = NextResponse.redirect(new URL("/manage", request.url));
     response.headers.set("Cache-Control", "private, no-store");
-    return response;
+    return withOwnerFlag(request, response);
   }
 
   // Opening a valid emailed link (or any dashboard visit) keeps this device signed in.
@@ -28,7 +38,7 @@ export function proxy(request: NextRequest) {
   const token = hasValidLink(request) ?? session?.token;
   const value = token ? createSessionValue(token) : null;
   if (value) response.cookies.set(sessionCookie(value));
-  return response;
+  return withOwnerFlag(request, response);
 }
 
 export const config = {

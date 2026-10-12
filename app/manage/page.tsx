@@ -1,3 +1,4 @@
+import { OwnerMark } from "@/components/owner-mark";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -10,7 +11,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import styles from "@/components/newsletter-landing.module.css";
 import { resolveStock } from "@/lib/stock-lookup";
-import { MAX_PICKS } from "@/lib/stocks";
+import { limitsFor } from "@/lib/plan";
 
 export const metadata: Metadata = {
   title: "Manage your watchlist | Metric Finance",
@@ -54,7 +55,8 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
   }
 
   const briefings = await listBriefingsForSubscriber(subscriber.id);
-  const picks = subscriber.tickers.slice(0, MAX_PICKS).map((symbol) => resolveStock(symbol) ?? { symbol, name: symbol, exchange: "US" });
+  const limits = limitsFor(subscriber.email);
+  const picks = subscriber.tickers.slice(0, limits.stocks).map((symbol) => resolveStock(symbol) ?? { symbol, name: symbol, exchange: "US" });
   await trackServer({
     event: "dashboard_viewed",
     distinctId: subscriber.id,
@@ -63,6 +65,7 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
 
   return (
     <main>
+      {isInternalEmail(subscriber.email) && <OwnerMark />}
       <ManageWatchlist
         token={subscriber.unsubscribeToken}
         exp={creds!.exp}
@@ -70,6 +73,7 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
         email={subscriber.email}
         justConfirmed={welcome === "1"}
         initialPicks={picks}
+        maxPicks={limits.stocks}
         briefings={briefings.map((briefing) => ({
           id: briefing.id,
           tickers: briefing.tickers,

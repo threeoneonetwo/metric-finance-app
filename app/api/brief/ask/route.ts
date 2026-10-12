@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
+import { limitsFor } from "@/lib/plan";
 import { getBriefingForSubscriber } from "@/db/briefings";
 import { hitRateLimit, refundRateLimit } from "@/db/rate-limit";
 import { isInternalEmail, trackServer } from "@/lib/analytics-server";
 import { answerLooksLikeAdvice, askModel, hasAskConfig, type Turn } from "@/lib/ask/answer";
-import { adviceReply, DAILY_QUESTIONS, guardQuestion, normalizeQuestion, outsideReply, scopeReply } from "@/lib/ask/guard";
+import { adviceReply, guardQuestion, normalizeQuestion, outsideReply, scopeReply } from "@/lib/ask/guard";
 import { getClientIp } from "@/lib/request-metadata";
 import { resolveSubscriber } from "@/lib/session-server";
 
@@ -78,20 +79,21 @@ export async function POST(request: Request) {
     return respond(guard.reason, guard.reason === "advice" ? adviceReply() : outsideReply(guard.symbols, watchlist));
   }
 
-  // Only questions that reach the model count toward the daily allowance.
-  let remaining = DAILY_QUESTIONS;
+  // Only questions that reach the model count toward the daily allowance (IU readers get more, see lib/plan.ts).
+  const dailyQuestions = limitsFor(subscriber.email).questions;
+  let remaining = dailyQuestions;
   const day = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
   const readerKey = `ask:sub:${subscriber.id}:${day}`;
   try {
     const ip = getClientIp(request.headers) ?? "unknown";
     const [perReader, perIp] = await Promise.all([
-      hitRateLimit(readerKey, DAILY_QUESTIONS, 60 * 60 * 26),
+      hitRateLimit(readerKey, dailyQuestions, 60 * 60 * 26),
       hitRateLimit(`ask:ip:${ip}`, 60, 60 * 60),
     ]);
     if (perReader.limited || perIp.limited) {
-      return respond("limited", `You've used today's ${DAILY_QUESTIONS} questions. They reset tomorrow, and your next brief lands at 5 PM ET.`, { remaining: 0 });
+      return respond("limited", `You've used today's ${dailyQuestions} questions. They reset tomorrow, and your next brief lands at 5 PM ET.`, { remaining: 0 });
     }
-    remaining = Math.max(0, DAILY_QUESTIONS - perReader.used);
+    remaining = Math.max(0, dailyQuestions - perReader.used);
   } catch (error) {
     console.error("ask: rate limit check failed", error);
   }
@@ -99,7 +101,7 @@ export async function POST(request: Request) {
   // When we fail to answer, the question is given back so the reader never pays for our outage.
   const refund = async () => {
     await refundRateLimit(readerKey).catch(() => undefined);
-    remaining = Math.min(DAILY_QUESTIONS, remaining + 1);
+    remaining = Math.min(dailyQuestions, remaining + 1);
   };
   if (!hasAskConfig()) {
     await refund();

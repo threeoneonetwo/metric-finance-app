@@ -21,7 +21,7 @@ export function GoogleAnalytics() {
               if (new URLSearchParams(location.search).get('owner') === '1') {
                 localStorage.setItem('${OWNER_OPT_OUT_KEY}', '1');
               }
-              if (localStorage.getItem('${OWNER_OPT_OUT_KEY}') === '1') {
+              if (localStorage.getItem('${OWNER_OPT_OUT_KEY}') === '1' || document.cookie.split('; ').indexOf('mf_owner=1') !== -1) {
                 window['ga-disable-${GA_MEASUREMENT_ID}'] = true;
               }
             } catch(e) {}

@@ -8,6 +8,7 @@ import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
+import { isIuEmail, limitsFor, stocksInWords } from "@/lib/plan";
 import { FAQS } from "@/lib/faqs";
 import { getPostHogVisitorId, trackPostHogEvent } from "@/lib/posthog";
 import { type Stock } from "@/lib/stocks";
@@ -141,6 +142,9 @@ export function NewsletterLanding() {
   const [ctaRef, ctaInView] = useReveal<HTMLElement>();
 
   const emailValid = /^\S+@\S+\.\S+$/.test(email.trim());
+  // IU addresses get a bigger watchlist; the picker grows as soon as one is typed.
+  const limits = limitsFor(email);
+  const iuReader = isIuEmail(email);
   const router = useRouter();
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -151,6 +155,10 @@ export function NewsletterLanding() {
     }
     if (!emailValid) {
       setError("That email doesn't look right. Check it and try again.");
+      return;
+    }
+    if (picks.length > limits.stocks) {
+      setError(`This email can follow up to ${stocksInWords(limits.stocks)} stocks. Remove ${picks.length - limits.stocks} to continue.`);
       return;
     }
 
@@ -218,8 +226,9 @@ export function NewsletterLanding() {
                     if (picks.length === 0 && next.length > 0) trackPostHogEvent("signup_started", { tickers_count: next.length });
                     setPicks(next); setError(""); setSubmitted(false);
                   }}
-                  label="Step 1 · Choose up to five stocks you want us to follow"
-                  mobileLabel="Step 1 · Choose up to five stocks"
+                  label={`Step 1 · Choose up to ${stocksInWords(limits.stocks)} stocks you want us to follow`}
+                  mobileLabel={`Step 1 · Choose up to ${stocksInWords(limits.stocks)} stocks`}
+                  maxPicks={Math.max(limits.stocks, picks.length)}
                 />
 
                 <div className={styles.emailStep}>Step 2 · Tell us where to send it</div>
@@ -236,7 +245,7 @@ export function NewsletterLanding() {
                     {submitting ? "Subscribing…" : "Subscribe"}
                   </button>
                 </div>
-                <p className={error ? styles.error : styles.note}>{error || "We email you when your brief is posted at 5 PM ET. Unsubscribe at any time."}</p>
+                <p className={error ? styles.error : styles.note}>{error || (iuReader ? "Nice, an IU email. You get up to 15 stocks and 15 follow up questions a day, so add more stocks above if you like." : "We email you when your brief is posted at 5 PM ET. Unsubscribe at any time.")}</p>
                 <Link href="/brief" className={styles.sampleLink}>Read a sample brief <ArrowRight size={15} /></Link>
               </form>
             )}

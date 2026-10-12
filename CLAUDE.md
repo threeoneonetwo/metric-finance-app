@@ -31,7 +31,7 @@ Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle O
 - Analytics: server events go to PostHog through `lib/analytics-server.ts` (signup_submitted, email_confirmed, brief_opened, dashboard_viewed, brief_sent, daily_send_run and others), identified by a random subscriber id, never an email. Own accounts and test addresses carry `internal: true`. The dashboard is "Metric Finance: Product Metrics" in PostHog project 487674 (shared with Roast My Startup, so filter web events by `$host`).
 - Email health: every email is sent through the SES configuration set `metric-finance-email-events`, which publishes deliveries, hard bounces, complaints and rejects to the SNS topic of the same name. SNS posts them to `/api/ses-events` (signature checked, topic ARN pinned to AWS account 809668424139), which forwards them to PostHog and deactivates hard bounced or complaining addresses. If the configuration set is ever deleted, `sendEmail` falls back to a normal send.
 - Preview deployments share the production database. Don't test signup flows with real addresses on previews.
-- All email is sent as "Vansh Pandita <vp@metricfinance.app>" (`lib/sender.ts`, one constant, no env var). Use `SENDER_EMAIL` in copy instead of typing the address. The old `SES_FROM_EMAIL` env var is no longer read. Mail sent to vp@ has nowhere to land until inbound routing exists; replies use Reply-To.
+- All email is sent as "Vansh Pandita <vp@metricfinance.app>" (`lib/sender.ts`, one constant, no env var). Use `SENDER_EMAIL` in copy instead of typing the address. The old `SES_FROM_EMAIL` env var is no longer read. Mail sent to vp@ is forwarded to vanshpandita11@gmail.com by Cloudflare Email Routing; replies use Reply-To.
 
 ## Follow up questions on briefs
 - Every `/brief/[id]` page has an "Ask about your brief" panel (`components/brief-ask.tsx`) that posts to `/api/brief/ask`. Auth is the same as the brief page (signed link or `mf_session` cookie) and the brief must belong to the reader.
@@ -62,3 +62,8 @@ Homepage title and description target "stocks explained like you're 5" (see `app
 - To ship an idea: set `status = 'shipped'` and `shipped_at`. Votes on shipped ideas stop counting toward the reader's 3.
 - PostHog: `roadmap_viewed`, `roadmap_voted`, `roadmap_unvoted`, `roadmap_suggested` (length only, never the text).
 - The page uses the landing page texture (`data-texture="landing"` turns off the dotted grid in `globals.css`).
+
+## Reader limits (IU students)
+- `lib/plan.ts` decides each reader's allowance from their email: 5 stocks and 5 follow up questions a day by default, 15 and 15 for Indiana University addresses (`iu.edu` and subdomains like `umail.iu.edu`). Use `limitsFor(email)` everywhere; don't hardcode 5.
+- Enforced server side in `/api/subscribe`, `/api/watchlist` and `/api/brief/ask`. The signup picker grows to 15 as soon as an IU email is typed; the dashboard picker uses the saved email.
+- `write-brief.ts` gives the model more tokens and time for long watchlists. Each extra stock costs about 3 FMP calls a day, so IU readers use the market data quota three times faster.

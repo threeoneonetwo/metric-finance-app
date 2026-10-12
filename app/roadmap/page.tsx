@@ -1,3 +1,4 @@
+import { OwnerMark } from "@/components/owner-mark";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { RoadmapBoard } from "@/components/roadmap-board";
@@ -32,6 +33,7 @@ export default async function RoadmapPage({ searchParams }: RoadmapPageProps) {
   return (
     <main>
       <div className={styles.page} data-texture="landing">
+        {isInternalEmail(subscriber.email) && <OwnerMark />}
         <SiteHeader />
         <RoadmapBoard initial={state} creds={creds} />
         <SiteFooter />

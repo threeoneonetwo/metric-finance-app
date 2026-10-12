@@ -1,6 +1,7 @@
 import { US_STOCKS } from "@/lib/stock-lookup";
 
 /** Questions a reader can send to the model per New York day. Instant policy replies do not count. */
+// The standard allowance. IU readers get more; the route uses limitsFor() in lib/plan.ts.
 export const DAILY_QUESTIONS = 5;
 
 // Cheap, deterministic checks that run before any model call. They catch the two things we must never answer
@@ -63,7 +64,7 @@ export function adviceReply() {
 export function outsideReply(symbols: string[], watchlist: string[]) {
   const names = symbols.slice(0, 3).join(", ");
   const yours = watchlist.join(", ");
-  return `I can only answer questions about the stocks in this brief (${yours}). ${names} ${symbols.length === 1 ? "isn't" : "aren't"} in your watchlist. You can add up to five stocks from your dashboard, and they will show up in your next brief.`;
+  return `I can only answer questions about the stocks in this brief (${yours}). ${names} ${symbols.length === 1 ? "isn't" : "aren't"} in your watchlist. You can add stocks from your dashboard, and they will show up in your next brief.`;
 }
 
 export function scopeReply(watchlist: string[], aboutAnotherStock: boolean) {

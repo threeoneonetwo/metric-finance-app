@@ -1,3 +1,4 @@
+import { OwnerMark } from "@/components/owner-mark";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -79,6 +80,7 @@ export default async function BriefViewPage({ params, searchParams }: BriefViewP
   return (
     <main>
       <div className={styles.page}>
+        {isInternalEmail(subscriber.email) && <OwnerMark />}
         <SiteHeader />
         <SpotGlow className={styles.main}>
           <span className={styles.eyebrow}><i /> Your daily brief</span>

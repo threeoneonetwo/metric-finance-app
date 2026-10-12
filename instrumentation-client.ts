@@ -1,6 +1,6 @@
 import posthog from "posthog-js";
 import { stripSensitiveParams } from "@/lib/analytics-privacy";
-import { applyOwnerOptOutFromUrl } from "@/lib/gtag";
+import { applyOwnerOptOutFromUrl, isOwner } from "@/lib/gtag";
 
 function cleanProperties(properties: Record<string, unknown> | undefined) {
   if (!properties) return;
@@ -13,11 +13,13 @@ const POSTHOG_PROJECT_TOKEN = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
 const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com";
 
 if (POSTHOG_PROJECT_TOKEN && typeof window !== "undefined") {
-  const isOwner = applyOwnerOptOutFromUrl();
+  const ownerDevice = applyOwnerOptOutFromUrl();
 
-  if (!isOwner) {
+  if (!ownerDevice) {
     // Deferred until after load so analytics never delays the first paint.
-    const init = () =>
+    // Checked again at init time: signing in on the dashboard can mark this device as the owner's before then.
+    const init = () => {
+      if (isOwner()) return;
       posthog.init(POSTHOG_PROJECT_TOKEN, {
         api_host: POSTHOG_HOST,
         defaults: "2026-05-30",
@@ -32,6 +34,7 @@ if (POSTHOG_PROJECT_TOKEN && typeof window !== "undefined") {
         },
         capture_pageleave: true,
       });
+    };
     if (document.readyState === "complete") setTimeout(init, 0);
     else window.addEventListener("load", () => setTimeout(init, 0), { once: true });
   }
