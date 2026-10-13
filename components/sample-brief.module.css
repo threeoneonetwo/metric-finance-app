@@ -35,8 +35,6 @@
 .mailWatch strong { color: #fff; }
 .mailSignoff { padding: 22px 0 4px; }
 .mailSignoff > p { margin: 0 0 16px; color: #dfe3ee; font-size: 15px; font-weight: 700; }
-.mailShare { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 16px; border: 1px dashed #2b3a66; color: #9aa6c0; font-size: 13.5px; line-height: 1.5; }
-.mailShare em { padding: 10px 16px; background: #fff; color: #05070d; font-size: 11.5px; font-style: normal; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .mailFoot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding-top: 22px; margin-top: 4px; color: #56668a; font-size: 12px; }
 .mailFoot span:first-child { color: #6fe0dd; }
 .mailFrame figcaption { padding: 12px 20px; border-top: 1px solid #161f35; background: #0c111e; color: #56668a; font-size: 12px; line-height: 1.5; }
@@ -63,8 +61,6 @@
 
 .mailFrame { overflow: hidden; border-radius: 20px; }
 .mailIdea { border-radius: 14px; }
-.mailShare { border-radius: 14px; }
-.mailShare em { border-radius: 10px; }
 .page .cta { border-radius: 14px; }
 
 @media (max-width: 760px) { .intro h1 { white-space: nowrap; font-size: min(46px, calc((100vw - 40px) / 16.4)); } }
@@ -92,8 +88,6 @@
 .mailGlance:hover, .mailRest:hover { background: rgba(143, 168, 250, .06); transform: translateX(4px); }
 .mailIdea { transition: border-color 200ms ease, box-shadow 200ms ease; }
 .mailIdea:hover { box-shadow: 0 0 0 1px rgba(143, 168, 250, .25); }
-.mailShare { transition: border-color 200ms ease, background-color 200ms ease; }
-.mailShare:hover { border-color: rgba(143, 168, 250, .45); }
 
 /* Sheen on the call to action */
 .page .cta { position: relative; overflow: hidden; }

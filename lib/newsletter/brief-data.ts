@@ -1,3 +1,4 @@
+import profiles from "@/data/stock-profiles.json";
 import { getTickerSnapshots } from "./market-data";
 import { getTickerNews, type NewsHeadline } from "./news";
 
@@ -64,7 +65,9 @@ async function getNextEarnings(ticker: string): Promise<NextEarnings | null> {
 
 async function getProfile(ticker: string) {
   const rows = await fmpJson<Array<{ sector?: string; industry?: string }>>(`profile?symbol=${encodeURIComponent(ticker.replace(".", "-"))}`);
-  return { sector: rows?.[0]?.sector ?? null, industry: rows?.[0]?.industry ?? null };
+  // Stocks the data plan refuses fall back to the local profile list (sector and industry for every US stock).
+  const local = (profiles as Record<string, { sector?: string; industry?: string }>)[ticker];
+  return { sector: rows?.[0]?.sector ?? local?.sector ?? null, industry: rows?.[0]?.industry ?? local?.industry ?? null };
 }
 
 export async function gatherBriefFacts(tickers: string[]): Promise<BriefFacts> {

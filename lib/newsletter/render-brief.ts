@@ -21,12 +21,9 @@ const label = (text: string) =>
 const section = (inner: string) =>
   `<tr><td style="padding:24px 0;border-bottom:1px solid #161f35;">${inner}</td></tr>`;
 
-export function shareLinks(brief: Brief, baseUrl: string) {
-  const message = `${brief.idea.term} in 30 seconds: ${brief.idea.explanation}\n\nExplained daily by Metric Finance: ${baseUrl}`;
-  return {
-    whatsapp: `https://wa.me/?text=${encodeURIComponent(message)}`,
-    email: `mailto:?subject=${encodeURIComponent(`${brief.idea.term} in 30 seconds`)}&body=${encodeURIComponent(message)}`,
-  };
+/** Removes the "share today's idea" block from a brief saved before it was taken out (the page has its own share card). */
+export function withoutShareBlock(html: string) {
+  return html.replace(/<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border:1px dashed #2b3a66;[\s\S]*?<\/td><\/tr><\/table>/, "");
 }
 
 export function renderBriefEmail(input: {
@@ -37,10 +34,9 @@ export function renderBriefEmail(input: {
   manageUrl: string;
   unsubscribeUrl: string;
 }) {
-  const { brief, facts, baseUrl } = input;
+  const { brief, facts } = input;
   const tickers = input.tickers.filter((ticker) => facts.tickers.has(ticker));
   const date = dateLine(facts.asOf);
-  const share = shareLinks(brief, baseUrl);
   const pull = (ticker: string) => move(facts.tickers.get(ticker)?.changePercent ?? null);
 
   const glance = brief.glance
@@ -98,12 +94,7 @@ export function renderBriefEmail(input: {
   </td></tr></table></td></tr>
   ${section(`${label("What to watch next")}<ul style="margin:0;padding-left:18px;">${watch}</ul>`)}
   <tr><td style="padding:24px 0 8px;">
-    <p style="margin:0 0 14px;font-family:${FONT};font-size:15px;line-height:22px;font-weight:bold;color:#dfe3ee;">That's the brief. See you tomorrow at 5.</p>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border:1px dashed #2b3a66;border-radius:14px;padding:16px;">
-      <p style="margin:0 0 12px;font-family:${FONT};font-size:13.5px;line-height:21px;color:#9aa6c0;">Know someone who would like ${esc(brief.idea.term)} explained? Send them today's idea. It shares the explainer only, never your watchlist.</p>
-      <a href="${share.whatsapp}" style="display:inline-block;margin:0 8px 8px 0;padding:11px 16px;border-radius:10px;background:#ffffff;font-family:${FONT};font-size:12px;font-weight:bold;letter-spacing:1.2px;text-transform:uppercase;color:#05070d;text-decoration:none;">Share on WhatsApp</a>
-      <a href="${share.email}" style="display:inline-block;margin:0 0 8px 0;padding:10px 16px;border-radius:10px;border:1px solid #2b3a66;font-family:${FONT};font-size:12px;font-weight:bold;letter-spacing:1.2px;text-transform:uppercase;color:#b3c9ff;text-decoration:none;">Share by email</a>
-    </td></tr></table>
+    <p style="margin:0;font-family:${FONT};font-size:15px;line-height:22px;font-weight:bold;color:#dfe3ee;">That's the brief. See you tomorrow at 5.</p>
   </td></tr>
   <tr><td style="padding-top:22px;font-family:${FONT};font-size:12px;line-height:18px;color:#56668a;">
     <a href="${input.manageUrl}" style="color:#6fe0dd;text-decoration:none;">Manage your watchlist</a><br><br>
@@ -135,7 +126,6 @@ export function renderBriefEmail(input: {
     ...brief.watchNext.map((row) => `- ${row.label} ${row.text}`),
     "",
     "That's the brief. See you tomorrow at 5.",
-    `Share today's idea (no watchlist attached): ${share.whatsapp}`,
     "",
     `Manage your watchlist: ${input.manageUrl}`,
     `Not financial advice. Unsubscribe: ${input.unsubscribeUrl}`,

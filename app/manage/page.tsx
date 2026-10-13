@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { listBriefingsForSubscriber } from "@/db/briefings";
 import { isInternalEmail, trackServer } from "@/lib/analytics-server";
 import { resolveSubscriber } from "@/lib/session-server";
+import { briefTitle } from "@/lib/newsletter/brief-title";
 import { ManageWatchlist } from "@/components/manage-watchlist";
 import { RequestManageLink } from "@/components/request-manage-link";
 import { SiteFooter } from "@/components/site-footer";
@@ -74,10 +75,10 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
         justConfirmed={welcome === "1"}
         initialPicks={picks}
         maxPicks={limits.stocks}
-        briefings={briefings.map((briefing) => ({
+        briefings={briefings.slice(0, 1).map((briefing) => ({
           id: briefing.id,
           tickers: briefing.tickers,
-          text: briefing.text,
+          title: briefTitle(briefing.html, briefing.sentAt),
           sentAt: briefing.sentAt.toISOString(),
         }))}
       />

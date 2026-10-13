@@ -110,10 +110,6 @@ export function SampleBrief() {
 
             <div className={styles.mailSignoff}>
               <p>That&apos;s the brief. See you tomorrow at 5.</p>
-              <div className={styles.mailShare}>
-                <span>Know someone who nods along when people say &quot;capex&quot;? Send them today&apos;s idea, no watchlist attached.</span>
-                <em>Share today&apos;s idea</em>
-              </div>
             </div>
 
             <div className={styles.mailFoot}>

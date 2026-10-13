@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BriefFrame } from "@/components/brief-frame";
 import { BriefAsk } from "@/components/brief-ask";
+import { withoutShareBlock } from "@/lib/newsletter/render-brief";
 import { RoadmapLink } from "@/components/roadmap-link";
 import { ShareCard } from "@/components/share-card";
 import { SpotGlow } from "@/components/spot-glow";
@@ -89,7 +90,7 @@ export default async function BriefViewPage({ params, searchParams }: BriefViewP
             {briefing.tickers.map((ticker) => <li key={ticker}>{ticker}</li>)}
           </ul>
           <div className={styles.frameWrap}>
-            <BriefFrame html={briefing.html} title={`Metric Finance brief for ${date}`} />
+            <BriefFrame html={withoutShareBlock(briefing.html)} title={`Metric Finance brief for ${date}`} />
           </div>
           <BriefAsk briefingId={briefing.id} tickers={briefing.tickers} starters={starters} creds={creds!} />
           <ShareCard page="brief" />

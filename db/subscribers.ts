@@ -1,3 +1,4 @@
+import { IU_LIMITS, limitsFor } from "@/lib/plan";
 import { randomBytes } from "crypto";
 import { eq } from "drizzle-orm";
 import { getDb } from "./client";
@@ -14,7 +15,7 @@ export async function upsertSubscriber(input: SubscriberInput) {
   if (!db) return null;
 
   const email = input.email.trim().toLowerCase();
-  const tickers = input.tickers.map((ticker) => ticker.trim().toUpperCase()).slice(0, 5);
+  const tickers = input.tickers.map((ticker) => ticker.trim().toUpperCase()).slice(0, limitsFor(email).stocks);
   const name = input.name?.trim() || undefined;
   const verificationToken = randomBytes(24).toString("hex");
 
@@ -24,9 +25,11 @@ export async function upsertSubscriber(input: SubscriberInput) {
     // Anyone can submit any email, so never modify a verified subscriber from an unauthenticated signup.
     if (existing.active) return existing;
 
+    // Keep the confirmation link from an earlier email working: a slow inbox (or a second request) must not
+    // invalidate the link someone already received.
     const [updated] = await db
       .update(subscribers)
-      .set({ tickers, name: name ?? existing.name, verificationToken, updatedAt: new Date() })
+      .set({ tickers, name: name ?? existing.name, verificationToken: existing.verificationToken ?? verificationToken, updatedAt: new Date() })
       .where(eq(subscribers.email, email))
       .returning();
     return updated ?? null;
@@ -94,7 +97,8 @@ export async function updateTickersByToken(token: string, tickers: string[]) {
   const db = getDb();
   if (!db) return null;
 
-  const normalized = tickers.map((ticker) => ticker.trim().toUpperCase()).slice(0, 5);
+  // The route has already applied this reader's own limit; this is only the highest limit anyone can have.
+  const normalized = tickers.map((ticker) => ticker.trim().toUpperCase()).slice(0, IU_LIMITS.stocks);
 
   const [updated] = await db
     .update(subscribers)
