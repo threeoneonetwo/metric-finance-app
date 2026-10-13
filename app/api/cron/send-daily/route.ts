@@ -18,12 +18,6 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Sending is paused by the owner until this New York date. Delete this check once it has passed.
-  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
-  if (today < "2026-10-13") {
-    return NextResponse.json({ ok: true, skipped: "paused until 2026-10-13" });
-  }
-
   // Two UTC schedules cover daylight saving; only the one that lands on 5 PM in New York sends.
   if (!isSendHourInNewYork(new Date())) {
     return NextResponse.json({ ok: true, skipped: "not 5 PM in New York" });

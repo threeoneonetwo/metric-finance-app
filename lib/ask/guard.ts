@@ -17,7 +17,11 @@ const ADVICE_PATTERNS = [
   /\b(is|was)\s+(it|this|now|\w+)\s+(a\s+)?(good|bad|smart|great)\s+(time\s+to\s+(buy|sell|invest)|buy|investment|stock\s+to\s+buy)\b/,
   /\b(worth|time\s+to)\s+(buying|selling|investing)\b/,
   /\b(buy|sell|hold)\s+(or|vs\.?)\s+(sell|hold|buy)\b/,
-  /\bprice\s+target\b/,
+  // Asking for a price target is a prediction request; asking what the term means ("what is a price target?") is fine.
+  /\bprice\s+targets?\s+(for|of|on)\b/,
+  /\b(what('?s|\s+is)|give\s+me|tell\s+me|set)\s+(the|your|my|its|their)\s+price\s+targets?\b/,
+  /\b\w+['\u2019]s\s+price\s+targets?\b/,
+  /\b(hit|reach|get\s+to|exceed)\s+(its|the|that|their|my)?\s*(price\s+)?targets?\b/,
   /\bwhere\s+will\s+.+\s+(be|trade|go)\b/,
   /\bwill\s+(it|this|the\s+stock|the\s+price|shares?|\$?[a-z]{1,5})\s+(go\s+up|go\s+down|rise|fall|drop|crash|recover|rebound|moon|double|bounce)\b/,
   /\b(predict|forecast)\s+(the\s+)?(price|stock|share)/,

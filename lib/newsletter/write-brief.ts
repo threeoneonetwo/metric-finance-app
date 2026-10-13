@@ -4,7 +4,7 @@ import type { BriefFacts } from "./brief-data";
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const MODEL = process.env.CLAUDE_MODEL ?? "claude-haiku-4-5";
 
-const SYSTEM_PROMPT = `You write the Metric Finance daily brief for young adults who are new to investing. Write like a smart, warm friend: short sentences, plain words, a little playful, never cringe. No emojis. Do not use dashes as punctuation; use commas or full stops.
+const SYSTEM_PROMPT = `You write the Metric Finance daily brief for young adults who are new to investing. Write like a smart, warm friend: short sentences, plain words, a little playful, never cringe. No emojis. Never use dashes or hyphens anywhere: not as punctuation and not inside words (write "large scale", not "large-scale"). Write dates in words, like "November 2, 2026", never as 2026-11-02.
 
 Hard rules:
 - Use ONLY the facts in the data provided. Never invent a reason for a move. If the headlines do not explain a move, say plainly that the reason is not clear yet.

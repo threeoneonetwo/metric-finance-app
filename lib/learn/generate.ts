@@ -104,7 +104,7 @@ export async function writeRecap(data: RecapData) {
     },
     prompt: `Write the stock market recap for ${data.longDate}. Sections to cover (use these headings or close variants): How the market did, What moved stocks today, Biggest movers, One idea to learn, What to watch next.
 
-Rules for this recap: the percent moves for the S&P 500, Nasdaq 100 and Dow are measured through their tracking funds SPY, QQQ and DIA, so say "the S&P 500" naturally. Only explain a move if the headlines support it; otherwise say the reason is not clear yet. List movers only from the data. Never invent index levels or numbers.\n\n${JSON.stringify(data, null, 2)}`,
+Rules for this recap: the percent moves are for the S&P 500, the Nasdaq Composite and the Dow Jones Industrial Average, so name them naturally. Only explain a move if the headlines support it; otherwise say the reason is not clear yet. List movers only from the data. Never invent index levels or numbers.\n\n${JSON.stringify(data, null, 2)}`,
   });
   if (!result?.intro || !Array.isArray(result.sections) || result.sections.length < 3) return null;
   result.terms = (result.terms ?? []).filter((slug) => TERMS.some((term) => term.slug === slug));

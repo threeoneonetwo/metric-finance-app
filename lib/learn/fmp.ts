@@ -8,13 +8,16 @@ async function fmp<T>(path: string): Promise<T[]> {
   const key = process.env.FMP_API_KEY;
   if (!key) throw new QuotaError("No FMP key");
   const response = await fetch(`${BASE}/${path}${path.includes("?") ? "&" : "?"}apikey=${key}`, { cache: "no-store", signal: AbortSignal.timeout(10000) });
-  const data = (await response.json()) as unknown;
-  if (!Array.isArray(data)) {
-    const message = JSON.stringify(data);
-    if (/limit/i.test(message)) throw new QuotaError(message.slice(0, 120));
+  // Plan restrictions come back as plain text ("Premium Query Parameter..."), not JSON, so read the text first.
+  const text = await response.text();
+  if (/limit/i.test(text) && !text.trim().startsWith("[")) throw new QuotaError(text.slice(0, 120));
+  let data: unknown;
+  try {
+    data = JSON.parse(text);
+  } catch {
     return [];
   }
-  return data as T[];
+  return Array.isArray(data) ? (data as T[]) : [];
 }
 
 export type FmpProfile = {
@@ -74,8 +77,9 @@ export const fetchLosers = () => movers("biggest-losers");
 
 export async function fetchIndexMoves(): Promise<{ symbol: string; label: string; changePercent: number }[]> {
   const out: { symbol: string; label: string; changePercent: number }[] = [];
-  for (const [symbol, label] of [["SPY", "S&P 500"], ["QQQ", "Nasdaq 100"], ["DIA", "Dow Jones"]] as const) {
-    const [row] = await fmp<Record<string, unknown>>(`quote?symbol=${symbol}`);
+  // The real indexes, not the funds that track them: the free plan blocks QQQ and DIA but allows these.
+  for (const [symbol, label] of [["^GSPC", "S&P 500"], ["^IXIC", "Nasdaq Composite"], ["^DJI", "Dow Jones"]] as const) {
+    const [row] = await fmp<Record<string, unknown>>(`quote?symbol=${encodeURIComponent(symbol)}`);
     const changePercent = num(row?.changePercentage);
     if (changePercent !== null) out.push({ symbol, label, changePercent });
   }

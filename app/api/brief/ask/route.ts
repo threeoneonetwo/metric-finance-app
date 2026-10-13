@@ -86,11 +86,12 @@ export async function POST(request: Request) {
   const readerKey = `ask:sub:${subscriber.id}:${day}`;
   try {
     const ip = getClientIp(request.headers) ?? "unknown";
-    const [perReader, perIp] = await Promise.all([
+    const [perReader, perIp, perReaderCalls] = await Promise.all([
       hitRateLimit(readerKey, dailyQuestions, 60 * 60 * 26),
+      hitRateLimit(`ask:calls:${subscriber.id}:${day}`, dailyQuestions * 4, 60 * 60 * 26),
       hitRateLimit(`ask:ip:${ip}`, 60, 60 * 60),
     ]);
-    if (perReader.limited || perIp.limited) {
+    if (perReader.limited || perIp.limited || perReaderCalls.limited) {
       return respond("limited", `You've used today's ${dailyQuestions} questions. They reset tomorrow, and your next brief lands at 5 PM ET.`, { remaining: 0 });
     }
     remaining = Math.max(0, dailyQuestions - perReader.used);
@@ -120,6 +121,9 @@ export async function POST(request: Request) {
     await refund();
     return respond("unavailable", "I couldn't answer that just now. Please try again in a moment.", { remaining });
   }
+
+  // Policy answers (advice, outside the watchlist, off topic) are free for the reader, as the panel promises.
+  if (result.verdict !== "answer" || !result.answer || answerLooksLikeAdvice(result.answer)) await refund();
 
   const followUps = result.followUps
     .map((item) => normalizeQuestion(item))
