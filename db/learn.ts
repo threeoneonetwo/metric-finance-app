@@ -13,12 +13,26 @@ async function safe<T>(fallback: T, run: () => Promise<T>): Promise<T> {
   }
 }
 
+// The writer occasionally returns list entries as {item: "..."} instead of plain strings, which breaks page rendering.
+// Flatten them on the way in and on the way out so one odd row can never fail a build.
+const flatList = (value: unknown): string[] =>
+  (Array.isArray(value) ? value : [])
+    .map((entry) => (typeof entry === "string" ? entry : entry && typeof entry === "object" ? Object.values(entry)[0] : ""))
+    .filter((entry): entry is string => typeof entry === "string" && entry.trim().length > 0);
+
+const cleanStockContent = (content: LearnStockContent): LearnStockContent => ({
+  ...content,
+  makesMoney: flatList(content.makesMoney),
+  movesStock: flatList(content.movesStock),
+  goodToKnow: flatList(content.goodToKnow),
+});
+
 export const getLearnStock = (symbol: string) =>
   safe(null, async () => {
     const db = getDb();
     if (!db) return null;
     const [row] = await db.select().from(learnStockPages).where(eq(learnStockPages.symbol, symbol)).limit(1);
-    return row ?? null;
+    return row ? { ...row, content: cleanStockContent(row.content) } : null;
   });
 
 export const saveLearnStock = async (symbol: string, content: LearnStockContent, facts: LearnStockFacts) => {
@@ -26,8 +40,8 @@ export const saveLearnStock = async (symbol: string, content: LearnStockContent,
   if (!db) throw new Error("No database");
   await db
     .insert(learnStockPages)
-    .values({ symbol, content, facts, generatedAt: new Date() })
-    .onConflictDoUpdate({ target: learnStockPages.symbol, set: { content, facts, generatedAt: new Date() } });
+    .values({ symbol, content: cleanStockContent(content), facts, generatedAt: new Date() })
+    .onConflictDoUpdate({ target: learnStockPages.symbol, set: { content: cleanStockContent(content), facts, generatedAt: new Date() } });
 };
 
 /** Symbols that already have a page, oldest first, so the daily run can refresh the stalest ones. */
