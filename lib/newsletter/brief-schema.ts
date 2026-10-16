@@ -124,7 +124,8 @@ export function validateBrief(raw: unknown, tickers: string[]): { ok: true; brie
     return { ok: false, reason: "rest of stocks does not match" };
   }
   rest.sort((a, b) => expectedRest.indexOf(a.ticker) - expectedRest.indexOf(b.ticker));
-  if (rest.some((row) => words(row.text) > 55)) return { ok: false, reason: "a rest entry is too long" };
+  // The prompt asks for 25 to 40 words; a few extra are fine, and rejecting here costs a whole second model call.
+  if (rest.some((row) => words(row.text) > 80)) return { ok: false, reason: "a rest entry is too long" };
 
   const idea = { term: clean(value.idea?.term), explanation: clean(value.idea?.explanation) };
   if (!idea.term || words(idea.explanation) < 30 || words(idea.explanation) > 80) return { ok: false, reason: "idea is the wrong size" };

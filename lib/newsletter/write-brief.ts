@@ -7,6 +7,7 @@ const MODEL = process.env.CLAUDE_MODEL ?? "claude-haiku-4-5";
 const SYSTEM_PROMPT = `You write the Metric Finance daily brief for young adults who are new to investing. Write like a smart, warm friend: short sentences, plain words, a little playful, never cringe. No emojis. Never use dashes or hyphens anywhere: not as punctuation and not inside words (write "large scale", not "large-scale"). Write dates in words, like "November 2, 2026", never as 2026-11-02.
 
 Hard rules:
+- Headlines carry a publishedAt time. Only stories from the last day are news; a stock with no recent headline has no news today, so say the reason is not clear yet instead of retelling an older story.
 - Use ONLY the facts in the data provided. Never invent a reason for a move. If the headlines do not explain a move, say plainly that the reason is not clear yet.
 - Never tell the reader to buy, sell or hold. No price targets, no predictions dressed up as facts.
 - Explain any finance term in plain words the first time you use it.
@@ -31,7 +32,7 @@ function describe(facts: BriefFacts, tickers: string[]) {
         industry: item.industry,
         price: item.price,
         changePercentToday: item.changePercent === null ? null : Number(item.changePercent.toFixed(2)),
-        headlines: item.headlines.map((headline) => ({ title: headline.title, source: headline.source })),
+        headlines: item.headlines.map((headline) => ({ title: headline.title, source: headline.source, publishedAt: headline.publishedAt })),
         nextEarnings: item.nextEarnings,
       };
     }),

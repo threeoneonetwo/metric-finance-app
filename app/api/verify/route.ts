@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { isInternalEmail, trackServer } from "@/lib/analytics-server";
 import { manageLinkParams } from "@/lib/manage-link";
 import { markSubscribersSent, verifySubscriberByToken } from "@/db/subscribers";
@@ -8,7 +8,8 @@ import { hasSesConfig } from "@/lib/newsletter/ses";
 import { sendDigestToSubscriber } from "@/lib/newsletter/send-digest";
 import { hasBriefWriterConfig } from "@/lib/newsletter/write-brief";
 
-export const maxDuration = 30;
+// The first brief is written after the redirect, so confirming is instant; the writing itself can take a minute.
+export const maxDuration = 120;
 
 // Email security scanners prefetch links, so GET only shows a confirm button page; the POST does the work.
 export async function GET(request: Request) {
@@ -45,7 +46,7 @@ export async function POST(request: Request) {
     await trackServer({ event: "ticker_followed", distinctId: subscriber.id, properties: { internal, ticker } });
   }
 
-  await sendFirstBriefing(subscriber);
+  after(() => sendFirstBriefing(subscriber));
 
   return NextResponse.redirect(
     new URL(`/manage?${manageLinkParams(subscriber.unsubscribeToken)}&welcome=1`, request.url),

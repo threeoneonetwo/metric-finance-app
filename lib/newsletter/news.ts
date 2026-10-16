@@ -3,7 +3,12 @@ const GOOGLE_NEWS_RSS_URL = "https://news.google.com/rss/search";
 export type NewsHeadline = {
   title: string;
   source: string | null;
+  /** ISO time the story was published, so the writer can tell today's news from old news. */
+  publishedAt: string | null;
 };
+
+// Stories older than this are not today's news.
+const MAX_AGE_MS = 36 * 60 * 60 * 1000;
 
 /**
  * Free, no-API-key news lookup via Google News RSS. Returns the top few
@@ -11,7 +16,7 @@ export type NewsHeadline = {
  * instead of guessing a reason for the day's price move.
  */
 export async function getTickerNews(companyName: string, ticker: string): Promise<NewsHeadline[]> {
-  const query = encodeURIComponent(`"${companyName}" OR ${ticker} stock`);
+  const query = encodeURIComponent(`"${companyName}" OR ${ticker} stock when:2d`);
   const url = `${GOOGLE_NEWS_RSS_URL}?q=${query}&hl=en-US&gl=US&ceid=US:en`;
 
   try {
@@ -23,7 +28,11 @@ export async function getTickerNews(companyName: string, ticker: string): Promis
     if (!response.ok) return [];
 
     const xml = await response.text();
-    return parseHeadlines(xml).slice(0, 3);
+    const now = Date.now();
+    return parseHeadlines(xml)
+      .filter((headline) => headline.publishedAt && now - Date.parse(headline.publishedAt) <= MAX_AGE_MS)
+      .sort((a, b) => Date.parse(b.publishedAt!) - Date.parse(a.publishedAt!))
+      .slice(0, 3);
   } catch {
     return [];
   }
@@ -43,7 +52,9 @@ function parseHeadlines(xml: string): NewsHeadline[] {
       const title = separatorIndex > 0 ? rawTitle.slice(0, separatorIndex) : rawTitle;
       const source = separatorIndex > 0 ? rawTitle.slice(separatorIndex + 3) : null;
 
-      return { title: title.trim(), source: source?.trim() ?? null };
+      const pub = item.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1];
+      const time = pub ? Date.parse(pub) : NaN;
+      return { title: title.trim(), source: source?.trim() ?? null, publishedAt: Number.isNaN(time) ? null : new Date(time).toISOString() };
     })
     .filter((headline): headline is NewsHeadline => Boolean(headline?.title));
 }

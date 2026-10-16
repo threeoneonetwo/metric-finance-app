@@ -6,7 +6,7 @@ import { hasSesConfig } from "@/lib/newsletter/ses";
 import { sendDigestToSubscriber } from "@/lib/newsletter/send-digest";
 import { hasBriefWriterConfig } from "@/lib/newsletter/write-brief";
 
-export const maxDuration = 30;
+export const maxDuration = 120;
 
 /**
  * Sends one real digest to one already-signed-up subscriber, on demand.

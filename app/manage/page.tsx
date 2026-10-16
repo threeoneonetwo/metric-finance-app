@@ -75,7 +75,7 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
         justConfirmed={welcome === "1"}
         initialPicks={picks}
         maxPicks={limits.stocks}
-        briefings={briefings.slice(0, 1).map((briefing) => ({
+        briefings={briefings.map((briefing) => ({
           id: briefing.id,
           tickers: briefing.tickers,
           title: briefTitle(briefing.html, briefing.sentAt),

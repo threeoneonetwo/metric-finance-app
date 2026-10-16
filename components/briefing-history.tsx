@@ -11,7 +11,7 @@ export type BriefingSummary = {
 };
 
 type BriefingHistoryProps = {
-  // Only the latest brief is shown here; older ones stay reachable by their own links.
+  // Newest first: the first one gets the headline card, the rest are listed under Past briefs.
   briefings: BriefingSummary[];
   watchlistTickers?: string[];
   // Signed dashboard credentials, reused so each brief opens without asking again.
@@ -50,6 +50,22 @@ export function BriefingHistory({ briefings, linkQuery }: BriefingHistoryProps) 
         </div>
         <ArrowRight size={18} />
       </Link>
+      {briefings.length > 1 ? (
+        <>
+          <h3 className={styles.pastBriefsHeading}>Past briefs</h3>
+          <ul className={styles.pastBriefs}>
+            {briefings.slice(1).map((briefing) => (
+              <li key={briefing.id}>
+                <Link href={`/brief/${briefing.id}?${linkQuery}`}>
+                  <span className={styles.pastBriefDate}>{DATE_FORMAT.format(new Date(briefing.sentAt))}</span>
+                  <span className={styles.pastBriefTitle}>{briefing.title}</span>
+                  <ArrowRight size={15} />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
     </div>
   );
 }
