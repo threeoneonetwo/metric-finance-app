@@ -77,7 +77,7 @@ export function renderBriefEmail(input: {
     .join("");
 
   const html = `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>${esc(brief.subject)}</title></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>${esc(brief.subject)}</title><meta name="mf-hook" content="${esc(brief.hook ?? "")}"></head>
 <body style="margin:0;padding:0;background:#05070d;">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#05070d;">${esc(brief.todayInOneSentence.slice(0, 110))}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#05070d;"><tr><td align="center" style="padding:28px 16px 40px;">

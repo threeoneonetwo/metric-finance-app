@@ -1,5 +1,6 @@
 export type Brief = {
   subject: string;
+  hook: string;
   scope: "company" | "sector" | "market" | "mixed";
   todayInOneSentence: string;
   glance: Array<{ ticker: string; signal: string }>;
@@ -20,7 +21,8 @@ export type Brief = {
 export const BRIEF_TOOL_SCHEMA = {
   type: "object",
   properties: {
-    subject: { type: "string", description: "Email subject, max 60 characters, plain and specific, no dashes, no emojis." },
+    subject: { type: "string", description: "The headline readers see on their dashboard and in the email, max 60 characters. Make it catchy: name the surprising thing and tease the why without giving it all away, so a reader wants to open it. Specific and true, never fake drama, no dashes, no emojis, no question marks." },
+    hook: { type: "string", description: "A curiosity headline for the dashboard card, 4 to 9 words, written like a friend teasing a story, not like a news wire. It names the surprising or human angle and leaves out the key detail so the reader has to open the brief. No numbers, no dashes, no emojis, no question marks, and it must be true to the data. Style only (never reuse wording or facts): The chip rally everyone slept on." },
     scope: { type: "string", enum: ["company", "sector", "market", "mixed"], description: "Whether today's main move was one company, a sector, the whole market, or a mix." },
     todayInOneSentence: { type: "string", description: "25 to 40 words. What changed today and whether it was company, sector or market wide. No intro." },
     glance: {
@@ -74,7 +76,7 @@ export const BRIEF_TOOL_SCHEMA = {
       },
     },
   },
-  required: ["subject", "scope", "todayInOneSentence", "glance", "lead", "rest", "idea", "watchNext"],
+  required: ["subject", "hook", "scope", "todayInOneSentence", "glance", "lead", "rest", "idea", "watchNext"],
 } as const;
 
 const words = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
@@ -92,6 +94,8 @@ export function validateBrief(raw: unknown, tickers: string[]): { ok: true; brie
   if (scope !== "company" && scope !== "sector" && scope !== "market" && scope !== "mixed") return { ok: false, reason: "bad scope" };
 
   const subject = clean(value.subject).slice(0, 78);
+  // A missing hook is not worth a second model call: the dashboard falls back to the subject.
+  const hook = clean(value.hook).replace(/[?.!]+$/, "").slice(0, 80) || subject;
   const sentence = clean(value.todayInOneSentence);
   if (!subject) return { ok: false, reason: "missing subject" };
   if (words(sentence) < 20 || words(sentence) > 50) return { ok: false, reason: `one sentence has ${words(sentence)} words` };
@@ -133,5 +137,5 @@ export function validateBrief(raw: unknown, tickers: string[]): { ok: true; brie
   const watchNext = (value.watchNext ?? []).slice(0, 2).map((row) => ({ label: clean(row?.label), text: clean(row?.text) })).filter((row) => row.label && row.text);
   if (watchNext.length === 0) return { ok: false, reason: "nothing to watch" };
 
-  return { ok: true, brief: { subject, scope, todayInOneSentence: sentence, glance, lead, rest, idea, watchNext } };
+  return { ok: true, brief: { subject, hook, scope, todayInOneSentence: sentence, glance, lead, rest, idea, watchNext } };
 }
