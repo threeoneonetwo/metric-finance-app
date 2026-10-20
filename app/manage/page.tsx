@@ -75,7 +75,7 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
         justConfirmed={welcome === "1"}
         initialPicks={picks}
         maxPicks={limits.stocks}
-        briefings={briefings.map((briefing) => ({
+        briefings={oneBriefPerDay(briefings).map((briefing) => ({
           id: briefing.id,
           tickers: briefing.tickers,
           title: briefTitle(briefing.html, briefing.sentAt),
@@ -84,4 +84,16 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
       />
     </main>
   );
+}
+
+// Newest first already; keep only the final brief of each New York day.
+function oneBriefPerDay<T extends { sentAt: Date }>(rows: T[]) {
+  const day = (date: Date) => date.toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+  const seen = new Set<string>();
+  return rows.filter((row) => {
+    const key = day(row.sentAt);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
