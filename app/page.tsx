@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { LandingViewEvent } from "@/components/analytics-events";
 import { NewsletterLanding } from "@/components/newsletter-landing";
 import { FAQS } from "@/lib/faqs";
 
@@ -55,7 +54,6 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
       />
-      <LandingViewEvent />
       <NewsletterLanding />
     </main>
   );
