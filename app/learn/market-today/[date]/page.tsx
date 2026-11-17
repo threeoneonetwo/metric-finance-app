@@ -6,7 +6,7 @@ import { getLearnArticle } from "@/db/learn";
 
 type Props = { params: Promise<{ date: string }> };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { date } = await params;

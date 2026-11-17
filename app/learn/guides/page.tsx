@@ -6,7 +6,7 @@ import { listLearnArticles } from "@/db/learn";
 import { GUIDES } from "@/lib/learn/guides";
 import styles from "../learn.module.css";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Beginner Stock Market Guides in Simple Words | Metric Finance",

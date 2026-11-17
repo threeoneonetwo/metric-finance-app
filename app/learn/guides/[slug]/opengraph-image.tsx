@@ -6,7 +6,7 @@ import { OG_SIZE, OG_TYPE, ogCard } from "@/lib/og";
 export const size = OG_SIZE;
 export const contentType = OG_TYPE;
 export const alt = "Beginner investing guide on Metric Finance";
-export const revalidate = 3600;
+export const revalidate = 604800;
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const slug = (await params).slug;

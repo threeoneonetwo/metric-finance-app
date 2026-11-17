@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/learn" },
 };
 
-export const revalidate = 1800;
+export const revalidate = 86400;
 
 export default async function LearnPage() {
   const [recaps, newGuides] = await Promise.all([listLearnArticles("market-today", 1), listLearnArticles("guide", 6)]);

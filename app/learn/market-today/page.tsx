@@ -5,7 +5,7 @@ import { LearnShell, SignupCta } from "@/components/learn-shell";
 import { listLearnArticles } from "@/db/learn";
 import styles from "../learn.module.css";
 
-export const revalidate = 1800;
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Stock Market Today: Daily Recap in Simple Words | Metric Finance",

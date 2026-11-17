@@ -5,7 +5,7 @@ import { comparePairs, indexableStocks } from "@/lib/learn/stocks";
 import { TERMS } from "@/lib/learn/terms";
 
 // Rebuilt hourly so new daily recaps and guides appear without a deploy.
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [recaps, storedGuides, stockAges] = await Promise.all([listLearnArticles("market-today", 400), listLearnArticles("guide", 400), listLearnStockAges()]);

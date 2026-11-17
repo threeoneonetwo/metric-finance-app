@@ -42,5 +42,12 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/manage", "/brief/:id"],
+  // The homepage only needs this file for signed in readers (cookie) or the owner flag, so everyone else gets the
+  // plain cached page without a server run.
+  matcher: [
+    { source: "/", has: [{ type: "cookie", key: "mf_session" }] },
+    { source: "/", has: [{ type: "query", key: "owner" }] },
+    "/manage",
+    "/brief/:id",
+  ],
 };

@@ -12,7 +12,7 @@ import styles from "../../learn.module.css";
 type Props = { params: Promise<{ symbol: string }> };
 
 // The daily Learn job rewrites stock pages; this lets the new text and fresh headlines appear within the hour.
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 // The 300 biggest stocks are built ahead of time. Every other US listed stock is built the first time it is visited.
 export function generateStaticParams() {

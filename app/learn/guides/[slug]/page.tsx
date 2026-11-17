@@ -10,7 +10,7 @@ import styles from "../../learn.module.css";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 export const generateStaticParams = () => GUIDES.map((guide) => ({ slug: guide.slug }));
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
