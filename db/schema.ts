@@ -1,4 +1,4 @@
-import { boolean, integer, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, integer, jsonb, pgTable, primaryKey, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const productEvents = pgTable("product_events", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -98,3 +98,12 @@ export const learnArticles = pgTable("learn_articles", {
   publishedOn: text("published_on").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+// why_pages: one "why did this stock move" explainer per stock per trading session (/why/[symbol]/[date]).
+// Created by db/migrations/0010_why_pages.sql. "content" is the InstantExplainer from lib/instant/explain.ts.
+export const whyPages = pgTable("why_pages", {
+  symbol: text("symbol").notNull(),
+  sessionDate: text("session_date").notNull(),
+  content: jsonb("content").$type<Record<string, unknown>>().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [primaryKey({ columns: [table.symbol, table.sessionDate] })]);

@@ -89,3 +89,5 @@
 .heroSearch { position: relative; z-index: 5; max-width: 720px; margin: 0 auto; }
 .signupBox { max-width: 720px; margin: 0 auto; scroll-margin-top: 96px; }
 .trySection { scroll-margin-top: 40px; }
+.shareLink { color: #9fb6ff; text-decoration: underline; text-underline-offset: 3px; }
+.shareLink:hover { color: #fff; }

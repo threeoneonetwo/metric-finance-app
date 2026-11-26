@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 import { listLearnArticles, listLearnStockAges } from "@/db/learn";
+import { listRecentWhyPages } from "@/db/why";
+import { whyHref } from "@/lib/why";
 import { GUIDES } from "@/lib/learn/guides";
 import { comparePairs, indexableStocks } from "@/lib/learn/stocks";
 import { TERMS } from "@/lib/learn/terms";
@@ -8,7 +10,8 @@ import { TERMS } from "@/lib/learn/terms";
 export const revalidate = 86400;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [recaps, storedGuides, stockAges] = await Promise.all([listLearnArticles("market-today", 400), listLearnArticles("guide", 400), listLearnStockAges()]);
+  const [recaps, storedGuides, stockAges, whyPages] = await Promise.all([listLearnArticles("market-today", 400), listLearnArticles("guide", 400), listLearnStockAges(), listRecentWhyPages(5000)]);
+  const whySymbols = [...new Set(whyPages.map((page) => page.symbol.toLowerCase().replace(/\./g, "-")))];
   const stockUpdated = new Map(stockAges.map((row) => [row.symbol, row.generatedAt]));
   const base = "https://metricfinance.app";
   const lastModified = new Date();
@@ -26,6 +29,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...recaps.map((recap) => ({ url: `${base}/learn/market-today/${recap.publishedOn}`, lastModified: recap.createdAt, changeFrequency: "never" as const, priority: 0.6 })),
     ...storedGuides.map((guide) => ({ url: `${base}/learn/guides/${guide.slug}`, lastModified: guide.createdAt, changeFrequency: "monthly" as const, priority: 0.7 })),
     { url: `${base}/learn/terms`, lastModified, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${base}/why`, lastModified, changeFrequency: "daily", priority: 0.9 },
+    ...whySymbols.map((slug) => ({ url: `${base}/why/${slug}`, lastModified, changeFrequency: "daily" as const, priority: 0.6 })),
+    ...whyPages.map((page) => ({ url: `${base}${whyHref(page)}`, lastModified: new Date(`${page.sessionDate}T22:00:00Z`), changeFrequency: "never" as const, priority: 0.6 })),
     ...GUIDES.map((guide) => ({ url: `${base}/learn/guides/${guide.slug}`, lastModified, changeFrequency: "monthly" as const, priority: 0.7 })),
     ...TERMS.map((term) => ({ url: `${base}/learn/terms/${term.slug}`, lastModified, changeFrequency: "monthly" as const, priority: 0.6 })),
     ...indexableStocks().map((entry, index) => ({ url: `${base}/learn/stocks/${entry.slug}`, lastModified: stockUpdated.get(entry.stock.symbol) ?? lastModified, changeFrequency: "monthly" as const, priority: index < 300 ? 0.7 : 0.4 })),

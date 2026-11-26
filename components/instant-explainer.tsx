@@ -7,26 +7,12 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Search, Sparkles } from "lucide-react";
-import { StockLogo } from "./stock-logo";
+import { WhyCard } from "./why-card";
 import styles from "./instant-explainer.module.css";
 import { getPostHogVisitorId, trackPostHogEvent } from "@/lib/posthog";
+import type { InstantExplainer } from "@/lib/instant/explain";
 
-type Explainer = {
-  symbol: string;
-  company: string;
-  exchange: string;
-  sessionLabel: string;
-  close: number;
-  previousClose: number | null;
-  changePercent: number | null;
-  marketChangePercent: number | null;
-  headline: string;
-  oneLiner: string;
-  whatHappened: string;
-  whyItMatters: string;
-  whatItDoesntProve: string;
-  idea: { term: string; explanation: string };
-};
+type Explainer = InstantExplainer;
 
 type Result = { symbol: string; name: string };
 
@@ -35,8 +21,6 @@ const QUICK_PICKS = ["NVDA", "TSLA", "AAPL", "AMZN", "PLTR"];
 
 // What we tell people while they wait (it can take a few seconds the first time a stock is asked for).
 const WAIT_LINES = ["Checking the last close", "Reading the latest headlines", "Writing it like you're 5"];
-
-const percent = (value: number | null) => (value === null ? null : `${value >= 0 ? "+" : ""}${value.toFixed(2)}%`);
 
 type Props = {
   /** Where it sits: "home" shows a search box, "learn" explains the page's own stock. */
@@ -149,8 +133,6 @@ export function InstantExplainer({ from, symbol: fixedSymbol, name: fixedName, o
   }
 
   const shownSymbol = explainer?.symbol ?? failure?.symbol ?? null;
-  const change = explainer ? percent(explainer.changePercent) : null;
-  const market = explainer ? percent(explainer.marketChangePercent) : null;
 
   return (
     <div className={`${styles.wrap} ${from === "learn" ? styles.learn : ""}`}>
@@ -215,34 +197,7 @@ export function InstantExplainer({ from, symbol: fixedSymbol, name: fixedName, o
         {failure && !loadingSymbol && <p className={styles.failure}>{failure.text}</p>}
 
         {explainer && !loadingSymbol && (
-          <article className={styles.card}>
-            <header className={styles.cardHead}>
-              <StockLogo symbol={explainer.symbol} />
-              <div className={styles.cardTitle}>
-                <strong>{explainer.symbol}</strong>
-                <span>{explainer.company}</span>
-              </div>
-              <div className={styles.move}>
-                <strong>${explainer.close.toFixed(2)}</strong>
-                {change && <span className={(explainer.changePercent ?? 0) >= 0 ? styles.up : styles.down}>{change}</span>}
-              </div>
-            </header>
-            <h3 className={styles.headline}>{explainer.headline}</h3>
-            <p className={styles.oneLiner}>{explainer.oneLiner}</p>
-            <dl className={styles.parts}>
-              <div><dt>What happened</dt><dd>{explainer.whatHappened}</dd></div>
-              <div><dt>Why it matters</dt><dd>{explainer.whyItMatters}</dd></div>
-              <div><dt>What it doesn&apos;t prove</dt><dd>{explainer.whatItDoesntProve}</dd></div>
-            </dl>
-            <div className={styles.idea}>
-              <span>Idea of the day</span>
-              <strong>{explainer.idea.term}</strong>
-              <p>{explainer.idea.explanation}</p>
-            </div>
-            <p className={styles.footnote}>
-              Based on the close on {explainer.sessionLabel}.{market ? ` The S&P 500 moved ${market} that day.` : ""} Educational, not financial advice.
-            </p>
-          </article>
+          <WhyCard explainer={explainer} shareLink />
         )}
 
         {shownSymbol && !loadingSymbol && onFollow && (

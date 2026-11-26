@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLearnStock } from "@/db/learn";
+import { listRecentWhyPages } from "@/db/why";
+import { whyHref } from "@/lib/why";
 import { latestHeadlines } from "@/lib/learn/news";
 import { StockLogo } from "@/components/stock-logo";
 import { InstantExplainer } from "@/components/instant-explainer";
@@ -46,10 +48,13 @@ export default async function StockPage({ params }: Props) {
   const entry = findStock((await params).symbol);
   if (!entry) notFound();
   const { stock, name, profile } = entry;
-  const [stored, headlines] = await Promise.all([
+  const [stored, headlines, whyPages] = await Promise.all([
     getLearnStock(stock.symbol),
     latestHeadlines(`"${name}" OR ${stock.symbol} stock`, 5),
+    listRecentWhyPages(2000),
   ]);
+  // The newest "why did it move" page for this stock, if there is one (one shared cached list, so no extra database work per page).
+  const latestWhy = whyPages.find((page) => page.symbol === stock.symbol) ?? null;
   const written = stored?.content ?? null;
   const facts = stored?.facts ?? null;
   const drivers = written ? { makes: written.makesMoney, moves: written.movesStock } : driversFor(entry);
@@ -90,6 +95,11 @@ export default async function StockPage({ params }: Props) {
         <div>
       {/* Today's move, explained on request (nothing runs until a visitor clicks, so crawlers don't use it up). */}
       <InstantExplainer from="learn" symbol={stock.symbol} name={name} />
+      {latestWhy && (
+        <p className={styles.related} style={{ margin: "-8px 0 22px" }}>
+          <Link href={whyHref(latestWhy)}>Why {stock.symbol} moved on {latestWhy.explainer.sessionLabel}</Link> · <Link href={`/why/${entry.slug}`}>Every {stock.symbol} explainer</Link>
+        </p>
+      )}
 
       <dl className={styles.facts}>
         <div><dt>Ticker</dt><dd>{stock.symbol}</dd></div>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowUpRight, BookOpen, LineChart, Newspaper, Spline } from "lucide-react";
+import { ArrowUpRight, BookOpen, LineChart, Newspaper, Spline, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { LearnShell, SignupCta } from "@/components/learn-shell";
 import { CountUp } from "@/components/learn-motion";
@@ -58,6 +58,7 @@ export default async function LearnPage() {
         {[
           { href: "#stocks", icon: <LineChart size={24} />, tone: styles.tileBlue, title: "Stock guides", text: "Any Nasdaq or NYSE stock, explained simply" },
           { href: "/learn/market-today", icon: <Newspaper size={24} />, tone: styles.tileViolet, title: "Market today", text: "A recap after every trading day" },
+          { href: "/why", icon: <TrendingUp size={24} />, tone: styles.tileBlue, title: "Why stocks moved", text: "The biggest moves of each day, explained" },
           { href: "/learn/guides", icon: <BookOpen size={24} />, tone: styles.tileTeal, title: "Beginner guides", text: "One clear idea at a time" },
           { href: "/learn/terms", icon: <Spline size={24} />, tone: styles.tileAmber, title: "Glossary", text: `${TERMS.length} terms in plain words` },
         ].map((tile) => (
@@ -95,7 +96,7 @@ export default async function LearnPage() {
         ))}
       </ul>
 
-      <p className={styles.related}><Link href="/learn/guides">See all guides</Link> · <Link href="/learn/market-today">Daily market recaps</Link></p>
+      <p className={styles.related}><Link href="/learn/guides">See all guides</Link> · <Link href="/learn/market-today">Daily market recaps</Link> · <Link href="/why">Why stocks moved today</Link></p>
 
       <section id="stocks" style={{ scrollMarginTop: 24 }}>
         <h2 className={styles.groupTitle}>Stock guides <small>Any Nasdaq or NYSE stock, explained like you&apos;re 5</small></h2>

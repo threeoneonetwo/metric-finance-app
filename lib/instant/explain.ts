@@ -12,6 +12,7 @@
 import { unstable_cache } from "next/cache";
 import profiles from "@/data/stock-profiles.json";
 import { hitRateLimit } from "@/db/rate-limit";
+import { saveWhyPage } from "@/db/why";
 import { resolveStock } from "@/lib/stock-lookup";
 
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
@@ -28,7 +29,8 @@ export type InstantExplainer = {
   symbol: string;
   company: string;
   exchange: string;
-  /** The trading day this is about, like "Tuesday, November 25". */
+  /** The trading day this is about, as 2026-11-25 (used in the page address) and as "Tuesday, November 25". */
+  sessionDate: string;
   sessionLabel: string;
   close: number;
   previousClose: number | null;
@@ -260,10 +262,11 @@ async function build(symbol: string, sessionDate: string): Promise<InstantExplai
   };
   if (!result.headline || !result.oneLiner || !result.whatHappened || !result.whyItMatters || !result.idea.term) throw new InstantError("writer_failed");
 
-  return {
+  const explainer: InstantExplainer = {
     symbol: stock.symbol,
     company: stock.name,
     exchange: stock.exchange,
+    sessionDate: session.date,
     sessionLabel: sessionLabel(session.date),
     close: session.close,
     previousClose: session.previousClose,
@@ -271,10 +274,11 @@ async function build(symbol: string, sessionDate: string): Promise<InstantExplai
     marketChangePercent: marketChange,
     ...result,
   };
+  return explainer;
 }
 
 // One cached answer per stock and session. Thrown errors are never cached.
-const cached = unstable_cache(build, ["instant-explainer-v2"], { revalidate: 60 * 60 * 24 * 7 });
+const cached = unstable_cache(build, ["instant-explainer-v3"], { revalidate: 60 * 60 * 24 * 7 });
 
 /** The explainer for a stock's last finished session, from the cache when someone already asked about that session. */
 export async function getInstantExplainer(symbol: string) {
@@ -283,5 +287,16 @@ export async function getInstantExplainer(symbol: string) {
   // Finding the latest session is free (Nasdaq), so it runs every time and decides which cached answer to use.
   const session = await lastSession(stock.symbol, "stocks");
   if (!session) throw new InstantError("no_data");
-  return cached(stock.symbol, session.date);
+  const explainer = await cached(stock.symbol, session.date);
+  // Every explainer also becomes its own page (/why/[symbol]/[date]). This runs outside the cache so it can refresh the
+  // page lists; the first save wins and later ones do nothing. A failed save never costs the reader their answer.
+  const key = `${explainer.symbol}:${explainer.sessionDate}`;
+  if (!savedThisInstance.has(key)) {
+    savedThisInstance.add(key);
+    await saveWhyPage(explainer).catch((error) => console.error("instant: could not save page", error instanceof Error ? error.message : error));
+  }
+  return explainer;
 }
+
+// Explainers this server instance has already saved, so repeat views don't write to the database again.
+const savedThisInstance = new Set<string>();

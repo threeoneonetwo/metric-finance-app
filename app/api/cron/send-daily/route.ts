@@ -8,6 +8,7 @@ import { hasSesConfig } from "@/lib/newsletter/ses";
 import { sendDigestToSubscriber, type BriefCache } from "@/lib/newsletter/send-digest";
 import { hasBriefWriterConfig } from "@/lib/newsletter/write-brief";
 import { refreshLearn } from "@/lib/learn/refresh";
+import { refreshWhy } from "@/lib/instant/refresh-why";
 
 export const maxDuration = 300;
 
@@ -30,6 +31,14 @@ export async function GET(request: Request) {
       console.log("learn refresh:", JSON.stringify(await refreshLearn()));
     } catch (error) {
       console.error("learn refresh failed", error);
+    }
+  });
+  // Alongside it, write "why did it move" pages for the day's biggest movers (/why). Its own deadline keeps it inside the time limit.
+  after(async () => {
+    try {
+      console.log("why refresh:", JSON.stringify(await refreshWhy(Date.now() + 200_000)));
+    } catch (error) {
+      console.error("why refresh failed", error);
     }
   });
 

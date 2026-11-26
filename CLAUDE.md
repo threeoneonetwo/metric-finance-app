@@ -49,6 +49,12 @@ Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle O
 - Signup accepts any stock in `data/us-stocks.json`. The picker searches it through `/api/stocks/search`.
 - The FMP market data plan has a small daily call limit (the free tier is about 250). The daily brief uses about 3 calls per unique ticker, so many subscribers following many different stocks will hit it. Upgrade the FMP plan before growing.
 
+## Instant explainers and /why pages
+- The homepage hero is a stock search (`components/instant-explainer.tsx`, API `/api/instant`, logic `lib/instant/explain.ts`). It explains one stock's last finished trading session from Nasdaq's free daily closes (FMP only as a fallback), so it does not use the FMP allowance. One AI write per stock per session, cached; `INSTANT_DAILY_CAP` (default 150) caps fresh writes per day, plus 20 per visitor per hour. Nothing runs until someone clicks.
+- Every explainer is saved as a page at `/why/[symbol]/[date]` (table `why_pages`, migration `0010_why_pages.sql`, already applied; helpers in `db/why.ts`, all cached under the `why-pages` tag). `/why/[symbol]` lists one stock, `/why` is the hub. Pages have share images and are in the sitemap.
+- After the 5 PM send, `refreshWhy()` (`lib/instant/refresh-why.ts`) writes explainers for the day's biggest movers plus popular stocks and pings IndexNow. Manual run: `GET /api/cron/why-refresh` with `Authorization: Bearer $CRON_SECRET`.
+- Signups record where they came from (`source` on `signup_submitted`: `home_form`, `instant_home`, `instant_learn`).
+
 ## SEO
 Homepage title and description target "stocks explained like you're 5" (see `app/page.tsx`). Canonical host is `metricfinance.app` (www redirects to it). Sitemap: `app/sitemap.ts`. AI-crawler summary: `public/llms.txt`. Search Console and Bing Webmaster Tools are used for indexing.
 
