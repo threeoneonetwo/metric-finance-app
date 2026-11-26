@@ -1,5 +1,5 @@
-import { revalidatePath } from "next/cache";
-import { articleExists, listLearnStockAges, saveLearnArticle, saveLearnStock } from "@/db/learn";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { articleExists, LEARN_ARTICLES_TAG, LEARN_STOCKS_TAG, listLearnStockAges, saveLearnArticle, saveLearnStock } from "@/db/learn";
 import { hasWriter } from "./claude";
 import { fetchGainers, fetchIndexMoves, fetchLosers, fetchProfile, QuotaError } from "./fmp";
 import { writeGuide, writeRecap, writeStockPage } from "./generate";
@@ -124,6 +124,9 @@ export async function refreshLearn(options: { stockLimit?: number; only?: ("reca
     report.stocksNote = result.note;
   }
 
+  // Drop the cached database reads first, so the pages rebuilt below see what was just saved.
+  revalidateTag(LEARN_STOCKS_TAG, { expire: 0 });
+  revalidateTag(LEARN_ARTICLES_TAG, { expire: 0 });
   for (const path of ["/learn", "/learn/guides", "/learn/market-today", "/sitemap.xml"]) revalidatePath(path);
   report.indexNow = await pingIndexNow(urls);
   return report;

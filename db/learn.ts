@@ -1,4 +1,5 @@
 import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 import { getDb } from "./client";
 import { learnArticles, learnStockPages, type LearnStockContent, type LearnStockFacts } from "./schema";
 
@@ -27,13 +28,31 @@ const cleanStockContent = (content: LearnStockContent): LearnStockContent => ({
   goodToKnow: flatList(content.goodToKnow),
 });
 
-export const getLearnStock = (symbol: string) =>
-  safe(null, async () => {
-    const db = getDb();
-    if (!db) return null;
-    const [row] = await db.select().from(learnStockPages).where(eq(learnStockPages.symbol, symbol)).limit(1);
-    return row ? { ...row, content: cleanStockContent(row.content) } : null;
-  });
+// Cache tags. The daily Learn job calls revalidateTag with these after it saves, so readers see new content right away.
+export const LEARN_STOCKS_TAG = "learn-stocks";
+export const LEARN_ARTICLES_TAG = "learn-articles";
+const DAY = 86400;
+
+// Neon's free plan bills by the hours the database is awake, and every page render that queries it wakes it up.
+// Bots crawl thousands of stock pages, and most of them have no saved guide, so instead of one query per page we load
+// all saved guides in one go (a few hundred rows) and keep them in Next's data cache for a day.
+const allLearnStocks = unstable_cache(
+  () =>
+    safe([] as (typeof learnStockPages.$inferSelect)[], async () => {
+      const db = getDb();
+      if (!db) return [];
+      return db.select().from(learnStockPages);
+    }),
+  ["learn-stocks-all"],
+  { tags: [LEARN_STOCKS_TAG], revalidate: DAY },
+);
+
+// Fetches the saved guide for one stock symbol, or null if there isn't one yet. Served from the cache above.
+export const getLearnStock = async (symbol: string) => {
+  const row = (await allLearnStocks()).find((entry) => entry.symbol === symbol);
+  // The cache stores dates as text, so turn generatedAt back into a Date.
+  return row ? { ...row, generatedAt: new Date(row.generatedAt), content: cleanStockContent(row.content) } : null;
+};
 
 export const saveLearnStock = async (symbol: string, content: LearnStockContent, facts: LearnStockFacts) => {
   const db = getDb();
@@ -52,20 +71,41 @@ export const listLearnStockAges = () =>
     return db.select({ symbol: learnStockPages.symbol, generatedAt: learnStockPages.generatedAt }).from(learnStockPages).orderBy(asc(learnStockPages.generatedAt));
   });
 
-export const getLearnArticle = (slug: string) =>
-  safe(null, async () => {
+type LearnArticleRow = typeof learnArticles.$inferSelect;
+// The cache stores dates as text, so turn createdAt back into a Date.
+const reviveArticle = (row: LearnArticleRow): LearnArticleRow => ({ ...row, createdAt: new Date(row.createdAt) });
+
+// Reads one saved article straight from the database (used by the daily job, which must see fresh data).
+const readLearnArticle = (slug: string) =>
+  safe(null as LearnArticleRow | null, async () => {
     const db = getDb();
     if (!db) return null;
     const [row] = await db.select().from(learnArticles).where(eq(learnArticles.slug, slug)).limit(1);
     return row ?? null;
   });
 
-export const listLearnArticles = (kind: "market-today" | "guide", limit = 60) =>
-  safe([] as (typeof learnArticles.$inferSelect)[], async () => {
-    const db = getDb();
-    if (!db) return [];
-    return db.select().from(learnArticles).where(eq(learnArticles.kind, kind)).orderBy(desc(learnArticles.publishedOn), desc(learnArticles.createdAt)).limit(limit);
-  });
+const cachedLearnArticle = unstable_cache(readLearnArticle, ["learn-article"], { tags: [LEARN_ARTICLES_TAG], revalidate: DAY });
+
+// Fetches one saved article (a recap or guide) by its slug, or null if it doesn't exist. Cached for pages.
+export const getLearnArticle = async (slug: string) => {
+  const row = await cachedLearnArticle(slug);
+  return row ? reviveArticle(row) : null;
+};
+
+const cachedLearnArticles = unstable_cache(
+  (kind: "market-today" | "guide", limit: number) =>
+    safe([] as LearnArticleRow[], async () => {
+      const db = getDb();
+      if (!db) return [];
+      return db.select().from(learnArticles).where(eq(learnArticles.kind, kind)).orderBy(desc(learnArticles.publishedOn), desc(learnArticles.createdAt)).limit(limit);
+    }),
+  ["learn-articles-list"],
+  { tags: [LEARN_ARTICLES_TAG], revalidate: DAY },
+);
+
+// Lists saved articles of one kind, newest first. Cached for pages.
+export const listLearnArticles = async (kind: "market-today" | "guide", limit = 60) =>
+  (await cachedLearnArticles(kind, limit)).map(reviveArticle);
 
 export const saveLearnArticle = async (article: Omit<typeof learnArticles.$inferInsert, "createdAt">) => {
   const db = getDb();
@@ -73,7 +113,7 @@ export const saveLearnArticle = async (article: Omit<typeof learnArticles.$infer
   await db.insert(learnArticles).values(article).onConflictDoNothing();
 };
 
-export const articleExists = (slug: string) => safe(false, async () => Boolean(await getLearnArticle(slug)));
+export const articleExists = (slug: string) => safe(false, async () => Boolean(await readLearnArticle(slug)));
 
 export const countGuides = () =>
   safe(0, async () => {
