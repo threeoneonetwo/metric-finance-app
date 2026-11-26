@@ -4,7 +4,7 @@ import { isSameBriefDay } from "@/lib/newsletter/brief-day";
 import { gatherBriefFacts } from "@/lib/newsletter/brief-data";
 import { hasFmpConfig } from "@/lib/newsletter/market-data";
 import { trackServerNow } from "@/lib/analytics-server";
-import { hasSesConfig, sendEmail } from "@/lib/newsletter/ses";
+import { hasSesConfig } from "@/lib/newsletter/ses";
 import { sendDigestToSubscriber, type BriefCache } from "@/lib/newsletter/send-digest";
 import { hasBriefWriterConfig } from "@/lib/newsletter/write-brief";
 import { refreshLearn } from "@/lib/learn/refresh";
@@ -71,12 +71,8 @@ export async function GET(request: Request) {
   };
   await Promise.all(Array.from({ length: 4 }, worker));
 
-  if (noBrief > 0) {
-    await alertOwner(
-      `Metric Finance: ${noBrief} of ${subscribers.length} briefs could not be written`,
-      `Today's send skipped ${noBrief} of ${subscribers.length} subscribers because the brief could not be written, so they got no email.\n\nMost likely cause: Anthropic API credit ran out or the key is invalid. Check the Vercel logs for "write-brief" and your Anthropic billing page.`,
-    );
-  }
+  // No email to the owner here any more (they asked to stop the alerts). Failures still show in the Vercel logs and in PostHog as no_brief on daily_send_run.
+  if (noBrief > 0) console.error(`send-daily: ${noBrief} of ${subscribers.length} briefs could not be written`);
 
   await markSubscribersSent(sentIds);
 
@@ -99,12 +95,4 @@ export async function GET(request: Request) {
 function isSendHourInNewYork(date: Date) {
   const hour = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hour: "2-digit", hour12: false }).format(date);
   return Number(hour) % 24 === 17;
-}
-
-async function alertOwner(subject: string, text: string) {
-  try {
-    await sendEmail({ to: process.env.ALERT_EMAIL ?? "vanshpandita11@gmail.com", subject, text, html: `<pre>${text}</pre>` });
-  } catch (error) {
-    console.error("send-daily: failed to send owner alert", error);
-  }
 }
