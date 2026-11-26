@@ -1,7 +1,8 @@
 "use client";
 
-// "Try it first": a visitor picks a stock (or is already on its Learn page) and reads a short explainer of what it did today,
-// in the same voice as the daily brief, without giving us their email. Under it we offer to send that stock every day.
+// "Try it first": a visitor picks a stock (or is already on its Learn page) and reads a short explainer of what happened to it
+// at the last close, in the same voice as the daily brief, without giving us their email. Under it we offer that stock daily:
+// on the homepage it is added to the signup picker below, on Learn pages there is an email box right there.
 // Nothing is fetched until someone clicks, so crawlers never run it.
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -13,11 +14,12 @@ import { getPostHogVisitorId, trackPostHogEvent } from "@/lib/posthog";
 type Explainer = {
   symbol: string;
   company: string;
-  price: number | null;
+  exchange: string;
+  sessionLabel: string;
+  close: number;
+  previousClose: number | null;
   changePercent: number | null;
   marketChangePercent: number | null;
-  session: "open" | "closed";
-  asOfLabel: string;
   headline: string;
   oneLiner: string;
   whatHappened: string;
@@ -32,7 +34,7 @@ type Result = { symbol: string; name: string };
 const QUICK_PICKS = ["NVDA", "TSLA", "AAPL", "AMZN", "PLTR"];
 
 // What we tell people while they wait (it can take a few seconds the first time a stock is asked for).
-const WAIT_LINES = ["Checking today's price", "Reading the latest headlines", "Writing it like you're 5"];
+const WAIT_LINES = ["Checking the last close", "Reading the latest headlines", "Writing it like you're 5"];
 
 const percent = (value: number | null) => (value === null ? null : `${value >= 0 ? "+" : ""}${value.toFixed(2)}%`);
 
@@ -41,9 +43,11 @@ type Props = {
   from: "home" | "learn";
   symbol?: string;
   name?: string;
+  /** Homepage only: adds the stock to the signup picker and scrolls there, instead of showing an email box. */
+  onFollow?: (stock: { symbol: string; name: string; exchange: string }) => void;
 };
 
-export function InstantExplainer({ from, symbol: fixedSymbol, name: fixedName }: Props) {
+export function InstantExplainer({ from, symbol: fixedSymbol, name: fixedName, onFollow }: Props) {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Result[]>([]);
@@ -159,7 +163,7 @@ export function InstantExplainer({ from, symbol: fixedSymbol, name: fixedName }:
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 onKeyDown={(event) => { if (event.key === "Enter" && results[0]) explain(results[0].symbol); }}
-                placeholder="Type a stock you own, like Tesla or NVDA"
+                placeholder="Search any stock, like Tesla"
                 aria-label="Search for a stock to explain"
                 disabled={Boolean(loadingSymbol)}
               />
@@ -187,11 +191,11 @@ export function InstantExplainer({ from, symbol: fixedSymbol, name: fixedName }:
         !explainer && !loadingSymbol && !failure && fixedSymbol && (
           <div className={styles.prompt}>
             <div>
-              <strong>What did {fixedSymbol} do today?</strong>
-              <p>Get today&apos;s move for {fixedName ?? fixedSymbol} explained in plain words, in about ten seconds. Free, no signup.</p>
+              <strong>What&apos;s up with {fixedSymbol}?</strong>
+              <p>See what happened to {fixedName ?? fixedSymbol} at the last close, and why, in plain words. Takes about ten seconds. Free, no signup.</p>
             </div>
             <button type="button" className={styles.primary} onClick={() => explain(fixedSymbol)}>
-              <Sparkles size={16} /> Explain {fixedSymbol} today
+              <Sparkles size={16} /> Explain {fixedSymbol}
             </button>
           </div>
         )
@@ -219,7 +223,7 @@ export function InstantExplainer({ from, symbol: fixedSymbol, name: fixedName }:
                 <span>{explainer.company}</span>
               </div>
               <div className={styles.move}>
-                {explainer.price !== null && <strong>${explainer.price.toFixed(2)}</strong>}
+                <strong>${explainer.close.toFixed(2)}</strong>
                 {change && <span className={(explainer.changePercent ?? 0) >= 0 ? styles.up : styles.down}>{change}</span>}
               </div>
             </header>
@@ -236,13 +240,22 @@ export function InstantExplainer({ from, symbol: fixedSymbol, name: fixedName }:
               <p>{explainer.idea.explanation}</p>
             </div>
             <p className={styles.footnote}>
-              {explainer.session === "open" ? "Market still open, so this can change. " : ""}
-              {market ? `S&P 500 ${market}. ` : ""}As of {explainer.asOfLabel}. Educational, not financial advice.
+              Based on the close on {explainer.sessionLabel}.{market ? ` The S&P 500 moved ${market} that day.` : ""} Educational, not financial advice.
             </p>
           </article>
         )}
 
-        {shownSymbol && !loadingSymbol && (
+        {shownSymbol && !loadingSymbol && onFollow && (
+          <div className={styles.signup}>
+            <strong>Want {shownSymbol} explained {explainer ? "like this " : ""}every trading day?</strong>
+            <p>Pick up to five stocks below and we&apos;ll post a free brief on all of them every trading day at 5 PM ET.</p>
+            <button type="button" className={styles.primary} onClick={() => onFollow({ symbol: shownSymbol, name: explainer?.company ?? shownSymbol, exchange: explainer?.exchange ?? "" })}>
+              Add {shownSymbol} to my daily brief <ArrowRight size={15} />
+            </button>
+          </div>
+        )}
+
+        {shownSymbol && !loadingSymbol && !onFollow && (
           <form className={styles.signup} onSubmit={(event) => signup(event, shownSymbol)} noValidate>
             <strong>Want {shownSymbol} explained {explainer ? "like this " : ""}every trading day?</strong>
             <p>We post a free brief at 5 PM ET for {shownSymbol} and up to 4 more stocks you pick. Unsubscribe anytime.</p>

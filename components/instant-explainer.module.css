@@ -84,3 +84,8 @@
 .tryHead span { color: #8fa8fa; font-family: ui-monospace, Menlo, monospace; font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
 .tryHead h2 { margin: 12px 0 12px; font-size: clamp(32px, 5vw, 48px); line-height: 1.05; letter-spacing: -.04em; }
 .tryHead p { margin: 0; color: #7e88a0; font-size: 17px; line-height: 1.6; }
+
+/* Homepage hero search and the signup section under it */
+.heroSearch { position: relative; z-index: 5; max-width: 720px; margin: 0 auto; }
+.signupBox { max-width: 720px; margin: 0 auto; scroll-margin-top: 96px; }
+.trySection { scroll-margin-top: 40px; }

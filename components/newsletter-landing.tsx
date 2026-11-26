@@ -149,6 +149,21 @@ export function NewsletterLanding() {
   const iuReader = isIuEmail(email);
   const router = useRouter();
 
+  // "Add to my daily brief" under an explainer: puts that stock in the picker (if there is room) and scrolls to the signup.
+  function follow(stock: { symbol: string; name: string; exchange: string }) {
+    if (!picks.some((pick) => pick.symbol === stock.symbol)) {
+      if (picks.length >= limits.stocks) {
+        setError(`You can follow up to ${stocksInWords(limits.stocks)} stocks. Remove one to add ${stock.symbol}.`);
+      } else {
+        if (picks.length === 0) trackPostHogEvent("signup_started", { tickers_count: 1, from: "explainer" });
+        setPicks([...picks, { symbol: stock.symbol, name: stock.name, exchange: stock.exchange }]);
+        setError("");
+      }
+    }
+    setSubmitted(false);
+    document.getElementById("signup")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (picks.length === 0) {
@@ -208,49 +223,11 @@ export function NewsletterLanding() {
 
         <div className={styles.heroInner}>
           <h1 className={styles.fadeUp} style={{ animationDelay: "0ms" }}>Stocks<br className={styles.mobileBreak} /> explained<br />like you&apos;re 5</h1>
-          <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "80ms" }}>A bite sized breakdown of only the stocks you&apos;re interested in, to help you become a smarter investor for free.</p>
+          <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "80ms" }}>Search any US stock and see what happened at the last close, and why, in words anyone can follow. Free, no signup.</p>
 
-          <div id="signup" className={`${styles.signup} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>
-            {submitted ? (
-              <div className={styles.success} aria-live="polite">
-                <div className={styles.successTitle}><Check size={20} /> You&apos;re in.</div>
-                <p>We will email {email.trim()} when your first brief is up.</p>
-                <div className={styles.successPicks}>
-                  {picks.map((stock) => <span key={stock.symbol}>{stock.symbol}</span>)}
-                </div>
-                <button type="button" onClick={() => setSubmitted(false)}>Edit my watchlist</button>
-              </div>
-            ) : (
-              <form onSubmit={submit} noValidate>
-                <StockPicker
-                  picks={picks}
-                  onPicksChange={(next) => {
-                    if (picks.length === 0 && next.length > 0) trackPostHogEvent("signup_started", { tickers_count: next.length });
-                    setPicks(next); setError(""); setSubmitted(false);
-                  }}
-                  label={`Step 1 · Choose up to ${stocksInWords(limits.stocks)} stocks you want us to follow`}
-                  mobileLabel={`Step 1 · Choose up to ${stocksInWords(limits.stocks)} stocks`}
-                  maxPicks={Math.max(limits.stocks, picks.length)}
-                />
-
-                <div className={styles.emailStep}>Step 2 · Tell us where to send it</div>
-                <div className={styles.emailRow}>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(event) => { setEmail(event.target.value); setError(""); }}
-                    placeholder="you@email.com"
-                    aria-label="Email address"
-                    className={error ? styles.inputError : ""}
-                  />
-                  <button type="submit" disabled={!emailValid || picks.length === 0 || submitting}>
-                    {submitting ? "Subscribing…" : "Subscribe"}
-                  </button>
-                </div>
-                <p className={error ? styles.error : styles.note}>{error || (iuReader ? "Nice, an IU email. You get up to 15 stocks and 15 follow up questions a day, so add more stocks above if you like." : "We email you when your brief is posted at 5 PM ET. Unsubscribe at any time.")}</p>
-                <a href="#try" className={styles.sampleLink}>Not sure yet? See how we&apos;d explain your stock today <ArrowRight size={15} /></a>
-              </form>
-            )}
+          {/* The search: any stock, explained from its last close. "Add to my daily brief" drops it into the signup picker below. */}
+          <div className={`${instantStyles.heroSearch} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>
+            <InstantExplainer from="home" onFollow={follow} />
           </div>
 
           <div className={`${styles.stats} ${styles.fadeUp}`} style={{ animationDelay: "240ms" }} onPointerMove={tiltMove} onPointerOut={tiltReset}>
@@ -261,14 +238,57 @@ export function NewsletterLanding() {
         </div>
       </section>
 
-      {/* Try it first: explain any stock right now, no email needed, then offer to send it daily. */}
-      <section id="try" className={instantStyles.trySection}>
+      {/* Daily brief signup: pick up to five stocks (or more for IU emails) and get a brief on them every trading day. */}
+      <section id="signup" className={instantStyles.trySection}>
         <div className={instantStyles.tryHead}>
-          <span>Try it first</span>
-          <h2>See how we&apos;d explain your stock today</h2>
-          <p>Pick any US stock and read a quick brief on what it did and why, in plain words. No email needed.</p>
+          <span>Free daily brief</span>
+          <h2>Stay on top of your portfolio</h2>
+          <p>Pick up to {stocksInWords(limits.stocks)} stocks you own or watch. Every trading day at 5 PM ET we post a short brief on what moved and why, and email you when it&apos;s up.</p>
         </div>
-        <InstantExplainer from="home" />
+        <div className={instantStyles.signupBox}>
+            <div className={styles.signup}>
+              {submitted ? (
+                <div className={styles.success} aria-live="polite">
+                  <div className={styles.successTitle}><Check size={20} /> You&apos;re in.</div>
+                  <p>We will email {email.trim()} when your first brief is up.</p>
+                  <div className={styles.successPicks}>
+                    {picks.map((stock) => <span key={stock.symbol}>{stock.symbol}</span>)}
+                  </div>
+                  <button type="button" onClick={() => setSubmitted(false)}>Edit my watchlist</button>
+                </div>
+              ) : (
+                <form onSubmit={submit} noValidate>
+                  <StockPicker
+                    picks={picks}
+                    onPicksChange={(next) => {
+                      if (picks.length === 0 && next.length > 0) trackPostHogEvent("signup_started", { tickers_count: next.length });
+                      setPicks(next); setError(""); setSubmitted(false);
+                    }}
+                    label={`Step 1 · Choose up to ${stocksInWords(limits.stocks)} stocks you want us to follow`}
+                    mobileLabel={`Step 1 · Choose up to ${stocksInWords(limits.stocks)} stocks`}
+                    maxPicks={Math.max(limits.stocks, picks.length)}
+                  />
+
+                  <div className={styles.emailStep}>Step 2 · Tell us where to send it</div>
+                  <div className={styles.emailRow}>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(event) => { setEmail(event.target.value); setError(""); }}
+                      placeholder="you@email.com"
+                      aria-label="Email address"
+                      className={error ? styles.inputError : ""}
+                    />
+                    <button type="submit" disabled={!emailValid || picks.length === 0 || submitting}>
+                      {submitting ? "Subscribing…" : "Subscribe"}
+                    </button>
+                  </div>
+                  <p className={error ? styles.error : styles.note}>{error || (iuReader ? "Nice, an IU email. You get up to 15 stocks and 15 follow up questions a day, so add more stocks above if you like." : "We email you when your brief is posted at 5 PM ET. Unsubscribe at any time.")}</p>
+                  <Link href="/brief" className={styles.sampleLink}>Read a sample brief <ArrowRight size={15} /></Link>
+                </form>
+              )}
+            </div>
+        </div>
       </section>
 
       <SectionWave />
