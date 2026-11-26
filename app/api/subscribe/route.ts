@@ -75,18 +75,20 @@ export async function POST(request: Request) {
 
   // The visitor's anonymous PostHog id links this signup to the visit that led to it.
   const visitorId = body.visitorId && body.visitorId.length <= 100 ? body.visitorId : undefined;
+  // Where the signup came from (the homepage form, an instant explainer, a Learn page), so we can see which one works.
+  const source = body.source && /^[a-z_]{1,30}$/.test(body.source) ? body.source : "home_form";
   const internal = isInternalEmail(subscriber.email);
   if (subscriber.active) {
     await trackServer({
       event: "signup_already_subscribed",
       distinctId: visitorId ?? subscriber.id,
-      properties: { internal, tickers_count: tickers.length },
+      properties: { internal, tickers_count: tickers.length, source },
     });
   } else {
     await trackServer({
       event: "signup_submitted",
       distinctId: visitorId ?? subscriber.id,
-      properties: { internal, tickers_count: tickers.length },
+      properties: { internal, tickers_count: tickers.length, source },
     });
     if (visitorId) {
       await trackServer({ event: "$identify", distinctId: subscriber.id, anonymousId: visitorId, properties: { internal } });
@@ -104,7 +106,7 @@ export async function POST(request: Request) {
   return NextResponse.json({ ok: true, needsVerification: true });
 }
 
-function isSubscribeBody(value: unknown): value is { email: string; tickers: string[]; name?: string; visitorId?: string } {
+function isSubscribeBody(value: unknown): value is { email: string; tickers: string[]; name?: string; visitorId?: string; source?: string } {
   if (!value || typeof value !== "object") return false;
   const body = value as Record<string, unknown>;
   return (
@@ -112,7 +114,8 @@ function isSubscribeBody(value: unknown): value is { email: string; tickers: str
     Array.isArray(body.tickers) &&
     body.tickers.every((ticker) => typeof ticker === "string") &&
     (body.name === undefined || typeof body.name === "string") &&
-    (body.visitorId === undefined || typeof body.visitorId === "string")
+    (body.visitorId === undefined || typeof body.visitorId === "string") &&
+    (body.source === undefined || typeof body.source === "string")
   );
 }
 

@@ -16,7 +16,10 @@ export type PostHogEventName =
   | "signup_started"
   | "share_clicked"
   | "brief_question_submitted"
-  | "pro_paywall_shown";
+  | "pro_paywall_shown"
+  | "instant_explainer_requested"
+  | "instant_explainer_shown"
+  | "instant_signup_submitted";
 
 type PostHogEventProperties = Record<string, string | number | boolean | null | undefined>;
 

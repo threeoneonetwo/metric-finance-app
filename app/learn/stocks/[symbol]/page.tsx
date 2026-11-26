@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getLearnStock } from "@/db/learn";
 import { latestHeadlines } from "@/lib/learn/news";
 import { StockLogo } from "@/components/stock-logo";
+import { InstantExplainer } from "@/components/instant-explainer";
 import { AsideCta, faqJsonLd, LearnShell, SignupCta, SITE } from "@/components/learn-shell";
 import { TERMS } from "@/lib/learn/terms";
 import { driversFor, findStock, indexableStocks, isIndexable, money, peersOf, sizeInfoFor, sizeLabel, summaryFor, termsFor } from "@/lib/learn/stocks";
@@ -87,6 +88,9 @@ export default async function StockPage({ params }: Props) {
 
       <div className={styles.layout}>
         <div>
+      {/* Today's move, explained on request (nothing runs until a visitor clicks, so crawlers don't use it up). */}
+      <InstantExplainer from="learn" symbol={stock.symbol} name={name} />
+
       <dl className={styles.facts}>
         <div><dt>Ticker</dt><dd>{stock.symbol}</dd></div>
         <div><dt>Exchange</dt><dd>{exchange}</dd></div>

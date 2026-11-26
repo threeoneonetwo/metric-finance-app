@@ -8,6 +8,8 @@ import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
+import { InstantExplainer } from "./instant-explainer";
+import instantStyles from "./instant-explainer.module.css";
 import { isIuEmail, limitsFor, stocksInWords } from "@/lib/plan";
 import { FAQS } from "@/lib/faqs";
 import { getPostHogVisitorId, trackPostHogEvent } from "@/lib/posthog";
@@ -246,7 +248,7 @@ export function NewsletterLanding() {
                   </button>
                 </div>
                 <p className={error ? styles.error : styles.note}>{error || (iuReader ? "Nice, an IU email. You get up to 15 stocks and 15 follow up questions a day, so add more stocks above if you like." : "We email you when your brief is posted at 5 PM ET. Unsubscribe at any time.")}</p>
-                <Link href="/brief" className={styles.sampleLink}>Read a sample brief <ArrowRight size={15} /></Link>
+                <a href="#try" className={styles.sampleLink}>Not sure yet? See how we&apos;d explain your stock today <ArrowRight size={15} /></a>
               </form>
             )}
           </div>
@@ -257,6 +259,16 @@ export function NewsletterLanding() {
             <div data-tilt><strong>Daily analysis</strong><span>Metric engine</span></div>
           </div>
         </div>
+      </section>
+
+      {/* Try it first: explain any stock right now, no email needed, then offer to send it daily. */}
+      <section id="try" className={instantStyles.trySection}>
+        <div className={instantStyles.tryHead}>
+          <span>Try it first</span>
+          <h2>See how we&apos;d explain your stock today</h2>
+          <p>Pick any US stock and read a quick brief on what it did and why, in plain words. No email needed.</p>
+        </div>
+        <InstantExplainer from="home" />
       </section>
 
       <SectionWave />
