@@ -63,7 +63,8 @@ export async function sendDigestToSubscriber(input: {
 
   const notification = renderBriefNotification({
     headline: brief.subject,
-    tickers,
+    summary: brief.todayInOneSentence,
+    stocks: brief.glance.map((row) => ({ ticker: row.ticker, changePercent: input.facts.tickers.get(row.ticker)?.changePercent ?? null, signal: row.signal })),
     briefUrl: briefUrl(input.baseUrl, recorded.id, input.subscriber.unsubscribeToken),
     dashboardUrl: manageUrl(input.baseUrl, input.subscriber.unsubscribeToken),
     unsubscribeUrl,

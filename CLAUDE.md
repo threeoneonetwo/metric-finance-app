@@ -1,6 +1,6 @@
 # Metric Finance
 
-Free daily brief, published every trading day at 5 PM ET (after the market closes), that explains a subscriber's chosen US stocks (up to 5) "like you're 5". It is a brief, never call it a newsletter. The brief is posted on the website (`/brief/[id]`, signed link, also listed on the `/manage` dashboard). The daily email is only a notification that links to it. Live at https://metricfinance.app. Owner: Vansh (vanshpandita11@gmail.com).
+Free daily brief, published every trading day at 5 PM ET (after the market closes), that explains a subscriber's chosen US stocks (up to 5) "like you're 5". It is a brief, never call it a newsletter. The brief is posted on the website (`/brief/[id]`, signed link, also listed on the `/manage` dashboard). The daily email is a short preview that links to it: the headline, each stock's move with its one line signal, the one sentence summary and a button to the full brief (`lib/newsletter/render-notification.ts`, light design with dark mode styles, tested for Gmail, Outlook and Apple Mail). The why, the company numbers, the rivals and the question box stay on the site. Live at https://metricfinance.app. Owner: Vansh (vanshpandita11@gmail.com).
 
 ## Stack
 Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle ORM on Neon Postgres, Amazon SES for email, Anthropic API for the daily explanations, PostHog + Google Analytics for tracking. Hosted on Vercel.
