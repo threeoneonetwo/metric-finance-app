@@ -724,3 +724,6 @@ body > main.report-page::before {
   background: rgba(39, 39, 42, 0.96);
 }
 
+
+/* Headlines use the display typeface loaded in app/layout.tsx; everything else keeps the plain system font. */
+h1, h2 { font-family: var(--font-display), Arial, Helvetica, sans-serif; }

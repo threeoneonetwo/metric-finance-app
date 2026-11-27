@@ -24,7 +24,7 @@ export function LearnShell({ crumbs, jsonLd, progress = false, children }: { cru
     <main>
       <div className={styles.page}>
         {progress && <ReadingProgress />}
-        <SiteHeader />
+        <SiteHeader signIn />
         <SpotlightLayer>
           {crumbs.length > 1 && <p className={styles.crumbs}>
             {crumbs.map((crumb, index) => (

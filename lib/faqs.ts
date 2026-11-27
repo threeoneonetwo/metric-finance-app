@@ -1,8 +1,8 @@
 // Shared so the page and its structured data always say the same thing.
 export const FAQS = [
   {
-    question: "What does Metric's analysis cover?",
-    answer: "Each briefing covers price action, fundamentals, peer comparison, and recent news in simple words rather than analyst shorthand.",
+    question: "What does the brief cover?",
+    answer: "Each brief covers what your stocks did and why, each company's latest sales, profit, cash and debt, how it compares with its rivals, and the news that matters, all in simple words.",
   },
   {
     question: "Does Metric give buy or sell recommendations?",

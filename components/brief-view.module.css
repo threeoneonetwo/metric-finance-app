@@ -1,6 +1,6 @@
 .page { min-height: 100vh; background: #05070d; color: #fff; font-family: Arial, sans-serif; -webkit-font-smoothing: antialiased; }
 .main { max-width: 680px; margin: 0 auto; padding: 56px 20px 88px; }
-.eyebrow { display: inline-flex; align-items: center; gap: 10px; color: #8fa8fa; font-family: ui-monospace, Menlo, monospace; font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; color: #8fa8fa; font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
 .eyebrow i { display: block; width: 8px; height: 8px; border-radius: 2px; background: #7aa2ff; }
 .title { margin: 16px 0 14px; color: #fff; font-size: clamp(28px, 7vw, 44px); font-weight: 800; line-height: 1.05; letter-spacing: -.045em; }
 .tickers { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 28px; padding: 0; list-style: none; }
@@ -10,7 +10,7 @@
 .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 .actions a { display: inline-flex; align-items: center; justify-content: center; height: 50px; padding: 0 24px; border: 1px solid #2b3a66; border-radius: 14px; color: #b3c9ff; font-size: 12.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms ease, background-color 150ms ease; }
 .actions a:hover { transform: translateY(-2px); border-color: #8fa8fa; background: rgba(143, 168, 250, .08); color: #fff; }
-.note { margin: 22px 0 0; color: #56668a; font-size: 12.5px; line-height: 1.6; }
+.note { margin: 22px 0 0; color: #8b98b8; font-size: 12.5px; line-height: 1.6; }
 .share { margin-top: 28px; padding: 22px; border: 1px solid #1d2740; border-radius: 20px; background: linear-gradient(180deg, rgba(122, 162, 255, .07), rgba(122, 162, 255, .02)); }
 .share h2 { margin: 0 0 6px; color: #fff; font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
 .share p { margin: 0 0 16px; color: #8d9bbd; font-size: 14px; line-height: 1.55; }
@@ -53,11 +53,11 @@
 .askForm { display: flex; gap: 10px; align-items: flex-end; padding: 8px 8px 8px 16px; border: 1px solid #2b3a66; border-radius: 18px; background: #0b1020; transition: border-color 150ms ease, box-shadow 150ms ease; }
 .askForm:focus-within { border-color: #8fa8fa; box-shadow: 0 0 0 4px rgba(143, 168, 250, .14); }
 .askForm textarea { flex: 1; min-height: 44px; max-height: 140px; padding: 11px 0; border: 0; background: transparent; color: #fff; font: inherit; font-size: 16px; line-height: 1.4; resize: none; outline: none; field-sizing: content; }
-.askForm textarea::placeholder { color: #6f7fa6; }
+.askForm textarea::placeholder { color: #93a1c2; }
 .askForm button { display: grid; flex: none; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 14px; background: linear-gradient(135deg, #8fb0ff, #6f8cff); color: #05070d; cursor: pointer; transition: transform 150ms ease, opacity 150ms ease; }
 .askForm button:hover:not(:disabled) { transform: translateY(-2px); }
 .askForm button:disabled { opacity: .35; cursor: default; }
-.askMeta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; margin: 12px 2px 0; color: #56668a; font-size: 12.5px; line-height: 1.5; }
+.askMeta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; margin: 12px 2px 0; color: #8b98b8; font-size: 12.5px; line-height: 1.5; }
 .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @keyframes askIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes askDot { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-4px); } }

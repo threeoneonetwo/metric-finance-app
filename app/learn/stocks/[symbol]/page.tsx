@@ -1,3 +1,4 @@
+// Facts come from local data files; the price chart reads Nasdaq's free daily closes (cached for a few hours).
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -7,6 +8,8 @@ import { whyHref } from "@/lib/why";
 import { latestHeadlines } from "@/lib/learn/news";
 import { StockLogo } from "@/components/stock-logo";
 import { InstantExplainer } from "@/components/instant-explainer";
+import { PriceChart } from "@/components/price-chart";
+import { getPriceHistory } from "@/lib/prices";
 import { AsideCta, faqJsonLd, LearnShell, SignupCta, SITE } from "@/components/learn-shell";
 import { TERMS } from "@/lib/learn/terms";
 import { driversFor, findStock, indexableStocks, isIndexable, money, peersOf, sizeInfoFor, sizeLabel, summaryFor, termsFor } from "@/lib/learn/stocks";
@@ -27,7 +30,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!entry) return {};
   // Titles and descriptions answer the question people actually search ("is X a large cap stock"), built from the stock's own data.
   const size = sizeInfoFor(entry);
-  const title = size
+  // Huge companies get the question people really ask about them; for smaller ones, the size question is the search.
+  const famous = size?.label === "mega cap" || size?.label === "large cap";
+  const title = famous
+    ? `${entry.name} (${entry.stock.symbol}) Stock Explained: What It Does and Why It Moves | Metric Finance`
+    : size
     ? `${entry.name} (${entry.stock.symbol}) Stock: Is It a ${size.titleLabel}? | Metric Finance`
     : `${entry.name} (${entry.stock.symbol}) Stock Explained Like You're 5 | Metric Finance`;
   const base = `What ${entry.name} does, how it makes money and what moves ${entry.stock.symbol} stock, explained in simple words. Follow it in a free daily brief.`;
@@ -48,10 +55,11 @@ export default async function StockPage({ params }: Props) {
   const entry = findStock((await params).symbol);
   if (!entry) notFound();
   const { stock, name, profile } = entry;
-  const [stored, headlines, whyPages] = await Promise.all([
+  const [stored, headlines, whyPages, history] = await Promise.all([
     getLearnStock(stock.symbol),
     latestHeadlines(`"${name}" OR ${stock.symbol} stock`, 5),
     listRecentWhyPages(2000),
+    getPriceHistory(stock.symbol, 30),
   ]);
   // The newest "why did it move" page for this stock, if there is one (one shared cached list, so no extra database work per page).
   const latestWhy = whyPages.find((page) => page.symbol === stock.symbol) ?? null;
@@ -94,6 +102,11 @@ export default async function StockPage({ params }: Props) {
       <div className={styles.layout}>
         <div>
       {/* Today's move, explained on request (nothing runs until a visitor clicks, so crawlers don't use it up). */}
+      <PriceChart
+        symbol={stock.symbol}
+        history={history}
+        marks={new Map(whyPages.filter((page) => page.symbol === stock.symbol).map((page) => [page.sessionDate, whyHref(page)]))}
+      />
       <InstantExplainer from="learn" symbol={stock.symbol} name={name} />
       {latestWhy && (
         <p className={styles.related} style={{ margin: "-8px 0 22px" }}>

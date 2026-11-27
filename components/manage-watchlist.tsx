@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Check } from "lucide-react";
-import { BriefingHistory, type BriefingSummary } from "./briefing-history";
+import { BriefingHistory, PastBriefs, type BriefingSummary } from "./briefing-history";
+import { WatchlistMoves, type WatchlistMove } from "./watchlist-moves";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import styles from "./newsletter-landing.module.css";
@@ -20,9 +21,11 @@ type ManageWatchlistProps = {
   maxPicks: number;
   briefings: BriefingSummary[];
   justConfirmed?: boolean;
+  /** How each saved stock did at the last close. */
+  moves?: WatchlistMove[];
 };
 
-export function ManageWatchlist({ token, exp, sig, email, initialPicks, maxPicks, briefings, justConfirmed }: ManageWatchlistProps) {
+export function ManageWatchlist({ token, exp, sig, email, initialPicks, maxPicks, briefings, justConfirmed, moves = [] }: ManageWatchlistProps) {
   const [picks, setPicks] = useState<Stock[]>(initialPicks);
   // Baseline of what's actually stored, so "Saved" survives until the next edit.
   const [savedPicks, setSavedPicks] = useState<Stock[]>(initialPicks);
@@ -35,7 +38,7 @@ export function ManageWatchlist({ token, exp, sig, email, initialPicks, maxPicks
 
   async function save() {
     if (picks.length === 0) {
-      setError("Keep at least one stock, or unsubscribe if you'd rather stop the briefing.");
+      setError("Keep at least one stock, or unsubscribe if you'd rather stop the brief.");
       return;
     }
 
@@ -68,7 +71,8 @@ export function ManageWatchlist({ token, exp, sig, email, initialPicks, maxPicks
       <SiteHeader />
 
       <section className={styles.manageSection}>
-        <div className={styles.manageInner}>
+        <div className={`${styles.manageInner} ${styles.dashboard}`}>
+          <div className={styles.dashboardMain}>
           {justConfirmed && (
             <div className={styles.welcomeBanner} role="status">
               <span className={styles.welcomeCheck}><Check size={16} /></span>
@@ -87,7 +91,11 @@ export function ManageWatchlist({ token, exp, sig, email, initialPicks, maxPicks
             briefings={briefings}
             watchlistTickers={initialPicks.map((stock) => stock.symbol)}
             linkQuery={`token=${token}&exp=${exp}&sig=${sig}`}
+            showPast={false}
           />
+
+          {/* Each saved stock's move at the last close, with a one month line. */}
+          <WatchlistMoves moves={moves} />
 
           <h2 className={styles.briefingHeading}>Manage your watchlist</h2>
           <div className={styles.signup}>
@@ -114,21 +122,28 @@ export function ManageWatchlist({ token, exp, sig, email, initialPicks, maxPicks
               <p className={styles.error}>{error}</p>
             ) : status === "saved" && !isDirty ? (
               <p className={styles.manageSaved} aria-live="polite">
-                <Check size={15} /> Your next briefing will use this watchlist.
+                <Check size={15} /> Your next brief will use this watchlist.
               </p>
             ) : (
-              <p className={styles.note}>Changes take effect from your next briefing.</p>
+              <p className={styles.note}>Changes take effect from your next brief.</p>
             )}
           </div>
+
+          </div>
+
+          {/* Side column: past briefs by week, the roadmap card and account links. */}
+          <aside className={styles.dashboardSide}>
+          <PastBriefs briefings={briefings} linkQuery={`token=${token}&exp=${exp}&sig=${sig}`} />
 
           <RoadmapLink creds={{ token, exp, sig }} from="dashboard" />
 
           <a className={styles.manageUnsubscribe} href={`/api/unsubscribe?token=${token}`}>
-            Unsubscribe from the briefing
+            Unsubscribe from the brief
           </a>
           <a className={styles.manageUnsubscribe} href="/api/session/clear" style={{ marginLeft: 20 }}>
             Sign out of this device
           </a>
+          </aside>
         </div>
       </section>
       <SiteFooter />

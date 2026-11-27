@@ -1,14 +1,16 @@
 "use client";
 
+// The homepage. From top to bottom: a hero with the stock search and the day's biggest moves, the signup form, what is in the brief, our promises, FAQ and a final call to action.
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import styles from "./newsletter-landing.module.css";
 import { StockPicker } from "./stock-picker";
 import { InstantExplainer } from "./instant-explainer";
+import { MoversStrip, type Mover } from "./movers-strip";
 import instantStyles from "./instant-explainer.module.css";
 import { isIuEmail, limitsFor, stocksInWords } from "@/lib/plan";
 import { FAQS } from "@/lib/faqs";
@@ -23,28 +25,13 @@ const FEATURES = [
   ["05", "Ask follow up questions", "Still curious? Ask anything about your stocks right inside the brief and get a clear answer from the same data."],
 ] as const;
 
-const TESTIMONIALS = [
-  {
-    quote: "I had been holding Netflix for months without really knowing why. One Metric briefing helped me understand what I actually owned.",
-    author: "Dana W.",
-    role: "Product manager, Austin",
-  },
-  {
-    quote: "I always found stock research intimidating. Metric broke it down so simply that I read the whole briefing in one sitting.",
-    author: "Marcus B.",
-    role: "Growth marketer, Chicago",
-  },
-  {
-    quote: "I checked my JPMorgan position before adding more. The explanation was clear enough that I could make my own decision with confidence.",
-    author: "Priya S.",
-    role: "UX designer, Seattle",
-  },
-  {
-    quote: "I used to spend an hour reading five different sites. Now I understand my whole watchlist from one briefing.",
-    author: "Ethan C.",
-    role: "Software engineer, Denver",
-  },
-];
+// Four promises shown where the testimonials used to be. Every one of them is true of how the brief is made.
+const PROMISES = [
+  ["Never tells you what to buy", "We explain what happened and why. We never say buy, sell or hold, and questions asking for tips get a polite no."],
+  ["Every number has a source", "Prices come from Nasdaq, company numbers from SEC filings, news from the day's headlines. When the reason for a move isn't clear, the brief says so."],
+  ["Free, with no ads", "No paywall, no sponsored picks and no credit card. Unsubscribe with one click."],
+  ["Real people behind it", "Built by Yashna and Vansh. Reply to any email and it reaches us, not a support queue."],
+] as const;
 
 
 function useReveal<T extends HTMLElement>() {
@@ -63,25 +50,6 @@ function useReveal<T extends HTMLElement>() {
   }, []);
 
   return [ref, inView] as const;
-}
-
-// Cards lean gently toward the mouse. Touch and pen input is ignored.
-function tiltMove(event: React.PointerEvent<HTMLElement>) {
-  if (event.pointerType !== "mouse") return;
-  const card = (event.target as HTMLElement).closest<HTMLElement>("[data-tilt]");
-  if (!card) return;
-  const box = card.getBoundingClientRect();
-  const x = (event.clientX - box.left) / box.width - 0.5;
-  const y = (event.clientY - box.top) / box.height - 0.5;
-  card.style.setProperty("--ry", `${(x * 6).toFixed(2)}deg`);
-  card.style.setProperty("--rx", `${(-y * 6).toFixed(2)}deg`);
-}
-
-function tiltReset(event: React.PointerEvent<HTMLElement>) {
-  const card = (event.target as HTMLElement).closest<HTMLElement>("[data-tilt]");
-  if (card && event.relatedTarget instanceof Node && card.contains(event.relatedTarget)) return;
-  card?.style.removeProperty("--rx");
-  card?.style.removeProperty("--ry");
 }
 
 // Small chart style thumbnails that hint at what each part of the brief shows.
@@ -129,17 +97,16 @@ function SectionWave() {
   return <hr className={styles.sectionWave} aria-hidden="true" />;
 }
 
-export function NewsletterLanding() {
+// Also which FAQ answer is open.
+export function NewsletterLanding({ movers = [] }: { movers?: Mover[] }) {
   const [picks, setPicks] = useState<Stock[]>([]);
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [slide, setSlide] = useState(0);
-  const [quotePaused, setQuotePaused] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
   const [featuresRef, featuresInView] = useReveal<HTMLElement>();
-  const [testimonialsRef, testimonialsInView] = useReveal<HTMLElement>();
+  const [promisesRef, promisesInView] = useReveal<HTMLElement>();
   const [faqRef, faqInView] = useReveal<HTMLElement>();
   const [ctaRef, ctaInView] = useReveal<HTMLElement>();
 
@@ -223,19 +190,17 @@ export function NewsletterLanding() {
 
         <div className={styles.heroInner}>
           <h1 className={styles.fadeUp} style={{ animationDelay: "0ms" }}>Stocks<br className={styles.mobileBreak} /> explained<br />like you&apos;re 5</h1>
-          <p className={`${styles.heroCopy} ${styles.fadeUp}`} style={{ animationDelay: "80ms" }}>Search any US stock and see what happened at the last close, and why, in words anyone can follow. Free, no signup.</p>
+          <p className={styles.heroCopy}>Search any US stock and see what happened at the last close, and why, in words anyone can follow. Free, no signup.</p>
 
           {/* The search: any stock, explained from its last close. "Add to my daily brief" drops it into the signup picker below. */}
-          <div className={`${instantStyles.heroSearch} ${styles.fadeUp}`} style={{ animationDelay: "160ms" }}>
+          <div className={instantStyles.heroSearch}>
             <InstantExplainer from="home" onFollow={follow} />
           </div>
 
-          <div className={`${styles.stats} ${styles.fadeUp}`} style={{ animationDelay: "240ms" }} onPointerMove={tiltMove} onPointerOut={tiltReset}>
-            <div data-tilt><strong>Top stocks</strong><span>Nasdaq &amp; NYSE</span></div>
-            <div data-tilt><strong>Market context</strong><span>Without the noise</span></div>
-            <div data-tilt><strong>Daily analysis</strong><span>Metric engine</span></div>
-          </div>
         </div>
+
+        {/* Popular stocks with their move at the last close, so it's obvious the site is fresh every trading day. */}
+        <MoversStrip movers={movers} />
       </section>
 
       {/* Daily brief signup: pick up to five stocks (or more for IU emails) and get a brief on them every trading day. */}
@@ -315,43 +280,20 @@ export function NewsletterLanding() {
       </section>
 
       <SectionWave />
-      <section ref={testimonialsRef} className={`${styles.testimonialsSection} ${testimonialsInView ? styles.inView : ""}`}>
+      {/* Four plain promises about how the brief is made. */}
+      <section ref={promisesRef} className={`${styles.testimonialsSection} ${promisesInView ? styles.inView : ""}`}>
         <div className={styles.sectionInner}>
           <div className={styles.quoteHead}>
-            <span className={styles.inboxEyebrow}><i /> From real users</span>
-            <h2>Decide with confidence.</h2>
+            <span className={styles.inboxEyebrow}><i /> Our promises</span>
+            <h2>Why you can trust it</h2>
           </div>
-          <div className={styles.quoteStage} onMouseEnter={() => setQuotePaused(true)} onMouseLeave={() => setQuotePaused(false)} onFocus={() => setQuotePaused(true)} onBlur={() => setQuotePaused(false)}>
-            <span className={styles.quoteMark} aria-hidden="true">“</span>
-            <div className={styles.quoteStack}>
-              {TESTIMONIALS.map((item, index) => (
-                <figure key={item.author} className={`${styles.quoteItem} ${index === slide ? styles.quoteActive : ""}`} aria-hidden={index !== slide}>
-                  <blockquote>{item.quote}</blockquote>
-                  <figcaption>
-                    <span className={styles.quoteAvatar}>{item.author.charAt(0)}</span>
-                    <span><strong>{item.author}</strong><small>{item.role}</small></span>
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
-          </div>
-          <div className={styles.quoteNav}>
-            <button type="button" onClick={() => setSlide((slide - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)} aria-label="Previous testimonial"><ChevronLeft size={18} /></button>
-            <div className={styles.quoteBars}>
-              {TESTIMONIALS.map((item, index) => (
-                <button
-                  type="button"
-                  key={item.author}
-                  className={`${styles.quoteBar} ${index === slide ? styles.quoteBarActive : ""} ${quotePaused ? styles.quoteBarPaused : ""}`}
-                  onClick={() => setSlide(index)}
-                  aria-label={`Show testimonial ${index + 1}`}
-                  aria-current={index === slide}
-                >
-                  <i onAnimationEnd={() => index === slide && setSlide((slide + 1) % TESTIMONIALS.length)} />
-                </button>
-              ))}
-            </div>
-            <button type="button" onClick={() => setSlide((slide + 1) % TESTIMONIALS.length)} aria-label="Next testimonial"><ChevronRight size={18} /></button>
+          <div className={styles.promises}>
+            {PROMISES.map(([title, copy]) => (
+              <article key={title}>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -386,8 +328,8 @@ export function NewsletterLanding() {
         <div className={styles.ctaPanel}>
           <div className={styles.ctaGlow} aria-hidden="true" />
           <span className={styles.inboxEyebrow}><i /> Ready when you are</span>
-          <h2>Understand stocks like a pro</h2>
-          <p>Pick the stocks you care about and get the context you need in simple words every day.</p>
+          <h2>Finally get what&apos;s going on with your stocks</h2>
+          <p>Pick the stocks you care about. Every trading day at 5 PM ET you get the what and the why, in words anyone can follow.</p>
           <div className={styles.ctaActions}>
             <a href="#signup" className={styles.ctaPrimary}>Build my watchlist <ArrowRight size={16} /></a>
             <Link href="/brief" className={styles.ctaSecondary}>Read a sample brief</Link>

@@ -1,7 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { GoogleAnalytics } from "@/components/google-analytics";
 import { VercelAnalytics } from "@/components/vercel-analytics";
+import { Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
+
+// The headline typeface: friendly and a little playful, to match "like you're 5". Body text stays in the plain system font.
+const display = Bricolage_Grotesque({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-display", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://metricfinance.app"),
@@ -51,7 +55,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={display.variable}>
       <body className="antialiased">
         {children}
         <GoogleAnalytics />

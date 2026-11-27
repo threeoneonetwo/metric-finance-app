@@ -60,6 +60,12 @@ Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle O
 - After the 5 PM send, `refreshWhy()` (`lib/instant/refresh-why.ts`) writes explainers for the day's biggest movers plus popular stocks and pings IndexNow. Manual run: `GET /api/cron/why-refresh` with `Authorization: Bearer $CRON_SECRET`.
 - Signups record where they came from (`source` on `signup_submitted`: `home_form`, `instant_home`, `instant_learn`).
 
+## Charts, movers and look
+- Price charts (`components/price-chart.tsx`, server drawn SVG) sit on every Learn stock page and /why page; dots link to that stock's /why pages. Prices come from Nasdaq's free daily history in `lib/prices.ts` (cached 3 hours, no FMP calls).
+- The homepage shows "Biggest moves at the last close" for the 16 most popular stocks (`components/movers-strip.tsx`, loaded in `app/page.tsx`, which revalidates every 30 minutes). The dashboard lists the reader's own stocks the same way and groups past briefs by week.
+- Headlines (h1, h2) use Bricolage Grotesque, loaded in `app/layout.tsx`; body text stays Arial. Keep small text at 12px or more and muted text no darker than about #8b98b8 on the dark background.
+- Comparisons live at the alphabetical order address; `proxy.ts` 301 redirects the reverse order.
+
 ## SEO
 Homepage title and description target "stocks explained like you're 5" (see `app/page.tsx`). Canonical host is `metricfinance.app` (www redirects to it). Sitemap: `app/sitemap.ts`. AI-crawler summary: `public/llms.txt`. Search Console and Bing Webmaster Tools are used for indexing.
 

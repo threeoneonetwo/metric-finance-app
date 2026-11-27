@@ -28,10 +28,10 @@ export function SiteHeader({ fixed = false, faqHref = "/#faq", signIn = false }:
       </Link>
       <div className="flex items-center gap-2 lg:gap-3">
       <nav className="hidden min-w-0 items-center gap-6 lg:flex" style={{ fontFamily: "Arial, sans-serif" }} aria-label="Main navigation">
-        <Link href="/learn" className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white">
+        <Link href="/learn" className="px-1 py-2 text-base font-medium text-[#a9b4cc] transition-colors hover:text-white">
           Learn
         </Link>
-        <Link href={faqHref} className="px-1 py-2 text-base font-medium text-[#8993ab] transition-colors hover:text-white">
+        <Link href={faqHref} className="px-1 py-2 text-base font-medium text-[#a9b4cc] transition-colors hover:text-white">
           FAQ
         </Link>
         {signIn && (

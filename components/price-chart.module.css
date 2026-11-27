@@ -1,0 +1,24 @@
+/* The one month price chart and the tiny sparkline. */
+.chart { margin: 18px 0 22px; padding: 20px 22px 16px; border: 1px solid #1d2740; border-radius: 22px; background: linear-gradient(180deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .01)), #090e1a; color: #fff; }
+.head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+.label { display: block; color: #9aa8c8; font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.price { display: block; margin-top: 6px; font-size: 28px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.changeBox { text-align: right; }
+.changeBox > span { display: block; }
+.up, .down { font-family: ui-monospace, Menlo, monospace; font-size: 17px; font-weight: 800; }
+.up { color: #3fd68f; }
+.down { color: #ff7a7a; }
+.sub { margin-top: 4px; color: #9aa8c8; font-size: 13px; }
+.svg { display: block; width: 100%; height: auto; overflow: visible; }
+.dot { fill: #0a1022; stroke: #b3c9ff; stroke-width: 2.5; cursor: pointer; transition: r 150ms ease; }
+.dot:hover { r: 7; }
+.focusDot { fill: #b3c9ff; stroke: #0a1022; stroke-width: 3; }
+.axis { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; color: #9aa8c8; font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+.note { margin: 10px 0 0; color: #9aa8c8; font-size: 13px; }
+.spark { display: block; width: 100%; height: 30px; }
+
+@media (max-width: 640px) {
+  .chart { padding: 16px 16px 14px; }
+  .price { font-size: 24px; }
+  .axis span:nth-child(2) { display: none; }
+}

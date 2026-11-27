@@ -29,7 +29,7 @@
 
 .stepBody { padding: 6px 0 clamp(34px, 5vw, 46px); transition: opacity .35s ease; }
 .stepDim { opacity: .45; }
-.stepNum { margin-bottom: 8px; color: #8798b4; font-size: 11px; font-weight: 700; letter-spacing: .16em; }
+.stepNum { margin-bottom: 8px; color: #8798b4; font-size: 12px; font-weight: 700; letter-spacing: .16em; }
 .stepTitle { margin: 0 0 8px; font-size: clamp(22px, 2.8vw, 28px); font-weight: 700; line-height: 1.15; letter-spacing: -.03em; }
 .stepText { margin: 0; color: #b9c6dc; font-size: 16px; line-height: 1.6; }
 
@@ -46,7 +46,7 @@
 .cardFrom span { display: block; overflow: hidden; color: #c3cfe4; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
 .cardTime { color: #8798b4; font-size: 12px; white-space: nowrap; }
 .cardBody { padding: 16px 18px; }
-.cardLabel { margin-bottom: 12px; color: #8798b4; font-size: 11px; font-weight: 700; letter-spacing: .14em; }
+.cardLabel { margin-bottom: 12px; color: #8798b4; font-size: 12px; font-weight: 700; letter-spacing: .14em; }
 .cardList { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
 .cardList li { display: flex; gap: 12px; color: #f2f5fa; font-size: 15px; line-height: 1.5; }
 .cardList li::before { content: ""; flex: none; width: 6px; height: 6px; margin-top: 8px; border-radius: 2px; background: #8fa8fa; }
@@ -66,7 +66,7 @@
 .next:hover { color: #fff; transform: translateX(3px); }
 
 .ready { display: flex; flex-direction: column; gap: 20px; padding: clamp(24px, 4vw, 36px); border: 1px solid #2b3a66; border-radius: 20px; background: #0b1120; }
-.readyLabel { margin-bottom: 8px; color: #8fa8fa; font-size: 11px; font-weight: 700; letter-spacing: .16em; }
+.readyLabel { margin-bottom: 8px; color: #8fa8fa; font-size: 12px; font-weight: 700; letter-spacing: .16em; }
 .readyTitle { font-size: clamp(22px, 3vw, 28px); font-weight: 700; letter-spacing: -.03em; }
 .openRow { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 10px; }
 .openPrimary, .openGhost { padding: 16px 20px; border-radius: 14px; font-size: 16px; font-weight: 700; text-align: center; text-decoration: none; transition: transform .15s cubic-bezier(0.16, 1, 0.3, 1), background-color .15s ease, border-color .15s ease; }

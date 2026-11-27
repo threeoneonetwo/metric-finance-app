@@ -1,3 +1,6 @@
+// This file runs before certain pages load ("/" for signed in readers, "/manage", "/brief/:id" and comparisons, see the matcher at the bottom).
+// It sends returning members from the homepage to their dashboard, keeps readers signed in when they open a valid
+// emailed link, and sends comparisons typed in the other order to their real address.
 import { NextResponse, type NextRequest } from "next/server";
 import { isValidManageLink } from "@/lib/manage-link";
 import { SESSION_COOKIE, createSessionValue, readSession, sessionCookie } from "@/lib/session";
@@ -33,6 +36,14 @@ export function proxy(request: NextRequest) {
     return withOwnerFlag(request, response);
   }
 
+  // Comparisons live at one address with the two stocks in alphabetical order (aapl-vs-nvda). Someone who types or
+  // searches the other order (nvda-vs-aapl) is sent there instead of seeing a "not found" page.
+  if (request.nextUrl.pathname.startsWith("/learn/compare/")) {
+    const [first, second] = request.nextUrl.pathname.slice("/learn/compare/".length).split("-vs-");
+    if (first && second && second.localeCompare(first) < 0) return NextResponse.redirect(new URL(`/learn/compare/${second}-vs-${first}`, request.url), 301);
+    return NextResponse.next();
+  }
+
   // Opening a valid emailed link (or any dashboard visit) keeps this device signed in.
   const response = NextResponse.next();
   const token = hasValidLink(request) ?? session?.token;
@@ -49,5 +60,6 @@ export const config = {
     { source: "/", has: [{ type: "query", key: "owner" }] },
     "/manage",
     "/brief/:id",
+    "/learn/compare/:pair",
   ],
 };

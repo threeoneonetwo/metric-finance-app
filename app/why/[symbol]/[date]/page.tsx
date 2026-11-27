@@ -7,6 +7,8 @@ import { notFound } from "next/navigation";
 import { getWhyPage, listRecentWhyPages, listWhyPagesForSymbol } from "@/db/why";
 import { LearnShell, SignupCta, SITE } from "@/components/learn-shell";
 import { WhyCard, whyHref } from "@/components/why-card";
+import { PriceChart } from "@/components/price-chart";
+import { getPriceHistory } from "@/lib/prices";
 import { findStock } from "@/lib/learn/stocks";
 import { direction, isSessionDate, longDate, percentText } from "@/lib/why";
 import styles from "@/app/learn/learn.module.css";
@@ -52,7 +54,10 @@ export default async function WhyPage({ params }: Props) {
   if (!found) notFound();
   const { entry, page } = found;
   const { explainer } = page;
-  const [history, recent] = await Promise.all([listWhyPagesForSymbol(entry.stock.symbol), listRecentWhyPages(300)]);
+  const [history, recent, prices] = await Promise.all([listWhyPagesForSymbol(entry.stock.symbol), listRecentWhyPages(300), getPriceHistory(entry.stock.symbol, 90)]);
+  // The month leading up to this day, plus the few days after it when they exist, so the move sits in context.
+  const dayIndex = prices.findIndex((day) => day.date === page.sessionDate);
+  const window = dayIndex < 0 ? [] : prices.slice(Math.max(0, dayIndex - 24), dayIndex + 6);
   const earlier = history.filter((item) => item.sessionDate !== page.sessionDate).slice(0, 8);
   const sameDay = recent.filter((item) => item.sessionDate === page.sessionDate && item.symbol !== page.symbol).slice(0, 8);
   const title = question(entry.name, entry.stock.symbol, explainer.changePercent, page.sessionDate);
@@ -77,6 +82,13 @@ export default async function WhyPage({ params }: Props) {
       <h1 className={styles.h1}>{title}</h1>
 
       <WhyCard explainer={explainer} title="h2" />
+      <PriceChart
+        symbol={entry.stock.symbol}
+        history={window}
+        focusDate={page.sessionDate}
+        title={`${entry.stock.symbol} around ${explainer.sessionLabel}`}
+        marks={new Map(history.map((item) => [item.sessionDate, whyHref(item)]))}
+      />
 
       <SignupCta
         title={`Get ${entry.stock.symbol} explained like this every trading day`}

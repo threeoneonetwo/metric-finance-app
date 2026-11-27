@@ -13,7 +13,7 @@ export function LegalPage({ title, updated, children }: LegalPageProps) {
   return (
     <main>
       <div className={styles.page}>
-        <SiteHeader />
+        <SiteHeader signIn />
         <section className={styles.manageSection}>
           <article className={`${styles.manageInner} ${styles.legal}`}>
             <h1 className={styles.manageHeading}>{title}</h1>

@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <main className="report-page relative flex min-h-screen flex-col">
       <div className="fixed inset-0 -z-10" style={{ backgroundColor: "#050810" }} />
-      <SiteHeader />
+      <SiteHeader signIn />
       <div className="mx-auto flex w-full max-w-[42rem] flex-1 flex-col justify-center px-4 py-14 text-center sm:px-6 sm:py-16 lg:px-8">
         <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-[#b8c4ff]">404</p>
         <h1 className="text-3xl font-bold tracking-tight text-white">Page not found</h1>

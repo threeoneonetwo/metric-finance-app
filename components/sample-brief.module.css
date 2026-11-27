@@ -2,14 +2,14 @@
 .mailFrame:hover { transform: translateY(-6px); box-shadow: 0 50px 100px rgba(0,0,0,.65), 0 0 0 1px rgba(111,224,221,.08), 0 0 90px rgba(111,224,221,.1); }
 .mailBar { display: flex; align-items: center; gap: 7px; padding: 12px 16px; border-bottom: 1px solid #161f35; background: #0c111e; }
 .mailBar span { width: 9px; height: 9px; border-radius: 50%; background: #1d2740; }
-.mailBar em { margin-left: 10px; color: #56668a; font-family: ui-monospace, Menlo, monospace; font-size: 11px; font-style: normal; letter-spacing: .1em; text-transform: uppercase; }
+.mailBar em { margin-left: 10px; color: #8b98b8; font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-style: normal; letter-spacing: .1em; text-transform: uppercase; }
 .mailMeta { padding: 16px 20px; border-bottom: 1px solid #161f35; }
 .mailFrom { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
 .mailFrom strong { color: #fff; font-size: 14px; }
 .mailFrom span { color: #67738f; font-size: 12.5px; }
 .mailSubject { margin-top: 6px; color: #dfe3ee; font-size: 15px; font-weight: 700; }
 .mailBody { padding: 8px 24px 24px; background: #05070d; }
-.mailLabel { margin-bottom: 12px; color: #6fe0dd; font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.mailLabel { margin-bottom: 12px; color: #6fe0dd; font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
 .mailTicker { color: #fff; font-family: ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 700; }
 .mailUp, .mailDown { font-family: ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 700; }
 .mailUp { color: #3fae64; }
@@ -35,17 +35,17 @@
 .mailWatch strong { color: #fff; }
 .mailSignoff { padding: 22px 0 4px; }
 .mailSignoff > p { margin: 0 0 16px; color: #dfe3ee; font-size: 15px; font-weight: 700; }
-.mailFoot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding-top: 22px; margin-top: 4px; color: #56668a; font-size: 12px; }
+.mailFoot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding-top: 22px; margin-top: 4px; color: #8b98b8; font-size: 12px; }
 .mailFoot span:first-child { color: #6fe0dd; }
-.mailFrame figcaption { padding: 12px 20px; border-top: 1px solid #161f35; background: #0c111e; color: #56668a; font-size: 12px; line-height: 1.5; }
+.mailFrame figcaption { padding: 12px 20px; border-top: 1px solid #161f35; background: #0c111e; color: #8b98b8; font-size: 12px; line-height: 1.5; }
 .page { min-height: 100vh; background: radial-gradient(90% 60% at 50% -6%, #10182c 0%, #060910 58%, #05070d 100%); color: #fff; }
 .main { padding: 72px 20px 96px; }
 .intro { max-width: 680px; margin: 0 auto 40px; }
-.kicker { display: block; margin-bottom: 18px; color: #56668a; font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
+.kicker { display: block; margin-bottom: 18px; color: #8b98b8; font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
 .intro h1 { margin: 0 0 16px; color: #fff; font-size: clamp(30px, 5vw, 46px); font-weight: 800; line-height: 1.06; letter-spacing: -.04em; }
-.intro p { max-width: none; margin: 0; color: #7e88a0; font-size: 16.5px; line-height: 1.65; }
+.intro p { max-width: none; margin: 0; color: #9aa6c0; font-size: 16.5px; line-height: 1.65; }
 .ctaWrap { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 22px; max-width: 680px; margin: 40px auto 0; }
-.ctaWrap span { color: #56668a; font-size: 13px; }
+.ctaWrap span { color: #8b98b8; font-size: 13px; }
 .page .cta { display: inline-flex; align-items: center; gap: 10px; padding: 19px 38px; background: #fff; color: #05070d; font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1); }
 .cta svg { transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1); }
 .page .cta:hover { transform: translateY(-3px); }
@@ -102,14 +102,14 @@
 }
 
 /* The business behind each stock, and the rivals table */
-.mailPeriod { color: #7d879f; font-size: 12px; }
+.mailPeriod { color: #9aa6c0; font-size: 12px; }
 .mailStats { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 8px; }
-.mailStats span { display: block; color: #7d879f; font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.mailStats span { display: block; color: #9aa6c0; font-family: ui-monospace, Menlo, monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
 .mailStats strong { display: block; padding-top: 3px; color: #fff; font-family: ui-monospace, Menlo, monospace; font-size: 14px; }
 .mailRivals { border-collapse: collapse; font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
-.mailRivals th { padding: 0 14px 6px 0; color: #7d879f; font-size: 10px; font-weight: 400; letter-spacing: .08em; text-align: left; text-transform: uppercase; }
+.mailRivals th { padding: 0 14px 6px 0; color: #9aa6c0; font-size: 12px; font-weight: 400; letter-spacing: .08em; text-align: left; text-transform: uppercase; }
 .mailRivals td { padding: 3px 14px 3px 0; color: #b6b8be; }
 .mailSelf td { color: #fff; font-weight: 700; }
 .mailRivals td.mailUp { color: #3fae64; }
 .mailRivals td.mailDown { color: #c74b4b; }
-.mailNote { margin: 10px 0 0; color: #56668a; font-size: 12px; line-height: 1.5; }
+.mailNote { margin: 10px 0 0; color: #8b98b8; font-size: 12px; line-height: 1.5; }

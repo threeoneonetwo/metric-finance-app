@@ -54,7 +54,7 @@ const SHOWCASE_RIVALS = [
 export function SampleBrief() {
   return (
     <div className={styles.page}>
-      <SiteHeader />
+      <SiteHeader signIn />
       <SpotGlow>
       <main className={styles.main}>
         <div className={styles.intro}>

@@ -1,3 +1,4 @@
+import { getLastMoves } from "@/lib/prices";
 import { OwnerMark } from "@/components/owner-mark";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -55,7 +56,7 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
     );
   }
 
-  const briefings = await listBriefingsForSubscriber(subscriber.id);
+  const [briefings, lastMoves] = await Promise.all([listBriefingsForSubscriber(subscriber.id), getLastMoves(subscriber.tickers).catch(() => [])]);
   const limits = limitsFor(subscriber.email);
   const picks = subscriber.tickers.slice(0, limits.stocks).map((symbol) => resolveStock(symbol) ?? { symbol, name: symbol, exchange: "US" });
   await trackServer({
@@ -75,6 +76,9 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
         justConfirmed={welcome === "1"}
         initialPicks={picks}
         maxPicks={limits.stocks}
+        moves={subscriber.tickers
+          .flatMap((symbol) => lastMoves.find((move) => move.symbol === symbol) ?? [])
+          .map((move) => ({ symbol: move.symbol, name: resolveStock(move.symbol)?.name ?? move.symbol, changePercent: move.changePercent, date: move.date, closes: move.history.map((day) => day.close) }))}
         briefings={oneBriefPerDay(briefings).map((briefing) => ({
           id: briefing.id,
           tickers: briefing.tickers,

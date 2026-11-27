@@ -20,7 +20,7 @@ type BriefingHistoryProps = {
 
 const DATE_FORMAT = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/New_York" });
 
-export function BriefingHistory({ briefings, linkQuery }: BriefingHistoryProps) {
+export function BriefingHistory({ briefings, linkQuery, showPast = true }: BriefingHistoryProps & { showPast?: boolean }) {
   const latest = briefings[0];
 
   if (!latest) {
@@ -50,7 +50,7 @@ export function BriefingHistory({ briefings, linkQuery }: BriefingHistoryProps) 
         </div>
         <ArrowRight size={18} />
       </Link>
-      {briefings.length > 1 ? (
+      {showPast && briefings.length > 1 ? (
         <>
           <h3 className={styles.pastBriefsHeading}>Past briefs</h3>
           <ul className={styles.pastBriefs}>
@@ -66,6 +66,48 @@ export function BriefingHistory({ briefings, linkQuery }: BriefingHistoryProps) 
           </ul>
         </>
       ) : null}
+    </div>
+  );
+}
+
+// "Week of Nov 23": briefs are grouped by the Sunday that starts their week, in New York time.
+function weekLabel(sentAt: string) {
+  const day = new Date(new Date(sentAt).toLocaleString("en-US", { timeZone: "America/New_York" }));
+  day.setDate(day.getDate() - day.getDay());
+  return `Week of ${new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(day)}`;
+}
+
+const DAY_FORMAT = new Intl.DateTimeFormat("en-US", { weekday: "short", timeZone: "America/New_York" });
+
+/** Every brief except the latest, grouped by week, for the dashboard's side column. */
+export function PastBriefs({ briefings, linkQuery }: { briefings: BriefingSummary[]; linkQuery: string }) {
+  const older = briefings.slice(1);
+  if (older.length === 0) return null;
+  const weeks: Array<{ label: string; items: BriefingSummary[] }> = [];
+  for (const briefing of older) {
+    const label = weekLabel(briefing.sentAt);
+    const week = weeks[weeks.length - 1];
+    if (week?.label === label) week.items.push(briefing);
+    else weeks.push({ label, items: [briefing] });
+  }
+  return (
+    <div className={styles.pastWeeks}>
+      <h2 className={styles.briefingHeading}>Past briefs</h2>
+      {weeks.map((week) => (
+        <section key={week.label}>
+          <h3>{week.label}</h3>
+          <ul>
+            {week.items.map((briefing) => (
+              <li key={briefing.id}>
+                <Link href={`/brief/${briefing.id}?${linkQuery}`}>
+                  <span className={styles.pastWeekDay}>{DAY_FORMAT.format(new Date(briefing.sentAt))}</span>
+                  <span className={styles.pastWeekTitle}>{briefing.title}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
     </div>
   );
 }

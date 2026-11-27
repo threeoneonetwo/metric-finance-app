@@ -1,0 +1,28 @@
+/* The homepage "biggest moves at the last close" row. */
+.wrap { max-width: 980px; margin: 56px auto 0; text-align: left; }
+.head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.head h2 { margin: 0; color: #fff; font-size: 18px; font-weight: 800; letter-spacing: -.01em; }
+.head span { color: #9aa8c8; font-size: 13.5px; }
+.grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.card { display: flex; flex-direction: column; gap: 6px; height: 100%; padding: 14px 14px 12px; border: 1px solid #1d2740; border-radius: 16px; background: #090e1a; color: #fff; text-decoration: none; transition: border-color 150ms ease, transform 150ms ease, background-color 150ms ease; }
+.card:hover { border-color: #3b4f86; background: #0c1324; transform: translateY(-2px); }
+.top { display: flex; align-items: center; gap: 8px; }
+.top strong { font-family: ui-monospace, Menlo, monospace; font-size: 14px; }
+.up, .down { margin-left: auto; font-family: ui-monospace, Menlo, monospace; font-size: 13.5px; font-weight: 800; }
+.up { color: #3fd68f; }
+.down { color: #ff7a7a; }
+.name { overflow: hidden; color: #9aa8c8; font-size: 12.5px; text-overflow: ellipsis; white-space: nowrap; }
+.why { margin-top: 2px; color: #b3c9ff; font-size: 12.5px; font-weight: 700; }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .wrap { margin-top: 40px; }
+  .grid { display: flex; overflow-x: auto; gap: 10px; margin: 0 -16px; padding: 0 16px 6px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .grid::-webkit-scrollbar { display: none; }
+  .grid li { flex: 0 0 42%; scroll-snap-align: start; }
+}
+@media (max-width: 520px) {
+  .head { flex-direction: column; gap: 2px; }
+}

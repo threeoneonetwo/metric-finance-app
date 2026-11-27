@@ -1,6 +1,39 @@
 import type { Metadata } from "next";
 import { NewsletterLanding } from "@/components/newsletter-landing";
 import { FAQS } from "@/lib/faqs";
+import { listRecentWhyPages } from "@/db/why";
+import { getLastMoves } from "@/lib/prices";
+import { STOCKS } from "@/lib/stocks";
+import { whyHref } from "@/lib/why";
+import type { Mover } from "@/components/movers-strip";
+
+// The movers strip refreshes every half hour (prices are cached for a few hours, so this costs nothing extra).
+export const revalidate = 1800;
+
+// The popular stocks the strip picks its six biggest moves from.
+const POPULAR = STOCKS.slice(0, 16).map((stock) => stock.symbol);
+
+// The six biggest moves among popular stocks at the last close. Each links to that day's explainer when one exists.
+async function loadMovers(): Promise<Mover[]> {
+  const [moves, pages] = await Promise.all([getLastMoves(POPULAR), listRecentWhyPages(300)]);
+  const latest = moves.reduce((date, move) => (move.date > date ? move.date : date), "");
+  return moves
+    .filter((move) => move.date === latest)
+    .slice(0, 6)
+    .map((move) => {
+      const page = pages.find((item) => item.symbol === move.symbol && item.sessionDate === move.date);
+      const stock = STOCKS.find((item) => item.symbol === move.symbol);
+      return {
+        symbol: move.symbol,
+        name: (stock?.name ?? move.symbol).replace(/,? (Inc\.|Corporation|Incorporated|Company|Co\.)$/, "").replace(/^The /, ""),
+        changePercent: move.changePercent,
+        date: move.date,
+        closes: move.history.map((day) => day.close),
+        href: page ? whyHref(page) : `/learn/stocks/${move.symbol.toLowerCase().replace(/\./g, "-")}`,
+        explained: Boolean(page),
+      };
+    });
+}
 
 export const metadata: Metadata = {
   title: "Metric Finance | Stocks explained like you're 5",
@@ -47,14 +80,15 @@ const STRUCTURED_DATA = {
   ],
 };
 
-export default function Home() {
+export default async function Home() {
+  const movers = await loadMovers().catch(() => []);
   return (
     <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
       />
-      <NewsletterLanding />
+      <NewsletterLanding movers={movers} />
     </main>
   );
 }
