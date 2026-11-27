@@ -33,6 +33,11 @@ Next.js 16 (App Router, React 19, TypeScript), Tailwind + CSS Modules, Drizzle O
 - Preview deployments share the production database. Don't test signup flows with real addresses on previews.
 - All email is sent as "Vansh Pandita <vp@metricfinance.app>" (`lib/sender.ts`, one constant, no env var). Use `SENDER_EMAIL` in copy instead of typing the address. The old `SES_FROM_EMAIL` env var is no longer read. Mail sent to vp@ is forwarded to vanshpandita11@gmail.com by Cloudflare Email Routing; replies use Reply-To.
 
+## Company numbers and rivals in the brief
+- Every brief has "The business behind your stocks" (latest quarter: sales, growth against a year ago, profit margin, cash, debt) and "How they stack up against rivals" (today's move, sales growth and margin next to up to 3 rivals). The tables are drawn from data; the AI only writes one plain words line for each (`numbers` in `lib/newsletter/brief-schema.ts`, optional so it never sinks a brief).
+- Company numbers come free from SEC filings (`lib/newsletter/fundamentals.ts`, EDGAR search for the CIK, then `companyfacts`), cached 3 days per company. Funds and foreign companies (20-F filers such as TSM) have none and the section skips them.
+- Rivals (`lib/newsletter/peers.ts`): hand picked in `RIVALS` for popular stocks, otherwise the biggest companies in the same industry from `data/stock-profiles.json`. Their prices come from Nasdaq's free quotes. None of this uses FMP calls.
+
 ## Follow up questions on briefs
 - Every `/brief/[id]` page has an "Ask about your brief" panel (`components/brief-ask.tsx`) that posts to `/api/brief/ask`. Auth is the same as the brief page (signed link or `mf_session` cookie) and the brief must belong to the reader.
 - Policy runs in layers, cheapest first: `lib/ask/guard.ts` instantly declines advice questions (buy, sell, hold, price targets, predictions) and any explicit ticker outside the brief's watchlist, without a model call. Then `lib/ask/answer.ts` makes one forced tool call that must classify the question (`answer`, `advice`, `outside_watchlist`, `unrelated`) before answering, grounded only in the brief text and the facts it was written from. The route applies the final policy and runs an output check for recommendation language. Answers are scrubbed of dashes.

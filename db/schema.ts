@@ -1,3 +1,5 @@
+import type { Fundamentals } from "@/lib/newsletter/fundamentals";
+import type { PeerFacts } from "@/lib/newsletter/peers";
 import { boolean, integer, jsonb, pgTable, primaryKey, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const productEvents = pgTable("product_events", {
@@ -28,6 +30,9 @@ export type StoredTickerFacts = {
   industry: string | null;
   headlines: { title: string; source: string | null }[];
   nextEarnings: { date: string; epsEstimated: number | null; revenueEstimated: number | null } | null;
+  // Added later, so older rows don't have them.
+  fundamentals?: Fundamentals | null;
+  peers?: PeerFacts[];
 };
 export type StoredBriefFacts = { asOf: string; marketChangePercent: number | null; tickers: StoredTickerFacts[] };
 

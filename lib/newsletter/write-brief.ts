@@ -1,5 +1,6 @@
 import { BRIEF_TOOL_SCHEMA, validateBrief, type Brief } from "./brief-schema";
 import type { BriefFacts } from "./brief-data";
+import type { Fundamentals } from "./fundamentals";
 
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const MODEL = process.env.CLAUDE_MODEL ?? "claude-haiku-4-5";
@@ -18,7 +19,25 @@ Hard rules:
 - The "rest" section must never retell the lead story. On a quiet day (move under about 0.7 percent and no relevant news) write one short line such as "Quiet day. Nothing material."
 - The "idea" teaches exactly one concept that comes out of the lead story, and must make sense to someone who never saw the brief.
 - "What to watch next": use the next earnings date and the analyst estimates in the data when present. If no dates exist, say what kind of event to watch without inventing one.
-- Word counts: one sentence 25 to 40 words. Lead about 150 words across its five parts. Each non quiet "rest" entry 25 to 40 words. Idea 40 to 60 words.`;
+- "numbers": one entry per stock, in the order given. "business" reads that stock's latestReport in plain words: is it selling more than a year ago, how much of each dollar of sales it keeps as profit (explain margin simply, like "keeps 62 cents of every dollar"), and how its cash compares with its debt. Round big numbers ("about 96 billion dollars") and name the period ("the quarter that ended July 26"). If latestReport is null, write an empty string. "rivals" compares the stock with its rivals in the data: say whether today's move was just this company or the whole group, and how its sales growth and margin compare. If rivals is empty, write an empty string. Never call a company a good or bad investment.
+- Word counts: one sentence 25 to 40 words. Lead about 150 words across its five parts. Each non quiet "rest" entry 25 to 40 words. Idea 40 to 60 words. Each "business" and "rivals" 20 to 40 words.`;
+
+// Billions with two decimals, which the model rounds into plain words.
+const billions = (value: number | null) => (value === null ? null : Number((value / 1e9).toFixed(2)));
+
+// A company's latest report in the form the model reads best: words for the date, billions for money.
+function reportFor(report: Fundamentals) {
+  return {
+    periodEnded: new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "long", day: "numeric", year: "numeric" }).format(new Date(`${report.periodEnd}T00:00:00Z`)),
+    revenueBillions: billions(report.revenue),
+    revenueGrowthVsYearAgoPercent: report.revenueGrowthPercent,
+    netIncomeBillions: billions(report.netIncome),
+    netMarginPercent: report.netMarginPercent,
+    operatingMarginPercent: report.operatingMarginPercent,
+    cashBillions: billions(report.cash),
+    debtBillions: billions(report.debt),
+  };
+}
 
 function describe(facts: BriefFacts, tickers: string[]) {
   return {
@@ -35,6 +54,8 @@ function describe(facts: BriefFacts, tickers: string[]) {
         changePercentToday: item.changePercent === null ? null : Number(item.changePercent.toFixed(2)),
         headlines: item.headlines.map((headline) => ({ title: headline.title, source: headline.source, publishedAt: headline.publishedAt })),
         nextEarnings: item.nextEarnings,
+        latestReport: item.fundamentals ? reportFor(item.fundamentals) : null,
+        rivals: (item.peers ?? []).map((peer) => ({ ticker: peer.ticker, company: peer.companyName, changePercentToday: peer.changePercent === null ? null : Number(peer.changePercent.toFixed(2)), revenueGrowthVsYearAgoPercent: peer.revenueGrowthPercent, netMarginPercent: peer.netMarginPercent })),
       };
     }),
   };
@@ -47,7 +68,7 @@ async function callModel(payload: unknown, apiKey: string, tickerCount: number) 
     body: JSON.stringify({
       model: MODEL,
       // Room for every stock: IU readers can follow up to 15.
-      max_tokens: 2400 + 220 * Math.max(0, tickerCount - 5),
+      max_tokens: 3400 + 330 * Math.max(0, tickerCount - 5),
       system: SYSTEM_PROMPT,
       tools: [{ name: "write_brief", description: "Write today's brief for this reader.", input_schema: BRIEF_TOOL_SCHEMA }],
       tool_choice: { type: "tool", name: "write_brief" },

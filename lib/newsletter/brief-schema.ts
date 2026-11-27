@@ -16,6 +16,8 @@ export type Brief = {
   rest: Array<{ ticker: string; text: string }>;
   idea: { term: string; explanation: string };
   watchNext: Array<{ label: string; text: string }>;
+  /** Per stock: its latest report read in plain words, and how it compares with rivals. Empty strings when there was no data. */
+  numbers: Array<{ ticker: string; business: string; rivals: string }>;
 };
 
 export const BRIEF_TOOL_SCHEMA = {
@@ -75,8 +77,21 @@ export const BRIEF_TOOL_SCHEMA = {
         required: ["label", "text"],
       },
     },
+    numbers: {
+      type: "array",
+      description: "One entry per watchlist stock, in the order given.",
+      items: {
+        type: "object",
+        properties: {
+          ticker: { type: "string" },
+          business: { type: "string", description: "20 to 40 words reading latestReport in plain words: sales growth, how much of each dollar it keeps as profit, cash against debt. Empty string when latestReport is null." },
+          rivals: { type: "string", description: "20 to 40 words: was today's move this company or its whole group, and how its growth and margin compare with the rivals in the data. Empty string when there are no rivals." },
+        },
+        required: ["ticker", "business", "rivals"],
+      },
+    },
   },
-  required: ["subject", "hook", "scope", "todayInOneSentence", "glance", "lead", "rest", "idea", "watchNext"],
+  required: ["subject", "hook", "scope", "todayInOneSentence", "glance", "lead", "rest", "idea", "watchNext", "numbers"],
 } as const;
 
 const words = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
@@ -137,5 +152,12 @@ export function validateBrief(raw: unknown, tickers: string[]): { ok: true; brie
   const watchNext = (value.watchNext ?? []).slice(0, 2).map((row) => ({ label: clean(row?.label), text: clean(row?.text) })).filter((row) => row.label && row.text);
   if (watchNext.length === 0) return { ok: false, reason: "nothing to watch" };
 
-  return { ok: true, brief: { subject, hook, scope, todayInOneSentence: sentence, glance, lead, rest, idea, watchNext } };
+  // Extra sections never sink a brief: rows for unknown stocks or with nothing to say are dropped, and overlong ones are cut.
+  const trim = (text: unknown) => clean(text).split(/\s+/).slice(0, 70).join(" ");
+  const numbers = (Array.isArray(value.numbers) ? value.numbers : [])
+    .map((row) => ({ ticker: String(row?.ticker ?? "").toUpperCase(), business: trim(row?.business), rivals: trim(row?.rivals) }))
+    .filter((row, index, all) => tickers.includes(row.ticker) && (row.business || row.rivals) && all.findIndex((other) => other.ticker === row.ticker) === index)
+    .sort((a, b) => tickers.indexOf(a.ticker) - tickers.indexOf(b.ticker));
+
+  return { ok: true, brief: { subject, hook, scope, todayInOneSentence: sentence, glance, lead, rest, idea, watchNext, numbers } };
 }

@@ -30,6 +30,27 @@ const SHOWCASE_REST = [
   { ticker: "MSFT", change: "+0.4%", up: true, text: "Quiet day. Nothing material." },
 ] as const;
 
+// The business behind each stock: numbers from the latest quarterly report, read in plain words.
+const SHOWCASE_BUSINESS = [
+  { ticker: "NVDA", period: "Quarter ended Jul 26", stats: [["Sales", "$96.2B"], ["vs a year ago", "+56%"], ["Profit margin", "62%"], ["Cash", "$22.4B"], ["Debt", "$33.4B"]], text: "Nvidia sold about 96 billion dollars of stuff in its latest quarter, way more than a year ago, and kept about 62 cents of every dollar as profit. That is unusually high for any company." },
+  { ticker: "TSLA", period: "Quarter ended Sep 30", stats: [["Sales", "$28.0B"], ["vs a year ago", "0%"], ["Profit margin", "3%"], ["Cash", "$17.9B"], ["Debt", "$8.0B"]], text: "Tesla's sales were flat against a year ago and it kept about 3 cents of every dollar as profit. Thin, but it holds more than twice as much cash as debt." },
+  { ticker: "AAPL", period: "Quarter ended Sep 26", stats: [["Sales", "$114.5B"], ["vs a year ago", "+12%"], ["Profit margin", "27%"], ["Cash", "$36.3B"], ["Debt", "$78.1B"]], text: "Apple grew sales about 12 percent and kept 27 cents of every dollar. It carries more debt than cash, which big steady earners often do on purpose because borrowing is cheap for them." },
+] as const;
+
+// How each stock compares with the biggest companies in its industry.
+const SHOWCASE_RIVALS = [
+  {
+    ticker: "NVDA",
+    rows: [["NVDA", "+3.1%", true, "+56%", "62%"], ["AVGO", "+1.4%", true, "+22%", "35%"], ["AMD", "+0.9%", true, "+32%", "12%"], ["MU", "+2.2%", true, "+46%", "28%"]],
+    text: "The whole chip group rose, but Nvidia rose the most. It is also growing faster and keeping more of each dollar than its biggest rivals, which is why the AI spending news hit it hardest.",
+  },
+  {
+    ticker: "TSLA",
+    rows: [["TSLA", "-2.4%", false, "0%", "3%"], ["GM", "+0.3%", true, "+4%", "5%"], ["F", "+0.1%", true, "+2%", "3%"]],
+    text: "Tesla fell while other carmakers barely moved, so this was a Tesla story, not an industry one. Its margin now looks a lot like the old carmakers it used to beat easily.",
+  },
+] as const;
+
 export function SampleBrief() {
   return (
     <div className={styles.page}>
@@ -87,6 +108,50 @@ export function SampleBrief() {
                   <p>{row.text}</p>
                 </div>
               ))}
+            </div>
+
+            {/* The business behind each stock: the latest quarterly numbers in plain words. */}
+            <div className={styles.mailSection}>
+              <div className={styles.mailLabel}>The business behind your stocks</div>
+              {SHOWCASE_BUSINESS.map((row) => (
+                <div className={styles.mailRest} key={row.ticker}>
+                  <div className={styles.mailRestTop}>
+                    <span className={styles.mailTicker}>{row.ticker}</span>
+                    <span className={styles.mailPeriod}>{row.period}</span>
+                  </div>
+                  <div className={styles.mailStats}>
+                    {row.stats.map(([name, value]) => (
+                      <div key={name}><span>{name}</span><strong>{value}</strong></div>
+                    ))}
+                  </div>
+                  <p>{row.text}</p>
+                </div>
+              ))}
+              <p className={styles.mailNote}>From each company&apos;s latest quarterly report filed with the SEC. Profit margin is profit as a share of sales.</p>
+            </div>
+
+            {/* How each stock stacks up against its biggest rivals. */}
+            <div className={styles.mailSection}>
+              <div className={styles.mailLabel}>How they stack up against rivals</div>
+              {SHOWCASE_RIVALS.map((group) => (
+                <div className={styles.mailRest} key={group.ticker}>
+                  <table className={styles.mailRivals}>
+                    <thead><tr><th /><th>Today</th><th>Sales growth</th><th>Margin</th></tr></thead>
+                    <tbody>
+                      {group.rows.map(([ticker, change, up, growth, margin]) => (
+                        <tr key={ticker} className={ticker === group.ticker ? styles.mailSelf : undefined}>
+                          <td>{ticker}</td>
+                          <td className={up ? styles.mailUp : styles.mailDown}>{change}</td>
+                          <td>{growth}</td>
+                          <td>{margin}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <p>{group.text}</p>
+                </div>
+              ))}
+              <p className={styles.mailNote}>Rivals are the biggest listed companies in the same industry.</p>
             </div>
 
             <div className={`${styles.mailSection} ${styles.mailIdea}`}>

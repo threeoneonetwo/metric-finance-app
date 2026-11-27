@@ -39,7 +39,7 @@ const toNumber = (value: unknown) => {
  * The free market data plan only covers a short list of symbols (many well known stocks answer "premium"), so any
  * stock it refuses is quoted from Nasdaq's public quote service instead. Same fields, no key, no daily limit.
  */
-async function nasdaqSnapshot(ticker: string): Promise<TickerSnapshot | null> {
+export async function nasdaqSnapshot(ticker: string): Promise<TickerSnapshot | null> {
   const headers = { Accept: "application/json", "User-Agent": "Mozilla/5.0" }; // Nasdaq stalls unfamiliar user agents
   const symbol = encodeURIComponent(ticker);
   try {

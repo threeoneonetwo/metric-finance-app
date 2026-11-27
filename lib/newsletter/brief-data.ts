@@ -1,6 +1,8 @@
 import profiles from "@/data/stock-profiles.json";
 import { getTickerSnapshots } from "./market-data";
 import { getTickerNews, type NewsHeadline } from "./news";
+import { getFundamentals, type Fundamentals } from "./fundamentals";
+import { getPeerFacts, type PeerFacts } from "./peers";
 
 const FMP_BASE_URL = "https://financialmodelingprep.com/stable";
 
@@ -19,6 +21,10 @@ export type TickerFacts = {
   industry: string | null;
   headlines: NewsHeadline[];
   nextEarnings: NextEarnings | null;
+  /** The latest quarterly report (sales, margins, cash, debt) from SEC filings, or null for funds and foreign companies. */
+  fundamentals: Fundamentals | null;
+  /** The biggest companies in the same industry: today's move, sales growth and margin. */
+  peers: PeerFacts[];
 };
 
 export type BriefFacts = {
@@ -81,10 +87,12 @@ export async function gatherBriefFacts(tickers: string[]): Promise<BriefFacts> {
     unique.map(async (ticker): Promise<TickerFacts | null> => {
       const snapshot = snapshots.get(ticker);
       if (!snapshot) return null;
-      const [headlines, profile, nextEarnings] = await Promise.all([
+      const [headlines, profile, nextEarnings, fundamentals, peers] = await Promise.all([
         getTickerNews(snapshot.companyName, ticker),
         getProfile(ticker),
         getNextEarnings(ticker),
+        getFundamentals(ticker),
+        getPeerFacts(ticker),
       ]);
       return {
         ticker,
@@ -95,6 +103,8 @@ export async function gatherBriefFacts(tickers: string[]): Promise<BriefFacts> {
         industry: profile.industry,
         headlines,
         nextEarnings,
+        fundamentals,
+        peers,
       };
     }),
   );

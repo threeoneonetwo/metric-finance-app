@@ -100,3 +100,16 @@
   .mailGlance, .mailRest, .page .cta::after { transition: none; animation: none; }
   .mailGlance:hover, .mailRest:hover { transform: none; }
 }
+
+/* The business behind each stock, and the rivals table */
+.mailPeriod { color: #7d879f; font-size: 12px; }
+.mailStats { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 8px; }
+.mailStats span { display: block; color: #7d879f; font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.mailStats strong { display: block; padding-top: 3px; color: #fff; font-family: ui-monospace, Menlo, monospace; font-size: 14px; }
+.mailRivals { border-collapse: collapse; font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
+.mailRivals th { padding: 0 14px 6px 0; color: #7d879f; font-size: 10px; font-weight: 400; letter-spacing: .08em; text-align: left; text-transform: uppercase; }
+.mailRivals td { padding: 3px 14px 3px 0; color: #b6b8be; }
+.mailSelf td { color: #fff; font-weight: 700; }
+.mailRivals td.mailUp { color: #3fae64; }
+.mailRivals td.mailDown { color: #c74b4b; }
+.mailNote { margin: 10px 0 0; color: #56668a; font-size: 12px; line-height: 1.5; }
